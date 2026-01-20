@@ -4,19 +4,26 @@
 
 package frc.robot;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /** Add your docs here. */
 public class CameraSystem {
@@ -30,6 +37,7 @@ public class CameraSystem {
     public final PhotonPoseEstimator photonEstimator;
     public Optional<EstimatedRobotPose> poseEstimate = Optional.empty();
     public PhotonPipelineResult result;
+    public Pose2d currentPose2d;
     
     CameraSystem(String name, Translation3d robotToCamTranslation, Rotation3d robotToCamRotation){
         this.cameraName = name;
@@ -39,8 +47,10 @@ public class CameraSystem {
         kRobotToCam = new Transform3d(new Translation3d(), new Rotation3d());
         kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
         photonEstimator = new PhotonPoseEstimator(kTagLayout, kRobotToCam);
+        currentPose2d = new Pose2d();
 
         photonCamera = new PhotonCamera(name);
+
     }
 
     Pose2d getRobotPose(){
@@ -51,10 +61,10 @@ public class CameraSystem {
                 if(poseEstimate.isEmpty()){
                     poseEstimate = photonEstimator.estimateLowestAmbiguityPose(result);
                 }
-                
+                currentPose2d = poseEstimate.orElse(null).estimatedPose.toPose2d();
             }
-
         }
+        return currentPose2d;
     }
-    
+
 }

@@ -20,8 +20,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.Commands.SpeedUpdater;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
@@ -48,6 +49,8 @@ public class RobotContainer {
                                                                                                 new Rotation3d(Constants.CAMERA_RIGHT_ROTATION_ROLL, Constants.CAMERA_RIGHT_ROTATION_PITCH, Constants.CAMERA_RIGHT_ROTATION_YAW));
 
     private final SendableChooser<Command> autoChooser;
+
+    private Trigger speedUpdater = new Trigger(() -> true);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
@@ -93,8 +96,9 @@ public class RobotContainer {
 
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        speedUpdater.whileTrue(new SpeedUpdater(drivetrain));
     }
 
     public Command getAutonomousCommand() {

@@ -53,7 +53,7 @@ public class RobotContainer {
     private Trigger speedUpdater = new Trigger(() -> true);
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser("Start Left Neutral Zone Climb");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -102,6 +102,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        //return Commands.none();
         return autoChooser.getSelected();
     }
 }

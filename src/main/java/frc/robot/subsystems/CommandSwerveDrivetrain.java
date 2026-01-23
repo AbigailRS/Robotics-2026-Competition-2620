@@ -136,6 +136,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutoBuilder();
     }
 
     /**
@@ -223,6 +224,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        configureAutoBuilder();
     }
 
     /**
@@ -336,5 +338,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public double getSpeedx(){
+        return this.getState().Speeds.vxMetersPerSecond;
+    }
+
+    public double getSpeedy(){
+        return this.getState().Speeds.vyMetersPerSecond;
+    }
+
+    public double getSpeedr(){
+        return this.getState().Speeds.omegaRadiansPerSecond;
     }
 }

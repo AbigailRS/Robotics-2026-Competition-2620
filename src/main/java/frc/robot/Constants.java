@@ -1,7 +1,5 @@
 package frc.robot;
 
-
-
 public class Constants {
     //Shooter Constants
     public static final int lazyShoot = 20;
@@ -14,10 +12,6 @@ public class Constants {
     public static final double voltagePercentageLeft = 0.75;
     public static final double rightSlingMaxVoltage = 12;
     public static final double voltagePercentageRight = 0.75;
-
-    public static final double lazySusanStop = 0.0;
-    public static final double leftSlingShotStop = 0.0;
-    public static final double rightSlingShotStop = 0.0;
     
     //Intake Constants
     public static final int lowerWheelIntake = 30;
@@ -39,9 +33,16 @@ public class Constants {
     public static final int rightRockSmusherVoltage = 4;
     public static final int leftRockSmusherVoltage = 4;
     public static final double maxConveryVoltage = 12;
-    public static final double converyVolyagePercentage = 0.5;
+    public static final double converyVoltagePercentage = 0.5;
     public static final double maxLeftRockSmusherVoltage = 12;
-    public static final double leftRockSmusherVoltagepercentage = 0.5;
+    public static final double leftRockSmusherVoltagePercentage = 0.5;
     public static final double maxRightRockSmusherVoltage = 12;
-    public static final double rightRockSmusherVoltagepercentage = 0.5;
+    public static final double rightRockSmusherVoltagePercentage = 0.5;
+
+    public static final double LeftInxderStop = 0.0;
+    public static final double RightInxderStop = 0.0;
+    public static final double ConveryForwardStop = 0.0;
+    public static final double ConveryBackwardStop = 0.0;
+
+
 }

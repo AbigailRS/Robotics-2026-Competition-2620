@@ -13,12 +13,15 @@ public class rockDestroyerInxder extends SubsystemBase {
 
   private TalonFX leftRockSmusher = new TalonFX(Constants.leftInxder, "rio");
   private TalonFX rightRockSmusher = new TalonFX(Constants. rightInxder,"rio");
-   private TalonFX converyIndex = new TalonFX(Constants. converorInxder,"rio");
+  private TalonFX converyIndex = new TalonFX(Constants. converorInxder,"rio");
+  
+
 
 
    private double converyVoltage = 0.0;
    private double leftRockSmusherVoltage = 0.0;
    private double rightRockSmusherVoltage = 0.0;
+   private double converyVoltageBack = 0.0;
 
 
   /** Creates a new rockDestroyerInxder. */
@@ -37,14 +40,17 @@ public class rockDestroyerInxder extends SubsystemBase {
     this.rightRockSmusherVoltage = voltageButter;
   }
 
+  public void setConveryVoltageBack(double voltageBread){
+    this.converyVoltageBack = voltageBread;
+  }
+
 
   @Override
   public void periodic() {
-    converyIndex.setVoltage(Constants.maxConveryVoltage * Constants.converyVolyagePercentage);
-    leftRockSmusher.setVoltage(Constants.maxLeftRockSmusherVoltage * Constants.leftRockSmusherVoltagepercentage);
-    rightRockSmusher.setVoltage(Constants.maxRightRockSmusherVoltage * Constants.rightRockSmusherVoltagepercentage);
-
-
+    converyIndex.setVoltage(Constants.maxConveryVoltage * converyVoltage);
+    leftRockSmusher.setVoltage(Constants.maxLeftRockSmusherVoltage * leftRockSmusherVoltage);
+    rightRockSmusher.setVoltage(Constants.maxRightRockSmusherVoltage * rightRockSmusherVoltage);
+    
 
     // This method will be called once per scheduler run
   }

@@ -3,6 +3,16 @@ package frc.robot;
 
 
 public class Constants {
+
+    //Climb Constants
+    public static final int climbLeft = 40;
+    public static final int climbRight = 41;
+
+    public static final double leftClimbMaxVoltage = 12;
+    public static final double leftClimbVoltagePercentage = 0.75;
+    public static final double rightClimbMaxVoltage = 12;
+    public static final double rightClimbVoltagePercentage = 0.75; 
+
     //Shooter Constants
     public static final int lazyShoot = 20;
     public static final int leftShoot = 21;

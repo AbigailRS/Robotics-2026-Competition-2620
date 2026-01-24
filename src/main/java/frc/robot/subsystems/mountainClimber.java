@@ -4,9 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class mountainClimber extends SubsystemBase {
+
+  private TalonFX mountainClimbingLeft = new TalonFX(Constants.climbLeft, "rio");
+  private TalonFX mountainClimbingRight = new TalonFX(Constants.climbRight, "rio");
+
+  private double climbingLeftVoltage = 0.0;
+  private double climbingRightVoltage = 0.0;
+
   /** Creates a new mountainClimber. */
   public mountainClimber() {}
 

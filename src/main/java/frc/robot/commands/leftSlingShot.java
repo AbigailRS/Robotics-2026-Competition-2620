@@ -10,11 +10,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.tinyPebbleShooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class lazySusanTurn extends Command {
+public class leftSlingShot extends Command {
 
   tinyPebbleShooter pebbleShooter;
   /** Creates a new lazySusanTurn. */
-  public lazySusanTurn(tinyPebbleShooter pebbleShooter) {
+  public leftSlingShot(tinyPebbleShooter pebbleShooter) {
     this.pebbleShooter = pebbleShooter;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,13 +26,13 @@ public class lazySusanTurn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pebbleShooter.setRotateVoltage(Constants.voltagePercentage);
+    pebbleShooter.setLeftSlingShotVoltage(Constants.voltagePercentageLeft);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pebbleShooter.setRotateVoltage(Constants.lazySusanStop);
+    pebbleShooter.setLeftSlingShotVoltage(Constants.leftSlingShotStop);
   }
 
   // Returns true when the command should end.

@@ -20,9 +20,12 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /** Add your docs here. */
@@ -38,22 +41,25 @@ public class CameraSystem {
     public Optional<EstimatedRobotPose> poseEstimate = Optional.empty();
     public PhotonPipelineResult result;
     public Pose2d currentPose2d;
+
+    StructPublisher<Pose2d> cameraPosePublisher;
     
     CameraSystem(String name, Translation3d robotToCamTranslation, Rotation3d robotToCamRotation){
         this.cameraName = name;
         this.robotToCamTranslation = robotToCamTranslation;
         this.robotToCamRotation = robotToCamRotation;
 
-        kRobotToCam = new Transform3d(new Translation3d(), new Rotation3d());
-        kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+        kRobotToCam = new Transform3d(robotToCamTranslation, robotToCamRotation);
+        kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
         photonEstimator = new PhotonPoseEstimator(kTagLayout, kRobotToCam);
         currentPose2d = new Pose2d();
 
         photonCamera = new PhotonCamera(name);
+        cameraPosePublisher = NetworkTableInstance.getDefault().getStructTopic(cameraName + " Pose Log", Pose2d.struct).publish();
 
     }
 
-    Pose2d getRobotPose(){
+    public Pose2d getRobotPose(){
         for(var result: photonCamera.getAllUnreadResults()){
             if(photonCamera.isConnected()){
                 result = photonCamera.getLatestResult();
@@ -61,9 +67,12 @@ public class CameraSystem {
                 if(poseEstimate.isEmpty()){
                     poseEstimate = photonEstimator.estimateLowestAmbiguityPose(result);
                 }
-                currentPose2d = poseEstimate.orElse(null).estimatedPose.toPose2d();
+                    currentPose2d = poseEstimate.orElse(null).estimatedPose.toPose2d();
+                
             }
         }
+
+        cameraPosePublisher.set(currentPose2d);
         return currentPose2d;
     }
 

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Commands.AddVisionMeasurements;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -82,10 +83,7 @@ public class RobotContainer {
         driver.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         ));
-        driver.x().whileTrue(Commands.run(() -> {
-            drivetrain.addVisionMeasurement(photonCameraLeft.getRobotPose(), Utils.getCurrentTimeSeconds());
-            drivetrain.addVisionMeasurement(photonCameraRight.getRobotPose(), Utils.getCurrentTimeSeconds());
-        }));
+        speedUpdater.whileTrue(new AddVisionMeasurements(drivetrain, photonCameraRight, photonCameraLeft));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.

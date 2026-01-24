@@ -1,5 +1,7 @@
 package frc.robot;
 
+
+
 public class Constants {
     //Shooter Constants
     public static final int lazyShoot = 20;
@@ -12,6 +14,10 @@ public class Constants {
     public static final double voltagePercentageLeft = 0.75;
     public static final double rightSlingMaxVoltage = 12;
     public static final double voltagePercentageRight = 0.75;
+
+    public static final double lazySusanStop = 0.0;
+    public static final double leftSlingShotStop = 0.0;
+    public static final double rightSlingShotStop = 0.0;
     
     //Intake Constants
     public static final int lowerWheelIntake = 30;

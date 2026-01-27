@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Commands.AddVisionMeasurements;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -50,8 +49,6 @@ public class RobotContainer {
                                                                                                 new Rotation3d(Constants.CAMERA_RIGHT_ROTATION_ROLL, Constants.CAMERA_RIGHT_ROTATION_PITCH, Constants.CAMERA_RIGHT_ROTATION_YAW));
 
     private final SendableChooser<Command> autoChooser;
-
-    private Trigger speedUpdater = new Trigger(() -> true);
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Start Left Neutral Zone Climb");
@@ -83,7 +80,6 @@ public class RobotContainer {
         driver.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         ));
-        speedUpdater.whileTrue(new AddVisionMeasurements(drivetrain, photonCameraRight, photonCameraLeft));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -95,8 +91,6 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
-
-        speedUpdater.whileTrue(new SpeedUpdater(drivetrain));
     }
 
     public Command getAutonomousCommand() {

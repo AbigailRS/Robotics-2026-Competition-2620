@@ -21,7 +21,6 @@ public class AddVisionMeasurements extends Command {
     this.drivetrain = drivetrain;
     this.leftCamera = leftCamera;
     this.rightCamera = rightCamera;
-    addRequirements(this.drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

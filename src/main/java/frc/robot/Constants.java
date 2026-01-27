@@ -22,6 +22,8 @@ public class Constants {
     public static final double maxExtendVoltage = 12;
     public static final double extendVoltagePercentage = 0.5;
 
+    public static final double INTAKE_STOP = 0;
+
 
 
     //Indxer

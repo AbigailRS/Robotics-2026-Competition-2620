@@ -71,6 +71,8 @@ public class Constants {
     public static final double MAX_EXTEND_VOLTAGE = 12;
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
 
+    public static final double INTAKE_STOP = 0;
+
 
 
     //Indxer

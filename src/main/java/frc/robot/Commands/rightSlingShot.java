@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.Commands;
 
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,13 +26,13 @@ public class rightSlingShot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pebbleShooter.setLeftSlingShotVoltage(Constants.voltagePercentageRight);
+    pebbleShooter.setLeftSlingShotVoltage(Constants.VOLTAGE_PERCENTAGE_RIGHT);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pebbleShooter.setLeftSlingShotVoltage(Constants.rightSlingShotStop);
+    pebbleShooter.setLeftSlingShotVoltage(Constants.RIGHT_SLING_STOP);
   }
 
   // Returns true when the command should end.

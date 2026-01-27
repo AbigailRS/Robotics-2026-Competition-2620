@@ -5,7 +5,13 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.Utils;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -28,6 +34,21 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
+
+        Pose2d leftPose = m_robotContainer.photonCameraLeft.getRobotPose();
+        Matrix<N3, N1> leftstdDevs = VecBuilder.fill(0.001, 0.001, 0.001);
+
+        if(m_robotContainer.photonCameraLeft.photonCamera.isConnected() && m_robotContainer.photonCameraLeft.hasTarget()){
+            m_robotContainer.drivetrain.addVisionMeasurement(leftPose, Utils.getSystemTimeSeconds(), leftstdDevs);
+        }
+        
+        Pose2d rightPose = m_robotContainer.photonCameraRight.getRobotPose();
+        Matrix<N3, N1> rightstdDevs = VecBuilder.fill(0.001, 0.001, 0.001);
+
+        if(m_robotContainer.photonCameraRight.photonCamera.isConnected() && m_robotContainer.photonCameraRight.hasTarget()){
+             m_robotContainer.drivetrain.addVisionMeasurement(rightPose, Utils.getCurrentTimeSeconds(), rightstdDevs);
+        }
+
     }
 
     @Override
@@ -62,7 +83,8 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+    }
 
     @Override
     public void teleopExit() {}

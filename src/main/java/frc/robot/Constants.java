@@ -36,6 +36,16 @@ public class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     
+
+    //Climb Constants
+    public static final int climbLeft = 40;
+    public static final int climbRight = 41;
+
+    public static final double leftClimbMaxVoltage = 12;
+    public static final double leftClimbVoltagePercentage = 0.75;
+    public static final double rightClimbMaxVoltage = 12;
+    public static final double rightClimbVoltagePercentage = 0.75; 
+
     //Shooter Constants
     public static final int lazyShoot = 20;
     public static final int leftShoot = 21;
@@ -47,6 +57,10 @@ public class Constants {
     public static final double voltagePercentageLeft = 0.75;
     public static final double rightSlingMaxVoltage = 12;
     public static final double voltagePercentageRight = 0.75;
+
+    public static final double lazySusanStop = 0.0;
+    public static final double leftSlingShotStop = 0.0;
+    public static final double rightSlingShotStop = 0.0;
     
     //Intake Constants
     public static final int lowerWheelIntake = 30;
@@ -68,9 +82,16 @@ public class Constants {
     public static final int rightRockSmusherVoltage = 4;
     public static final int leftRockSmusherVoltage = 4;
     public static final double maxConveryVoltage = 12;
-    public static final double converyVolyagePercentage = 0.5;
+    public static final double converyVoltagePercentage = 0.5;
     public static final double maxLeftRockSmusherVoltage = 12;
-    public static final double leftRockSmusherVoltagepercentage = 0.5;
+    public static final double leftRockSmusherVoltagePercentage = 0.5;
     public static final double maxRightRockSmusherVoltage = 12;
-    public static final double rightRockSmusherVoltagepercentage = 0.5;
+    public static final double rightRockSmusherVoltagePercentage = 0.5;
+
+    public static final double LeftInxderStop = 0.0;
+    public static final double RightInxderStop = 0.0;
+    public static final double ConveryForwardStop = 0.0;
+    public static final double ConveryBackwardStop = 0.0;
+
+
 }

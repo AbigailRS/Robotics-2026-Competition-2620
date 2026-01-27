@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,9 +12,9 @@ import frc.robot.Constants;
 
 public class tinyPebbleShooter extends SubsystemBase {
 
-  private TalonFX lazySusanMotor = new TalonFX(Constants.lazyShoot, "rio");
-  private TalonFX leftSlingShot = new TalonFX(Constants.leftShoot, "rio");
-  private TalonFX rightSlingShot = new TalonFX(Constants.rightShoot, "rio");
+  private TalonFX lazySusanMotor = new TalonFX(Constants.LAZY_SHOOT_CANID, CANBus.roboRIO());
+  private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
+  private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
 
   private double rotateVoltage = 0.0;
   private double leftVoltage = 0.0;
@@ -38,9 +39,9 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    lazySusanMotor.setVoltage(Constants.maxVoltage * rotateVoltage);
-    lazySusanMotor.setVoltage(Constants.leftSlingMaxVoltage * leftVoltage);
-    lazySusanMotor.setVoltage(Constants.rightSlingMaxVoltage * rightVoltage);
+    lazySusanMotor.setVoltage(Constants.MAX_VOLTAGE * rotateVoltage);
+    lazySusanMotor.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
+    lazySusanMotor.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
     // This method will be called once per scheduler run
   }
 }

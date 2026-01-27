@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,8 +12,8 @@ import frc.robot.Constants;
 
 public class bigRockIntake extends SubsystemBase {
 
-  private TalonFX rockGrabber = new TalonFX(Constants.lowerWheelIntake, "rio");
-  private TalonFX rockPusher = new TalonFX(Constants.upperWheelIntake, "rio");
+  private TalonFX rockGrabber = new TalonFX(Constants.LOWER_WHEEL_INTAKE_CANID, CANBus.roboRIO());
+  private TalonFX rockPusher = new TalonFX(Constants.UPPER_WHEEL_INTAKE_CANID, CANBus.roboRIO());
 
   private double extendVoltage = 0.0;
   private double intakeVoltage = 0.0;
@@ -31,8 +32,8 @@ public class bigRockIntake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    rockGrabber.setVoltage(Constants.maxIntakeVoltage * Constants.intakeVoltagePercentage);
-    rockPusher.setVoltage(Constants.maxExtendVoltage * Constants.extendVoltagePercentage);
+    rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * Constants.EXTEND_VOLTAGE_PERCENTAGE);
 
 
     // This method will be called once per scheduler run

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,8 +12,8 @@ import frc.robot.Constants;
 
 public class mountainClimber extends SubsystemBase {
 
-  private TalonFX mountainClimbingLeft = new TalonFX(Constants.climbLeft, "rio");
-  private TalonFX mountainClimbingRight = new TalonFX(Constants.climbRight, "rio");
+  private TalonFX mountainClimbingLeft = new TalonFX(Constants.CLIMB_LEFT_CANID, CANBus.roboRIO());
+  private TalonFX mountainClimbingRight = new TalonFX(Constants.CLIMB_RIGHT_CANID, CANBus.roboRIO());
 
   private double climbingLeftVoltage = 0.0;
   private double climbingRightVoltage = 0.0;

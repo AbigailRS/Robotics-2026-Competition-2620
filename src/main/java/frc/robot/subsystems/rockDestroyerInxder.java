@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,12 +12,10 @@ import frc.robot.Constants;
 
 public class rockDestroyerInxder extends SubsystemBase {
 
-  private TalonFX leftRockSmusher = new TalonFX(Constants.leftInxder, "rio");
-  private TalonFX rightRockSmusher = new TalonFX(Constants. rightInxder,"rio");
-  private TalonFX converyIndex = new TalonFX(Constants. converorInxder,"rio");
+  private TalonFX leftRockSmusher = new TalonFX(Constants.LEFT_INDEXER_CANID, CANBus.roboRIO());
+  private TalonFX rightRockSmusher = new TalonFX(Constants.RIGHT_INDEXER_CANID,CANBus.roboRIO());
+  private TalonFX converyIndex = new TalonFX(Constants.CONVEYOR_CANID,CANBus.roboRIO());
   
-
-
 
    private double converyVoltage = 0.0;
    private double leftRockSmusherVoltage = 0.0;
@@ -47,11 +46,11 @@ public class rockDestroyerInxder extends SubsystemBase {
 
   @Override
   public void periodic() {
-    converyIndex.setVoltage(Constants.maxConveryVoltage * converyVoltage);
-    leftRockSmusher.setVoltage(Constants.maxLeftRockSmusherVoltage * leftRockSmusherVoltage);
-    rightRockSmusher.setVoltage(Constants.maxRightRockSmusherVoltage * rightRockSmusherVoltage);
+    converyIndex.setVoltage(Constants.MAX_CONVEYOR_VOLTAGE * converyVoltage);
+    leftRockSmusher.setVoltage(Constants.MAX_LEFT_SMUSHER_VOLTAGE * leftRockSmusherVoltage);
+    rightRockSmusher.setVoltage(Constants.MAX_RIGHT_SMUSHER_VOLTAGE * rightRockSmusherVoltage);
     
 
     // This method will be called once per scheduler run
   }
-  }
+}

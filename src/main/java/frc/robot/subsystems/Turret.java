@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -29,7 +30,7 @@ public class Turret extends SubsystemBase {
                                 turretRotatePIDOutput = table.getDoubleTopic("turretRotatePIDOutput").publish();
 
   public Turret() {
-    rotateTurret = new TalonFX(Constants.TURRET_ROTATE_ID, "rio");
+    rotateTurret = new TalonFX(Constants.TURRET_ROTATE_ID, CANBus.roboRIO());
     rotateTurretPIDController = new PIDController(1.0, 0.0, 0.0);
     
   }

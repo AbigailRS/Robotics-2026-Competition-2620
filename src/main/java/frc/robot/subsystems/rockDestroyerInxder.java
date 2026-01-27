@@ -13,8 +13,8 @@ import frc.robot.Constants;
 public class rockDestroyerInxder extends SubsystemBase {
 
   private TalonFX leftRockSmusher = new TalonFX(Constants.LEFT_INDEXER_CANID, CANBus.roboRIO());
-  private TalonFX rightRockSmusher = new TalonFX(Constants.RIGHT_INDEXER_CANID,CANBus.roboRIO());
-  private TalonFX converyIndex = new TalonFX(Constants.CONVEYOR_CANID,CANBus.roboRIO());
+  private TalonFX rightRockSmusher = new TalonFX(Constants.RIGHT_INDEXER_CANID, CANBus.roboRIO());
+  private TalonFX converyIndex = new TalonFX(Constants.CONVEYOR_CANID, CANBus.roboRIO());
   
 
    private double converyVoltage = 0.0;

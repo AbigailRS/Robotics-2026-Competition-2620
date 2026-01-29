@@ -32,8 +32,8 @@ public class bigRockIntake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * Constants.INTAKE_VOLTAGE_PERCENTAGE);
-    rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * Constants.EXTEND_VOLTAGE_PERCENTAGE);
+    rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);
+    rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * extendVoltage /*Constants.EXTEND_VOLTAGE_PERCENTAGE*/);
 
 
     // This method will be called once per scheduler run

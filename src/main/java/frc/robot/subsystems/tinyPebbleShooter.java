@@ -40,8 +40,9 @@ public class tinyPebbleShooter extends SubsystemBase {
   @Override
   public void periodic() {
     lazySusanMotor.setVoltage(Constants.MAX_VOLTAGE * rotateVoltage);
-    lazySusanMotor.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
-    lazySusanMotor.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
+    System.out.println(leftVoltage);
+    leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
+    rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
     // This method will be called once per scheduler run
   }
 }

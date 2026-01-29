@@ -23,8 +23,25 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.SpeedUpdater;
+import frc.robot.Commands.Conveyor.LeftUp;
+import frc.robot.Commands.Conveyor.RightUp;
+import frc.robot.Commands.Conveyor.converybackwards;
+import frc.robot.Commands.Conveyor.converyforword;
+import frc.robot.Commands.Intake.IntakeExtend;
+import frc.robot.Commands.Intake.IntakeIn;
+import frc.robot.Commands.Intake.IntakeRefund;
+import frc.robot.Commands.Intake.IntakeRetract;
+import frc.robot.Commands.Shooter.lazySusanTurn;
+import frc.robot.Commands.Shooter.leftSlingShot;
+import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.bigRockIntake;
+import frc.robot.subsystems.rockDestroyerInxder;
+import frc.robot.subsystems.tinyPebbleShooter;
+
+
+
 
 public class RobotContainer {
 
@@ -41,6 +58,10 @@ public class RobotContainer {
     private final CommandXboxController operator = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    public final tinyPebbleShooter shooter = new tinyPebbleShooter();
+    public final bigRockIntake intake = new bigRockIntake();
+    public final rockDestroyerInxder index = new rockDestroyerInxder();
 
     public final CameraSystem photonCameraLeft = new CameraSystem("Left Photon Camera", new Translation3d(Constants.CAMERA_LEFT_TRANSLATION_X, Constants.CAMERA_LEFT_TRANSLATION_Y, Constants.CAMERA_LEFT_TRANSLATION_Z), 
                                                                                                 new Rotation3d(Constants.CAMERA_LEFT_ROTATION_ROLL, Constants.CAMERA_LEFT_ROTATION_PITCH, Constants.CAMERA_LEFT_ROTATION_YAW));
@@ -79,7 +100,19 @@ public class RobotContainer {
         driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         driver.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
-        ));
+        ));  
+        driver.y().whileTrue(new leftSlingShot(shooter)); // good
+        driver.x().whileTrue(new IntakeIn(intake));  // good
+        driver.rightBumper().whileTrue(new LeftUp(index)); // good
+        driver.leftBumper().whileTrue(new IntakeExtend(intake)); // good
+        driver.rightTrigger().whileTrue(new IntakeRefund(intake)); // good
+        driver.leftTrigger().whileTrue(new IntakeRetract(intake)); //good
+        driver.povDown().whileTrue(new RightUp(index)); // good
+        driver.povLeft().whileTrue(new converybackwards(index)); // good
+        driver.povUp().whileTrue(new converyforword(index)); // good
+        driver.povRight().whileTrue(new rightSlingShot(shooter)); // good
+        driver.povDownRight().whileTrue(new lazySusanTurn(shooter)); // good
+        
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.

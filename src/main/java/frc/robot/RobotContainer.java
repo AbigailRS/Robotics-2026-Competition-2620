@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.SpeedUpdater;
+import frc.robot.Commands.UpdateGameState;
 import frc.robot.Commands.Conveyor.LeftUp;
 import frc.robot.Commands.Conveyor.RightUp;
 import frc.robot.Commands.Conveyor.converybackwards;
@@ -63,6 +65,8 @@ public class RobotContainer {
     public final bigRockIntake intake = new bigRockIntake();
     public final rockDestroyerInxder index = new rockDestroyerInxder();
 
+    public final GameStateManager gameStateManager = new GameStateManager();
+
     public final CameraSystem photonCameraLeft = new CameraSystem("Left Photon Camera", new Translation3d(Constants.CAMERA_LEFT_TRANSLATION_X, Constants.CAMERA_LEFT_TRANSLATION_Y, Constants.CAMERA_LEFT_TRANSLATION_Z), 
                                                                                                 new Rotation3d(Constants.CAMERA_LEFT_ROTATION_ROLL, Constants.CAMERA_LEFT_ROTATION_PITCH, Constants.CAMERA_LEFT_ROTATION_YAW));
 
@@ -70,6 +74,14 @@ public class RobotContainer {
                                                                                                 new Rotation3d(Constants.CAMERA_RIGHT_ROTATION_ROLL, Constants.CAMERA_RIGHT_ROTATION_PITCH, Constants.CAMERA_RIGHT_ROTATION_YAW));
 
     private final SendableChooser<Command> autoChooser;
+
+    private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
+                                                            DriverStation.getMatchTime() == 129.0 ||
+                                                            DriverStation.getMatchTime() == 104.0 ||
+                                                            DriverStation.getMatchTime() == 79.0 ||
+                                                            DriverStation.getMatchTime() == 54.0 ||
+                                                            DriverStation.getMatchTime() == 29.0
+                                                        );
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Start Left Neutral Zone Climb");
@@ -124,6 +136,8 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        updateGameState.onTrue(new UpdateGameState(gameStateManager));
     }
 
     public Command getAutonomousCommand() {

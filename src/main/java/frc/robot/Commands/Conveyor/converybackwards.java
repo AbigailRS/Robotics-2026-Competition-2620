@@ -25,7 +25,7 @@ public class converybackwards extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inxder.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    inxder.setConveryVoltage(-Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
   }
 
   // Called once the command ends or is interrupted.

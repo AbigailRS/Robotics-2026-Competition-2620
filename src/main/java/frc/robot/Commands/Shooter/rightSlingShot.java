@@ -26,13 +26,13 @@ public class rightSlingShot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pebbleShooter.setLeftSlingShotVoltage(Constants.VOLTAGE_PERCENTAGE_RIGHT);
+    pebbleShooter.setRightSlingShotVoltage(Constants.VOLTAGE_PERCENTAGE_RIGHT);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pebbleShooter.setLeftSlingShotVoltage(Constants.RIGHT_SLING_STOP);
+    pebbleShooter.setRightSlingShotVoltage(Constants.RIGHT_SLING_STOP);
   }
 
   // Returns true when the command should end.

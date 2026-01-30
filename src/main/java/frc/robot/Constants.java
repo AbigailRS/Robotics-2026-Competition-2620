@@ -58,6 +58,9 @@ public class Constants {
     public static final double RIGHT_SLING_MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE_RIGHT = 0.75;
 
+    public static final double VELOCITY_LEFT_SLING = 50.0;
+    public static final double VELOCITY_RIGHT_SLING = 50.0;
+
     public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;
     public static final double RIGHT_SLING_STOP = 0.0;

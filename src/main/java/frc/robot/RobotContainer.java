@@ -33,7 +33,9 @@ import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
 import frc.robot.Commands.Shooter.lazySusanTurn;
 import frc.robot.Commands.Shooter.leftSlingShot;
+import frc.robot.Commands.Shooter.leftSlingVelocity;
 import frc.robot.Commands.Shooter.rightSlingShot;
+import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.bigRockIntake;
@@ -101,8 +103,8 @@ public class RobotContainer {
         driver.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         ));  
-        driver.y().whileTrue(new leftSlingShot(shooter)); // good
-        driver.x().whileTrue(new IntakeIn(intake));  // good
+        // driver.y().whileTrue(new leftSlingShot(shooter)); // good
+        // driver.x().whileTrue(new IntakeIn(intake));  // good
         driver.rightBumper().whileTrue(new LeftUp(index)); // good
         driver.leftBumper().whileTrue(new IntakeExtend(intake)); // good
         driver.rightTrigger().whileTrue(new IntakeRefund(intake)); // good
@@ -112,6 +114,9 @@ public class RobotContainer {
         driver.povUp().whileTrue(new converyforword(index)); // good
         driver.povRight().whileTrue(new rightSlingShot(shooter)); // good
         driver.povDownRight().whileTrue(new lazySusanTurn(shooter)); // good
+        driver.x().whileTrue(new rightSlingVelocity(shooter));
+        driver.y().whileTrue(new leftSlingVelocity(shooter));
+
         
 
         // Run SysId routines when holding back/start and X/Y.

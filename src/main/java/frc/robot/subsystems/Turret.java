@@ -26,8 +26,10 @@ public class Turret extends SubsystemBase {
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret");
-  private final DoublePublisher turretLLTx = table.getDoubleTopic("turretLLTx").publish(),
-                                turretRotatePIDOutput = table.getDoubleTopic("turretRotatePIDOutput").publish();
+  private final DoublePublisher priTurretLLTx = table.getDoubleTopic("turretLLTx").publish(),
+                                priTurretLLTxPID = table.getDoubleTopic("turretRotatePIDOutput").publish(),
+                                secTurretLLTx = table.getDoubleTopic("turretRotatePIDOutput").publish(),
+                                secTurretLLTxPID = table.getDoubleTopic("turretRotatePIDOutput").publish();
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_ROTATE_ID, CANBus.roboRIO());
@@ -36,19 +38,26 @@ public class Turret extends SubsystemBase {
   }
 
   public void setTurretRotateOnTarget(){
-    rotateTurretVoltage = rotateTurretPIDController.calculate(LimelightHelpers.getTX("Turret_LL"), 0.0);
+    if(LimelightHelpers.getTargetCount(Constants.PRIMARY_LIMELIGHT) > 0){
+      rotateTurretVoltage = rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.PRIMARY_LIMELIGHT), 0.0);
+    }
+    else if(LimelightHelpers.getTargetCount(Constants.SECONDARY_LIMELIGHT) > 0){
+      rotateTurretVoltage = rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.SECONDARY_LIMELIGHT), 0.0);
+    }
+    else{
+      rotateTurretVoltage = 0.0;
+    }
     
   }
 
   @Override
   public void periodic() {
     rotateTurret.setVoltage(rotateTurretVoltage);
-    updateLogging();
+    priTurretLLTx.set(LimelightHelpers.getTX(Constants.PRIMARY_LIMELIGHT));
+    priTurretLLTxPID.set(rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.PRIMARY_LIMELIGHT), 0.0));
+    secTurretLLTx.set(LimelightHelpers.getTX(Constants.SECONDARY_LIMELIGHT));
+    secTurretLLTxPID.set(rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.SECONDARY_LIMELIGHT), 0.0));
     
   }
 
-  public void updateLogging(){
-    turretLLTx.set(LimelightHelpers.getTX("Turret_LL"));
-    turretRotatePIDOutput.set(rotateTurretVoltage);
-  }
 }

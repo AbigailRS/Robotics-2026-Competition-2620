@@ -35,6 +35,9 @@ public class Constants {
 
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
+    public static final String PRIMARY_LIMELIGHT = "Primary Limelight";
+    public static final String SECONDARY_LIMELIGHT = "Secondary Limelight";
     
 
     //Climb Constants

@@ -14,23 +14,23 @@ import frc.robot.enums.GameState;
 /** Add your docs here. */
 public class GameStateManager {
     
-    private GameState state;
-    private Alliance advantageAlliance = Alliance.Red;
+    private static GameState state;
+    private static Alliance advantageAlliance = Alliance.Red;
 
-    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    private final NetworkTable table = inst.getTable("GameStateManager");
-    private final StringPublisher gameStatePublisher = table.getStringTopic("Game State").publish();
+    private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private static final NetworkTable table = inst.getTable("GameStateManager");
+    private static final StringPublisher gameStatePublisher = table.getStringTopic("Game State").publish();
     
     GameStateManager(){}
 
-    public void setAdvantageAlliance() {
+    public static void setAdvantageAlliance() {
         if(DriverStation.getGameSpecificMessage() == "B"){
             advantageAlliance = Alliance.Blue;
         }
         advantageAlliance = Alliance.Red;
     }
 
-    public GameState getState() {
+    public static GameState getState() {
         if(DriverStation.isAutonomous()){
             state = GameState.AUTO;
         }

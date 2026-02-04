@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Start to Neutral"
+            "pathName": "Loading Side Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Down to Climb"
+            "pathName": "Neutral Right to Neutral Left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral Right to Climb"
           }
         }
       ]

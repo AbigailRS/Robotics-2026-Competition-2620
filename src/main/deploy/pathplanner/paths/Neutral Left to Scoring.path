@@ -8,48 +8,43 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.212753209700429,
-        "y": 5.490599144079886
+        "x": 7.459681401784027,
+        "y": 3.101951205678634
       },
       "isLocked": false,
       "linkedName": "Neutral Middle"
     },
     {
       "anchor": {
-        "x": 4.647175463623395,
-        "y": 5.775249643366619
+        "x": 5.450650602409639,
+        "y": 2.4504819277108436
       },
       "prevControl": {
-        "x": 5.644772884591074,
-        "y": 5.705972044688309
+        "x": 6.223224685050308,
+        "y": 2.6029636545478185
       },
       "nextControl": {
-        "x": 3.7155920114122676,
-        "y": 5.839942938659058
+        "x": 4.620144578313253,
+        "y": 2.2865662650602405
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.516019971469329,
-        "y": 4.209671897289586
+        "x": 3.560156626506024,
+        "y": 2.1445060240963856
       },
       "prevControl": {
-        "x": 2.8228245363766042,
-        "y": 4.766034236804566
+        "x": 4.587361445783133,
+        "y": 2.10079518072289
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Climb Left"
+      "linkedName": "Loading Side"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.7036247334754768,
-      "rotationDegrees": 0.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

@@ -25,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
+import frc.robot.Commands.Conveyor.LeftDown;
 import frc.robot.Commands.Conveyor.LeftUp;
+import frc.robot.Commands.Conveyor.RightDown;
 import frc.robot.Commands.Conveyor.RightUp;
 import frc.robot.Commands.Conveyor.converybackwards;
 import frc.robot.Commands.Conveyor.converyforword;
@@ -115,19 +117,7 @@ public class RobotContainer {
         driver.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         ));  
-        // driver.y().whileTrue(new leftSlingShot(shooter)); // good
-        // driver.x().whileTrue(new IntakeIn(intake));  // good
-        driver.rightBumper().whileTrue(new LeftUp(index)); // good
-        driver.leftBumper().whileTrue(new IntakeExtend(intake)); // good
-        driver.rightTrigger().whileTrue(new IntakeRefund(intake)); // good
-        driver.leftTrigger().whileTrue(new IntakeRetract(intake)); //good
-        driver.povDown().whileTrue(new RightUp(index)); // good
-        driver.povLeft().whileTrue(new converybackwards(index)); // good
-        driver.povUp().whileTrue(new converyforword(index)); // good
-        driver.povRight().whileTrue(new rightSlingShot(shooter)); // good
-        driver.povDownRight().whileTrue(new lazySusanTurn(shooter)); // good
-        driver.x().whileTrue(new rightSlingVelocity(shooter));
-        driver.y().whileTrue(new leftSlingVelocity(shooter));
+        
 
         
 
@@ -143,6 +133,23 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
+
+
+        // OPERATOR CONTROLS
+        operator.x().whileTrue(new IntakeExtend(intake));
+        operator.b().whileTrue(new IntakeRetract(intake));
+        operator.leftBumper().whileTrue(new IntakeIn(intake));
+        operator.leftBumper().whileTrue(new converyforword(index));
+        operator.leftTrigger().whileTrue(new IntakeRefund(intake));
+        operator.rightBumper().whileTrue(new leftSlingShot(shooter));
+        operator.rightBumper().whileTrue(new rightSlingShot(shooter));
+        operator.rightBumper().whileTrue(new LeftUp(index));
+        operator.rightBumper().whileTrue(new RightUp(index));
+        operator.rightTrigger().whileTrue(new converybackwards(index));
+        operator.rightTrigger().whileTrue(new RightDown(index));
+        operator.rightTrigger().whileTrue(new LeftDown(index));
+
+
     }
 
     public Command getAutonomousCommand() {

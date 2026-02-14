@@ -35,7 +35,6 @@ import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
-import frc.robot.Commands.Shooter.lazySusanTurn;
 import frc.robot.Commands.Shooter.leftSlingShot;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
 import frc.robot.Commands.Shooter.rightSlingShot;

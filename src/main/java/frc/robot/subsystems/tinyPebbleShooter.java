@@ -19,7 +19,6 @@ import frc.robot.Constants;
 
 public class tinyPebbleShooter extends SubsystemBase {
 
-  //private TalonFX lazySusanMotor = new TalonFX(Constants.LAZY_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
 
@@ -56,13 +55,8 @@ public class tinyPebbleShooter extends SubsystemBase {
     leftSlingShot.getConfigurator().apply(ramprateConfig);
     rightSlingShot.getConfigurator().apply(ramprateConfig);
 
-  
-    
   }
 
- /*public void setRotateVoltage(double voltage){
-    this.rotateVoltage = voltage;
- */
 
   public void setLeftSlingShotVoltage(double leftvoltage){
     this.leftVoltage = leftvoltage;

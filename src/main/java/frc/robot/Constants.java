@@ -69,6 +69,9 @@ public class Constants {
     public static final int TURRET_CANID = 20;
     public static final int LEFT_SHOOT_CANID = 21;
     public static final int RIGHT_SHOOT_CANID = 22;
+
+    public static final int LEFT_LASERCAN_CANID = 23;
+    public static final int RIGHT_LASERCAN_CANID = 24;
     
     public static final double MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE = 0.75;
@@ -117,5 +120,8 @@ public class Constants {
     public static final double CONVEYOR_FORWARDS_STOP = 0.0;
     public static final double CONVEYOR_BACKWARDS_STOP = 0.0;
 
+    //Hoods
+    public static final int LEFT_HOOD_SERVO = 0;
+    public static final int RIGHT_HOOD_SERVO = 1;
 
 }

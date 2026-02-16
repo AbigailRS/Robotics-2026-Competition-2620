@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import au.grapplerobotics.LaserCan;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -21,6 +22,9 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
+
+  private LaserCan leftLaserCan = new LaserCan(Constants.LEFT_LASERCAN_CANID);
+  private LaserCan rightLaserCan = new LaserCan(Constants.RIGHT_LASERCAN_CANID);
 
   //private double rotateVoltage = 0.0;
   private double leftVoltage = 0.0;

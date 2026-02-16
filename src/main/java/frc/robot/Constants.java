@@ -47,11 +47,11 @@ public class Constants {
     public static final double RIGHT_CLIMB_VOLTAGE_PERCENTAGE = 0.75; 
 
     //Shooter Constants
-    public static final int LAZY_SHOOT_CANID = 20;
-    public static final int LEFT_SHOOT_CANID = 21;
-    public static final int RIGHT_SHOOT_CANID = 22;
+    //public static final int LAZY_SHOOT_CANID = 20;
+    public static final int LEFT_SHOOT_CANID = 20;
+    public static final int RIGHT_SHOOT_CANID = 21;
     
-    public static final double MAX_VOLTAGE = 12;
+    //public static final double MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE = 0.75;
     public static final double LEFT_SLING_MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE_LEFT = 0.75;
@@ -61,7 +61,7 @@ public class Constants {
     public static final double VELOCITY_LEFT_SLING = 50.0;
     public static final double VELOCITY_RIGHT_SLING = 50.0;
 
-    public static final double LAZY_SUSAN_STOP = 0.0;
+    //public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;
     public static final double RIGHT_SLING_STOP = 0.0;
     

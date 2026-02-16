@@ -124,28 +124,35 @@ public class RobotContainer {
         driver.povDown().whileTrue(new RightUp(index)); // good
         driver.povLeft().whileTrue(new converybackwards(index)); // good
         driver.povUp().whileTrue(new converyforword(index)); // good
-        driver.povRight().whileTrue(new rightSlingShot(shooter)); // good
+        driver.y().whileTrue(new rightSlingShot(shooter)); // good
         driver.povDownRight().whileTrue(new lazySusanTurn(shooter)); // good
-        driver.x().whileTrue(new rightSlingVelocity(shooter));
+        driver.y().whileTrue(new rightSlingVelocity(shooter));
+        driver.y().whileTrue(new leftSlingShot(shooter));
         driver.y().whileTrue(new leftSlingVelocity(shooter));
-
+                
         
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // Reset the field-centric heading on left bumper press.
-        driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        drivetrain.registerTelemetry(logger::telemeterize);
-
-        updateGameState.onTrue(new UpdateGameState(gameStateManager));
-    }
-
-    public Command getAutonomousCommand() {
+                
+        
+                // Run SysId routines when holding back/start and X/Y.
+                // Note that each routine should be run exactly once in a single log.
+                driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+                driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+                driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+                driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        
+                // Reset the field-centric heading on left bumper press.
+                driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+                drivetrain.registerTelemetry(logger::telemeterize);
+        
+                updateGameState.onTrue(new UpdateGameState(gameStateManager));
+            }
+        
+            private Object leftSlingVelocity(tinyPebbleShooter shooter2) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'leftSlingVelocity'");
+            }
+        
+            public Command getAutonomousCommand() {
         //return Commands.none();
         return autoChooser.getSelected();
     }

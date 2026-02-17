@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +16,10 @@ public class rockDestroyerInxder extends SubsystemBase {
   private TalonFX leftRockSmusher = new TalonFX(Constants.LEFT_INDEXER_CANID, CANBus.roboRIO());
   private TalonFX rightRockSmusher = new TalonFX(Constants.RIGHT_INDEXER_CANID, CANBus.roboRIO());
   private TalonFX converyIndex = new TalonFX(Constants.CONVEYOR_CANID, CANBus.roboRIO());
+
+  private TalonFXConfiguration leftIndexerConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration rightIndexerConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration converyIndexConfig = new TalonFXConfiguration();
   
 
    private double converyVoltage = 0.0;
@@ -25,7 +30,14 @@ public class rockDestroyerInxder extends SubsystemBase {
 
   /** Creates a new rockDestroyerInxder. */
   public rockDestroyerInxder() {
-    
+    leftIndexerConfig.MotorOutput.withInverted(Constants.INDEX_LEFT_INVERT);
+    rightIndexerConfig.MotorOutput.withInverted(Constants.INDEX_RIGHT_INVERT);
+    leftRockSmusher.getConfigurator().apply(leftIndexerConfig);
+    rightRockSmusher.getConfigurator().apply(rightIndexerConfig);
+
+    converyIndexConfig.MotorOutput.withInverted(Constants.INDEX_CONVERY_INVERT);
+    converyIndex.getConfigurator().apply(converyIndexConfig);
+
   }
   public void setConveryVoltage(double voltageJam){
     this.converyVoltage = voltageJam;

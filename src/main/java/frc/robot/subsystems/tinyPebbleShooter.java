@@ -8,10 +8,13 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
+import au.grapplerobotics.interfaces.LaserCanInterface.RegionOfInterest;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -23,6 +26,9 @@ public class tinyPebbleShooter extends SubsystemBase {
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
 
+  private TalonFXConfiguration leftSlingShotConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration rightSlingShotConfig = new TalonFXConfiguration();
+
   private LaserCan leftLaserCan = new LaserCan(Constants.LEFT_LASERCAN_CANID);
   private LaserCan rightLaserCan = new LaserCan(Constants.RIGHT_LASERCAN_CANID);
 
@@ -31,6 +37,11 @@ public class tinyPebbleShooter extends SubsystemBase {
   private double rightVoltage = 0.0;
   private double leftVelocity = 0.0;
   private double rightVelocity = 0.0;
+
+  private int shotCount = 0, laserCanLeftLastMeasurement = 0, laserCanRightLastMeasurement = 0;
+
+  private boolean leftShooterVeloControlMode = true, rightShooterVeloControlMode = true;
+
 
   Slot1Configs slot1Configs = new Slot1Configs();
   Slot2Configs slot2Configs = new Slot2Configs();
@@ -42,7 +53,8 @@ public class tinyPebbleShooter extends SubsystemBase {
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Shooter");
   private final DoublePublisher shooterLeftVelocitySetPointPublisher = table.getDoubleTopic("Shooter Left Velocity SetPoint").publish(), shooterRightVelocitySetPointPublisher = table.getDoubleTopic("Shooter Right Velocity SetPoint").publish(),
-                                shooterLeftVelocityPublisher = table.getDoubleTopic("Shooter Left Velocity").publish(), shooterRightVelocityPublisher = table.getDoubleTopic("Shooter Right Velocity").publish();
+                                shooterLeftVelocityPublisher = table.getDoubleTopic("Shooter Left Velocity").publish(), shooterRightVelocityPublisher = table.getDoubleTopic("Shooter Right Velocity").publish(),
+                                shotCountPublisher = table.getDoubleTopic("Shot Count").publish();
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
@@ -58,38 +70,88 @@ public class tinyPebbleShooter extends SubsystemBase {
     ramprateConfig.withVoltageClosedLoopRampPeriod(50);
     leftSlingShot.getConfigurator().apply(ramprateConfig);
     rightSlingShot.getConfigurator().apply(ramprateConfig);
+    
+    // leftRockSmusher.getConfigurator().apply(leftIndexerConfig);
+    // rightRockSmusher.getConfigurator().apply(rightIndexerConfig);
+
+    //Lasercan configuration
+    try{
+      leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+      leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+      rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+      rightLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      rightLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+    }catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
 
   }
 
 
   public void setLeftSlingShotVoltage(double leftvoltage){
     this.leftVoltage = leftvoltage;
+    leftShooterVeloControlMode = false;
   }
 
   public void setRightSlingShotVoltage(double rightvoltage){
     this.rightVoltage = rightvoltage;
+    rightShooterVeloControlMode = false;
   }
 
   public void setLeftSlingVelocity(double velocity){
     this.leftVelocity = velocity;
+    leftShooterVeloControlMode = true;
   }
 
   public void setRightSlingVelocity(double velocity){
     this.rightVelocity = velocity;
+    rightShooterVeloControlMode = true;
+  }
+
+  public int getShotCount(){
+    return shotCount;
+  }
+
+  public void setShotCount(int value){
+    shotCount = value;
   }
 
   @Override
   public void periodic() {
-    //lazySusanMotor.setVoltage(Constants.MAX_VOLTAGE * rotateVoltage);
+
+    LaserCan.Measurement leftLCMeasurement = leftLaserCan.getMeasurement();
+    if (leftLCMeasurement != null && leftLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      if(leftLCMeasurement.distance_mm > Constants.LASERCAN_LEFT_THRESHOLD_MM && leftLCMeasurement.distance_mm < Constants.LASERCAN_LEFT_THRESHOLD_MM){
+        shotCount++;
+      }
+      laserCanLeftLastMeasurement = leftLCMeasurement.distance_mm;
+    } 
+    LaserCan.Measurement rightLCMeasurement = rightLaserCan.getMeasurement();
+    if (rightLCMeasurement != null && rightLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      if(rightLCMeasurement.distance_mm > Constants.LASERCAN_RIGHT_THRESHOLD_MM && rightLCMeasurement.distance_mm < Constants.LASERCAN_RIGHT_THRESHOLD_MM){
+        shotCount++;
+      }
+      laserCanRightLastMeasurement = rightLCMeasurement.distance_mm;
+    } 
+
     shooterLeftVelocitySetPointPublisher.set(leftVelocity);
     shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
     shooterRightVelocitySetPointPublisher.set(rightVelocity);
     shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
-    leftSlingShot.setControl(v_leftVelocityVoltage.withVelocity(leftVelocity));
-    rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity));
-    //leftSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity));
-    //leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
-    //rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
+    shotCountPublisher.set(shotCount);
+    if(leftShooterVeloControlMode){
+      leftSlingShot.setControl(v_leftVelocityVoltage.withVelocity(leftVelocity));
+    }
+    else{
+      leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
+    }
+    if(rightShooterVeloControlMode){
+      rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity));
+    }
+    else{
+      rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
+    }
     // This method will be called once per scheduler run
   }
 }

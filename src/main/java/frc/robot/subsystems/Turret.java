@@ -35,12 +35,15 @@ public class Turret extends SubsystemBase {
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
+    rotateTurretConfig = new TalonFXConfiguration();
     rotateTurretConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.TURRET_RAMPRATE);
     rotateTurretConfig.MotorOutput.withInverted(Constants.TURRET_INVERSION);
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
+    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
+    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   public void setTurretVoltage(double voltage){
@@ -81,6 +84,10 @@ public class Turret extends SubsystemBase {
     else{
       return false;
     }
+  }
+
+  public void manualRun(double voltage){
+    this.rotateTurretVoltage = voltage;
   }
 
   @Override

@@ -35,18 +35,32 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
 
-        Pose2d leftPose = m_robotContainer.photonCameraLeft.getRobotPose();
-        Matrix<N3, N1> leftstdDevs = VecBuilder.fill(0.001, 0.001, 0.001);
+        Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
+        Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.001, 0.001, 0.001);
 
-        if(m_robotContainer.photonCameraLeft.photonCamera.isConnected() && m_robotContainer.photonCameraLeft.hasTarget()){
-            m_robotContainer.drivetrain.addVisionMeasurement(leftPose, Utils.getSystemTimeSeconds(), leftstdDevs);
+        if(m_robotContainer.photonCamera1.photonCamera.isConnected() && m_robotContainer.photonCamera1.hasTarget()){
+            m_robotContainer.drivetrain.addVisionMeasurement(pose1, Utils.getSystemTimeSeconds(), stdDevs1);
         }
         
-        Pose2d rightPose = m_robotContainer.photonCameraRight.getRobotPose();
-        Matrix<N3, N1> rightstdDevs = VecBuilder.fill(0.001, 0.001, 0.001);
+        Pose2d pose2 = m_robotContainer.photonCamera2.getRobotPose();
+        Matrix<N3, N1> stdDevs2 = VecBuilder.fill(0.001, 0.001, 0.001);
 
-        if(m_robotContainer.photonCameraRight.photonCamera.isConnected() && m_robotContainer.photonCameraRight.hasTarget()){
-             m_robotContainer.drivetrain.addVisionMeasurement(rightPose, Utils.getCurrentTimeSeconds(), rightstdDevs);
+        if(m_robotContainer.photonCamera2.photonCamera.isConnected() && m_robotContainer.photonCamera2.hasTarget()){
+             m_robotContainer.drivetrain.addVisionMeasurement(pose2, Utils.getCurrentTimeSeconds(), stdDevs2);
+        }
+
+        Pose2d pose3 = m_robotContainer.photonCamera3.getRobotPose();
+        Matrix<N3, N1> stdDevs3 = VecBuilder.fill(0.001, 0.001, 0.001);
+
+        if(m_robotContainer.photonCamera3.photonCamera.isConnected() && m_robotContainer.photonCamera2.hasTarget()){
+             m_robotContainer.drivetrain.addVisionMeasurement(pose3, Utils.getCurrentTimeSeconds(), stdDevs3);
+        }
+
+        Pose2d pose4 = m_robotContainer.photonCamera4.getRobotPose();
+        Matrix<N3, N1> stdDevs4 = VecBuilder.fill(0.001, 0.001, 0.001);
+
+        if(m_robotContainer.photonCamera4.photonCamera.isConnected() && m_robotContainer.photonCamera4.hasTarget()){
+             m_robotContainer.drivetrain.addVisionMeasurement(pose4, Utils.getCurrentTimeSeconds(), stdDevs4);
         }
 
     }

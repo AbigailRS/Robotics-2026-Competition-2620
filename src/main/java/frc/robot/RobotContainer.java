@@ -31,6 +31,8 @@ import frc.robot.Commands.Conveyor.RightDown;
 import frc.robot.Commands.Conveyor.RightUp;
 import frc.robot.Commands.Conveyor.converybackwards;
 import frc.robot.Commands.Conveyor.converyforword;
+import frc.robot.Commands.Hood.TESTSetHoodsHigh;
+import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
@@ -39,8 +41,11 @@ import frc.robot.Commands.Shooter.leftSlingShot;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
 import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
+import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hoods;
+import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.bigRockIntake;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
@@ -67,15 +72,23 @@ public class RobotContainer {
     public final tinyPebbleShooter shooter = new tinyPebbleShooter();
     public final bigRockIntake intake = new bigRockIntake();
     public final rockDestroyerInxder index = new rockDestroyerInxder();
+    public final Turret turret = new Turret();
+    public final Hoods hoods = new Hoods();
 
     public final GameStateManager gameStateManager = new GameStateManager();
 
-    public final CameraSystem photonCameraLeft = new CameraSystem("Left Photon Camera", new Translation3d(Constants.CAMERA_LEFT_TRANSLATION_X, Constants.CAMERA_LEFT_TRANSLATION_Y, Constants.CAMERA_LEFT_TRANSLATION_Z), 
-                                                                                                new Rotation3d(Constants.CAMERA_LEFT_ROTATION_ROLL, Constants.CAMERA_LEFT_ROTATION_PITCH, Constants.CAMERA_LEFT_ROTATION_YAW));
+    public final CameraSystem photonCamera1 = new CameraSystem("Photon Camera 1", new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
+                                                                                                new Rotation3d(Constants.CAMERA_1_ROTATION_ROLL, Constants.CAMERA_1_ROTATION_PITCH, Constants.CAMERA_1_ROTATION_YAW));
 
-    public final CameraSystem photonCameraRight = new CameraSystem("Right Photon Camera", new Translation3d(Constants.CAMERA_RIGHT_TRANSLATION_X, Constants.CAMERA_RIGHT_TRANSLATION_Y, Constants.CAMERA_RIGHT_TRANSLATION_Z), 
-                                                                                                new Rotation3d(Constants.CAMERA_RIGHT_ROTATION_ROLL, Constants.CAMERA_RIGHT_ROTATION_PITCH, Constants.CAMERA_RIGHT_ROTATION_YAW));
-
+    public final CameraSystem photonCamera2 = new CameraSystem("Photon Camera 2", new Translation3d(Constants.CAMERA_2_TRANSLATION_X, Constants.CAMERA_2_TRANSLATION_Y, Constants.CAMERA_2_TRANSLATION_Z), 
+                                                                                                new Rotation3d(Constants.CAMERA_2_ROTATION_ROLL, Constants.CAMERA_2_ROTATION_PITCH, Constants.CAMERA_2_ROTATION_YAW));
+    
+    public final CameraSystem photonCamera3 = new CameraSystem("Photon Camera 3", new Translation3d(Constants.CAMERA_3_TRANSLATION_X, Constants.CAMERA_3_TRANSLATION_Y, Constants.CAMERA_3_TRANSLATION_Z), 
+                                                                                                new Rotation3d(Constants.CAMERA_3_ROTATION_ROLL, Constants.CAMERA_3_ROTATION_PITCH, Constants.CAMERA_3_ROTATION_YAW));
+    
+    public final CameraSystem photonCamera4 = new CameraSystem("Photon Camera 4", new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
+                                                                                                new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW));
+    
     private final SendableChooser<Command> autoChooser;
 
     private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
@@ -122,10 +135,10 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
@@ -135,18 +148,25 @@ public class RobotContainer {
 
 
         // OPERATOR CONTROLS
-        operator.x().whileTrue(new IntakeExtend(intake));
-        operator.b().whileTrue(new IntakeRetract(intake));
-        operator.leftBumper().whileTrue(new IntakeIn(intake));
-        operator.leftBumper().whileTrue(new converyforword(index));
-        operator.leftTrigger().whileTrue(new IntakeRefund(intake));
+        // operator.x().whileTrue(new IntakeExtend(intake));
+        // operator.b().whileTrue(new IntakeRetract(intake));
+        // operator.leftBumper().whileTrue(new IntakeIn(intake));
+        // operator.leftBumper().whileTrue(new converyforword(index));
+        // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         operator.rightBumper().whileTrue(new rightSlingShot(shooter));
         operator.rightBumper().whileTrue(new LeftUp(index));
         operator.rightBumper().whileTrue(new RightUp(index));
-        operator.rightTrigger().whileTrue(new converybackwards(index));
-        operator.rightTrigger().whileTrue(new RightDown(index));
-        operator.rightTrigger().whileTrue(new LeftDown(index));
+        operator.rightBumper().whileTrue(new converyforword(index));
+        operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
+        operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        // operator.rightTrigger().whileTrue(new converybackwards(index));
+        // operator.rightTrigger().whileTrue(new RightDown(index));
+        // operator.rightTrigger().whileTrue(new LeftDown(index));
+        operator.povLeft().whileTrue(new ManualRotate(turret, 1.0));
+        operator.povRight().whileTrue(new ManualRotate(turret, -1.0));
+        operator.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+        operator.povDown().whileTrue(new TESTSetHoodsLow(hoods));
 
 
     }

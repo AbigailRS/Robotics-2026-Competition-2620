@@ -35,6 +35,8 @@ public class TrackHub extends Command {
   public void initialize() {
     rotateTurretPIDController = new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D);
     voltage = 0.0;
+    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
+    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -57,6 +59,8 @@ public class TrackHub extends Command {
   @Override
   public void end(boolean interrupted) {
     turret.setTurretVoltage(0);
+    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
+    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   // Returns true when the command should end.

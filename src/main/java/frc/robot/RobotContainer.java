@@ -153,8 +153,8 @@ public class RobotContainer {
         // operator.leftBumper().whileTrue(new IntakeIn(intake));
         // operator.leftBumper().whileTrue(new converyforword(index));
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
-        operator.rightBumper().whileTrue(new leftSlingShot(shooter));
-        operator.rightBumper().whileTrue(new rightSlingShot(shooter));
+        //operator.rightBumper().whileTrue(new leftSlingShot(shooter));
+        //operator.rightBumper().whileTrue(new rightSlingShot(shooter));
         operator.rightBumper().whileTrue(new LeftUp(index));
         operator.rightBumper().whileTrue(new RightUp(index));
         operator.rightBumper().whileTrue(new converyforword(index));

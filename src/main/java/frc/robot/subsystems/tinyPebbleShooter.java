@@ -71,8 +71,8 @@ public class tinyPebbleShooter extends SubsystemBase {
     leftSlingShot.getConfigurator().apply(ramprateConfig);
     rightSlingShot.getConfigurator().apply(ramprateConfig);
     
-    // leftRockSmusher.getConfigurator().apply(leftIndexerConfig);
-    // rightRockSmusher.getConfigurator().apply(rightIndexerConfig);
+    leftSlingShot.getConfigurator().apply(leftSlingShotConfig);
+    rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
 
     //Lasercan configuration
     try{

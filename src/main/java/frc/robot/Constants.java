@@ -94,8 +94,8 @@ public class Constants {
     public static final double RIGHT_SLING_MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE_RIGHT = 1.0;
 
-    public static final double VELOCITY_LEFT_SLING = 50.0;
-    public static final double VELOCITY_RIGHT_SLING = 50.0;
+    public static final double VELOCITY_LEFT_SLING = 90.0;
+    public static final double VELOCITY_RIGHT_SLING = 90.0;
 
     public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;
@@ -103,6 +103,9 @@ public class Constants {
 
     public static final int LASERCAN_LEFT_THRESHOLD_MM = 5;
     public static final int LASERCAN_RIGHT_THRESHOLD_MM = 5;
+
+    public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
+    public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -126,7 +129,7 @@ public class Constants {
     public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final int LEFT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.5;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.4;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.75;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;

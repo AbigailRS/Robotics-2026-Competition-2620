@@ -74,11 +74,7 @@ public class tinyPebbleShooter extends SubsystemBase {
     // leftSlingShot.getConfigurator().apply(ramprateConfig);
     // rightSlingShot.getConfigurator().apply(ramprateConfig);
 
-    rightSlingShotConfig.MotorOutput.withInverted(CONSTANTS.RIGHT_SHOOTER_INVERT);
-
-    //Lasercan configuration
-    // try{
-    //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+    rightSlingShotConfig.MotorOutput.withInverted(Constants.RIGHT_SHOOTER_INVERT); //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
     //   leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
     //   leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     //   rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);

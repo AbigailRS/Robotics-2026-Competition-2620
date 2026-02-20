@@ -106,6 +106,8 @@ public class Constants {
 
     public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
+
+    public static final InvertedValue RIGHT_SHOOTER_INVERT = InvertedValue.Clockwise_Positive;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;

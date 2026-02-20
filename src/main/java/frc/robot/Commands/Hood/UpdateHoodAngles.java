@@ -4,10 +4,13 @@
 
 package frc.robot.Commands.Hood;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class UpdateHoodAngles extends Command {
+
+  InterpolatingDoubleTreeMap angleIPMap = new InterpolatingDoubleTreeMap();
   /** Creates a new UpdateHoodAngles. */
   public UpdateHoodAngles() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -15,7 +18,14 @@ public class UpdateHoodAngles extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    angleIPMap.put(1.0, 15.0);
+    angleIPMap.put(1.5, 17.0);
+    angleIPMap.put(2.0, 18.0);
+    angleIPMap.put(3.0, 18.5);
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

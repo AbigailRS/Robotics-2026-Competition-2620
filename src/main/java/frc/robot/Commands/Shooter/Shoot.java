@@ -18,7 +18,8 @@ public class Shoot extends Command {
   rockDestroyerInxder indexer;
   boolean leftSpeedReached, rightSpeedReached;
 
-  InterpolatingDoubleTreeMap interpolationMap = new InterpolatingDoubleTreeMap();
+  InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
+
 
   public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer) {
     this.indexer = indexer;
@@ -33,10 +34,10 @@ public class Shoot extends Command {
     leftSpeedReached = false;
     rightSpeedReached = false;
 
-    interpolationMap.put(0.5, 90.0);
-    interpolationMap.put(1.0, 92.0);
-    interpolationMap.put(2.0, 93.0);
-    interpolationMap.put(3.0, 93.5);
+    velocityIPMap.put(0.5, 90.0);
+    velocityIPMap.put(1.0, 92.0);
+    velocityIPMap.put(2.0, 93.0);
+    velocityIPMap.put(3.0, 93.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

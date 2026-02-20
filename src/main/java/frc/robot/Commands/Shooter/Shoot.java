@@ -4,8 +4,10 @@
 
 package frc.robot.Commands.Shooter;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
@@ -15,6 +17,8 @@ public class Shoot extends Command {
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
   boolean leftSpeedReached, rightSpeedReached;
+
+  InterpolatingDoubleTreeMap interpolationMap = new InterpolatingDoubleTreeMap();
 
   public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer) {
     this.indexer = indexer;
@@ -28,6 +32,11 @@ public class Shoot extends Command {
   public void initialize() {
     leftSpeedReached = false;
     rightSpeedReached = false;
+
+    interpolationMap.put(0.5, 90.0);
+    interpolationMap.put(1.0, 92.0);
+    interpolationMap.put(2.0, 93.0);
+    interpolationMap.put(3.0, 93.5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

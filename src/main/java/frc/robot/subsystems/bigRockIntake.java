@@ -55,9 +55,9 @@ public class bigRockIntake extends SubsystemBase {
     rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * extendVoltage /*Constants.EXTEND_VOLTAGE_PERCENTAGE*/);
 
     IntakeVoltageSetPublisher.set(intakeVoltage);
-    IntakeVoltagePublisher.set(rockGrabber.getVelocity().getValueAsDouble());
+    IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
     ExtendVoltageSetPublisher.set(extendVoltage);
-    ExtendVoltagePublisher.set(rockPusher.getVelocity().getValueAsDouble());
+    ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
 
 
     // This method will be called once per scheduler run

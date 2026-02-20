@@ -23,6 +23,8 @@ import frc.robot.Constants;
 
 public class tinyPebbleShooter extends SubsystemBase {
 
+  
+
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
 
@@ -73,6 +75,8 @@ public class tinyPebbleShooter extends SubsystemBase {
     
     leftSlingShot.getConfigurator().apply(leftSlingShotConfig);
     rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
+
+    rightSlingShotConfig.MotorOutput.withInverted(CONSTANTS.RIGHT_SHOOTER_INVERT);
 
     //Lasercan configuration
     try{

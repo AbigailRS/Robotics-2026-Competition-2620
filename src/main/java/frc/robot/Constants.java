@@ -103,6 +103,8 @@ public class Constants {
 
     public static final int LASERCAN_LEFT_THRESHOLD_MM = 5;
     public static final int LASERCAN_RIGHT_THRESHOLD_MM = 5;
+
+    public static final int RIGHT_SHOOTER_INVERT = InvertedValue.Clockwise_Positive;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;

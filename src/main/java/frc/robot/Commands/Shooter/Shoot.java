@@ -56,7 +56,7 @@ public class Shoot extends Command {
       indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
-      indexer.setRightRockSmusherVoltage(0);
+      indexer.setRightRockSmusherVoltage(0.0);
     }
 
 

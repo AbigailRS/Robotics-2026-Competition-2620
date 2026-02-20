@@ -157,7 +157,7 @@ public class tinyPebbleShooter extends SubsystemBase {
       rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity).withEnableFOC(true));
     }
     else{
-      rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * -rightVoltage);
+      rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
     }
     // This method will be called once per scheduler run
     this.updateLogging();

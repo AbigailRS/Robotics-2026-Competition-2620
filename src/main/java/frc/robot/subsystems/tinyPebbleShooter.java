@@ -15,11 +15,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import au.grapplerobotics.interfaces.LaserCanInterface.RegionOfInterest;
+import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Commands.Shooter.leftSlingVelocity;
 
 public class tinyPebbleShooter extends SubsystemBase {
 
@@ -48,47 +50,43 @@ public class tinyPebbleShooter extends SubsystemBase {
   Slot1Configs slot1Configs = new Slot1Configs();
   Slot2Configs slot2Configs = new Slot2Configs();
   final VelocityVoltage v_rightVelocityVoltage = new VelocityVoltage(0).withSlot(1);
-  final VelocityVoltage v_leftVelocityVoltage = new VelocityVoltage(0).withSlot(2);
+  final VelocityVoltage v_leftVelocityVoltage = new VelocityVoltage(0).withSlot(1);
 
-  ClosedLoopRampsConfigs ramprateConfig = new ClosedLoopRampsConfigs();
+  // ClosedLoopRampsConfigs ramprateConfig = new ClosedLoopRampsConfigs();
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Shooter");
   private final DoublePublisher shooterLeftVelocitySetPointPublisher = table.getDoubleTopic("Shooter Left Velocity SetPoint").publish(), shooterRightVelocitySetPointPublisher = table.getDoubleTopic("Shooter Right Velocity SetPoint").publish(),
                                 shooterLeftVelocityPublisher = table.getDoubleTopic("Shooter Left Velocity").publish(), shooterRightVelocityPublisher = table.getDoubleTopic("Shooter Right Velocity").publish(),
-                                shotCountPublisher = table.getDoubleTopic("Shot Count").publish();
+                                shooterLeftVoltagePublisher = table.getDoubleTopic("Shooter Left Voltage").publish(), shooterRightVoltagePublisher = table.getDoubleTopic("Shooter Right Voltage").publish();
+
+  private final BooleanPublisher atLeftVeloPub = table.getBooleanTopic("At Left Velo").publish(), atRightVeloPub = table.getBooleanTopic("At Right Velo").publish();
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
-    slot1Configs.kP = 2.4;
+    slot1Configs.kP = 1.0;
     slot1Configs.kI = 0;
-    slot1Configs.kD = 0.5;
+    slot1Configs.kD = 0.0;
     rightSlingShot.getConfigurator().apply(slot1Configs);
+    leftSlingShot.getConfigurator().apply(slot1Configs);
 
-    slot2Configs.kP = 2.4;
-    slot2Configs.kI = 0;
-    slot2Configs.kD = 0.5;
-    leftSlingShot.getConfigurator().apply(slot2Configs);
-    ramprateConfig.withVoltageClosedLoopRampPeriod(50);
-    leftSlingShot.getConfigurator().apply(ramprateConfig);
-    rightSlingShot.getConfigurator().apply(ramprateConfig);
-    
-    leftSlingShot.getConfigurator().apply(leftSlingShotConfig);
-    rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
+    //ramprateConfig.withVoltageClosedLoopRampPeriod(50);
+    // leftSlingShot.getConfigurator().apply(ramprateConfig);
+    // rightSlingShot.getConfigurator().apply(ramprateConfig);
 
     rightSlingShotConfig.MotorOutput.withInverted(CONSTANTS.RIGHT_SHOOTER_INVERT);
 
     //Lasercan configuration
-    try{
-      leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-      leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
-      rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-      rightLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      rightLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
-    }catch (ConfigurationFailedException e) {
-      System.out.println("Configuration failed! " + e);
-    }
+    // try{
+    //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+    //   leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+    //   leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+    //   rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+    //   rightLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+    //   rightLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+    // }catch (ConfigurationFailedException e) {
+    //   System.out.println("Configuration failed! " + e);
+    // }
 
   }
 
@@ -121,41 +119,63 @@ public class tinyPebbleShooter extends SubsystemBase {
     shotCount = value;
   }
 
+  public boolean atLeftShootVelocity(){
+    if(Math.abs(leftSlingShot.getVelocity().getValueAsDouble() - leftVelocity) < Constants.SHOOTER_LEFT_ALLOWABLE_ERROR){
+      return true;
+    }
+    return false;
+  }
+
+  public boolean atRightShootVelocity(){
+    if(Math.abs(rightSlingShot.getVelocity().getValueAsDouble() - rightVelocity) < Constants.SHOOTER_RIGHT_ALLOWABLE_ERROR){
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public void periodic() {
 
-    LaserCan.Measurement leftLCMeasurement = leftLaserCan.getMeasurement();
-    if (leftLCMeasurement != null && leftLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      if(leftLCMeasurement.distance_mm > Constants.LASERCAN_LEFT_THRESHOLD_MM && leftLCMeasurement.distance_mm < Constants.LASERCAN_LEFT_THRESHOLD_MM){
-        shotCount++;
-      }
-      laserCanLeftLastMeasurement = leftLCMeasurement.distance_mm;
-    } 
-    LaserCan.Measurement rightLCMeasurement = rightLaserCan.getMeasurement();
-    if (rightLCMeasurement != null && rightLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      if(rightLCMeasurement.distance_mm > Constants.LASERCAN_RIGHT_THRESHOLD_MM && rightLCMeasurement.distance_mm < Constants.LASERCAN_RIGHT_THRESHOLD_MM){
-        shotCount++;
-      }
-      laserCanRightLastMeasurement = rightLCMeasurement.distance_mm;
-    } 
+    // LaserCan.Measurement leftLCMeasurement = leftLaserCan.getMeasurement();
+    // if (leftLCMeasurement != null && leftLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    //   if(leftLCMeasurement.distance_mm > Constants.LASERCAN_LEFT_THRESHOLD_MM && leftLCMeasurement.distance_mm < Constants.LASERCAN_LEFT_THRESHOLD_MM){
+    //     shotCount++;
+    //   }
+    //   laserCanLeftLastMeasurement = leftLCMeasurement.distance_mm;
+    // } 
+    // LaserCan.Measurement rightLCMeasurement = rightLaserCan.getMeasurement();
+    // if (rightLCMeasurement != null && rightLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+    //   if(rightLCMeasurement.distance_mm > Constants.LASERCAN_RIGHT_THRESHOLD_MM && rightLCMeasurement.distance_mm < Constants.LASERCAN_RIGHT_THRESHOLD_MM){
+    //     shotCount++;
+    //   }
+    //   laserCanRightLastMeasurement = rightLCMeasurement.distance_mm;
+    // } 
 
-    shooterLeftVelocitySetPointPublisher.set(leftVelocity);
-    shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
-    shooterRightVelocitySetPointPublisher.set(rightVelocity);
-    shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
-    shotCountPublisher.set(shotCount);
     if(leftShooterVeloControlMode){
-      leftSlingShot.setControl(v_leftVelocityVoltage.withVelocity(leftVelocity));
+      leftSlingShot.setControl(v_leftVelocityVoltage.withVelocity(leftVelocity).withEnableFOC(true));
     }
     else{
       leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
     }
     if(rightShooterVeloControlMode){
-      rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity));
+      rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity).withEnableFOC(true));
     }
     else{
       rightSlingShot.setVoltage(Constants.RIGHT_SLING_MAX_VOLTAGE * rightVoltage);
     }
     // This method will be called once per scheduler run
+    this.updateLogging();
+
+  }
+
+  public void updateLogging(){
+    shooterLeftVelocitySetPointPublisher.set(leftVelocity);
+    shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
+    shooterRightVelocitySetPointPublisher.set(rightVelocity);
+    shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
+    shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
+    shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
+    atLeftVeloPub.set(this.atLeftShootVelocity());
+    atRightVeloPub.set(this.atRightShootVelocity());
   }
 }

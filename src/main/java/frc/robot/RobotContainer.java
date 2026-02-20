@@ -37,11 +37,14 @@ import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
+import frc.robot.Commands.Shooter.Shoot;
 import frc.robot.Commands.Shooter.leftSlingShot;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
 import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.ManualRotate;
+import frc.robot.Commands.Turret.SearchForTarget;
+import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hoods;
@@ -90,6 +93,8 @@ public class RobotContainer {
                                                                                                 new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW));
     
     private final SendableChooser<Command> autoChooser;
+
+    private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()));
 
     private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
                                                             DriverStation.getMatchTime() == 129.0 ||
@@ -145,6 +150,7 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
+        inOwnZone.whileTrue(new SearchForTarget(turret));
 
 
         // OPERATOR CONTROLS
@@ -153,13 +159,14 @@ public class RobotContainer {
         // operator.leftBumper().whileTrue(new IntakeIn(intake));
         // operator.leftBumper().whileTrue(new converyforword(index));
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
-        //operator.rightBumper().whileTrue(new leftSlingShot(shooter));
-        //operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        operator.rightBumper().whileTrue(new LeftUp(index));
-        operator.rightBumper().whileTrue(new RightUp(index));
-        operator.rightBumper().whileTrue(new converyforword(index));
-        operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
-        operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
+        // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
+        // operator.rightBumper().whileTrue(new LeftUp(index));
+        // operator.rightBumper().whileTrue(new RightUp(index));
+        // operator.rightBumper().whileTrue(new converyforword(index));
+        // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
+        // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        operator.rightTrigger().whileTrue(new Shoot(shooter, index));
         // operator.rightTrigger().whileTrue(new converybackwards(index));
         // operator.rightTrigger().whileTrue(new RightDown(index));
         // operator.rightTrigger().whileTrue(new LeftDown(index));
@@ -167,7 +174,6 @@ public class RobotContainer {
         operator.povRight().whileTrue(new ManualRotate(turret, -1.0));
         operator.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         operator.povDown().whileTrue(new TESTSetHoodsLow(hoods));
-
 
     }
 

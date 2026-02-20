@@ -25,6 +25,8 @@ import frc.robot.Commands.Shooter.leftSlingVelocity;
 
 public class tinyPebbleShooter extends SubsystemBase {
 
+  
+
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
 
@@ -71,6 +73,8 @@ public class tinyPebbleShooter extends SubsystemBase {
     //ramprateConfig.withVoltageClosedLoopRampPeriod(50);
     // leftSlingShot.getConfigurator().apply(ramprateConfig);
     // rightSlingShot.getConfigurator().apply(ramprateConfig);
+
+    rightSlingShotConfig.MotorOutput.withInverted(CONSTANTS.RIGHT_SHOOTER_INVERT);
 
     //Lasercan configuration
     // try{

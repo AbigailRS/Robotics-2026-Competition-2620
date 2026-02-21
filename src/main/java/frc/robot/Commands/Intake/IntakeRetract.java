@@ -25,13 +25,14 @@ public class IntakeRetract extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeExtender.setExtendVoltage(-Constants.EXTEND_VOLTAGE_PERCENTAGE);
+    //intakeExtender.setExtendVoltage(-Constants.EXTEND_VOLTAGE_PERCENTAGE);
+    intakeExtender.setExtendPosition(Constants.EXTEND_POSITION_IN);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeExtender.setExtendVoltage(Constants.INTAKE_STOP);
+    //intakeExtender.setExtendVoltage(Constants.INTAKE_STOP);
   }
 
   // Returns true when the command should end.

@@ -24,13 +24,16 @@ public class bigRockIntake extends SubsystemBase {
 
   private double extendVoltage = 0.0;
   private double intakeVoltage = 0.0;
+  private double extendPosition = 0.0;
 
    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Indexer");
   private final DoublePublisher IntakeVoltageSetPublisher = table.getDoubleTopic("Intake Voltage SetPoint").publish(),
                                 ExtendVoltageSetPublisher = table.getDoubleTopic("Extend Voltage SetPoint").publish(),
+                                ExtendPositionSetPublisher = table.getDoubleTopic("Extend Position SetPoint").publish(),
                                 IntakeVoltagePublisher = table.getDoubleTopic("Intake Voltage").publish(),
-                                ExtendVoltagePublisher = table.getDoubleTopic("Extend Voltage").publish();
+                                ExtendVoltagePublisher = table.getDoubleTopic("Extend Voltage").publish(),
+                                ExtendPositionPublisher = table.getDoubleTopic("Extend Position}").publish();
 
   /** Creates a new rockDestroyerInxder. */
 
@@ -49,6 +52,10 @@ public class bigRockIntake extends SubsystemBase {
       this.intakeVoltage = voltageIN;
     }
 
+    public void setExtendPosition(double positionEX){
+      this.extendPosition = positionEX;
+    }
+
   @Override
   public void periodic() {
     rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);
@@ -58,8 +65,11 @@ public class bigRockIntake extends SubsystemBase {
     IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
     ExtendVoltageSetPublisher.set(extendVoltage);
     ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
+    ExtendPositionSetPublisher.set(extendPosition);
+    ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
+
 
 
     // This method will be called once per scheduler run
-  }
+  } 
 }

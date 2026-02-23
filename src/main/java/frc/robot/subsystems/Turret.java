@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
@@ -25,13 +27,15 @@ public class Turret extends SubsystemBase {
   private TalonFX rotateTurret;
   private TalonFXConfiguration rotateTurretConfig;
   private double rotateTurretVoltage;
+  private CANcoder cancoder;
+  private CANcoderConfiguration cancoderConfig;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret");
-  private final DoublePublisher pri_ll_tx_log = table.getDoubleTopic("Primary LL tx").publish(),
-                                sec_ll_tx_log = table.getDoubleTopic("Secondary LL tx").publish(),
-                                turret_voltage_log = table.getDoubleTopic("Turret Voltage").publish(),
-                                turret_current_log = table.getDoubleTopic("Turret Current").publish();
+  private final DoublePublisher pri_ll_tx_pub = table.getDoubleTopic("Primary LL tx").publish(),
+                                sec_ll_tx_pub = table.getDoubleTopic("Secondary LL tx").publish(),
+                                turret_voltage_pub = table.getDoubleTopic("Turret Voltage").publish(),
+                                turret_current_pub = table.getDoubleTopic("Turret Current").publish();
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
@@ -42,6 +46,8 @@ public class Turret extends SubsystemBase {
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
+
+    
     LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
     LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
@@ -98,7 +104,10 @@ public class Turret extends SubsystemBase {
   }
 
   public void updateLogging(){
-
+    pri_ll_tx_pub.set(LimelightHelpers.getTX(Constants.PRIMARY_LL_NAME));
+    sec_ll_tx_pub.set(LimelightHelpers.getTX(Constants.SECONDARY_LL_NAME));
+    turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
+    turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
   }
 
 }

@@ -105,7 +105,7 @@ public class RobotContainer {
                                                         );
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Start Left Neutral Zone Climb");
+        autoChooser = AutoBuilder.buildAutoChooser("Start Loading Side Neutral Zone Climb");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -117,7 +117,7 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? -driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
                     .withVelocityY(-driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )

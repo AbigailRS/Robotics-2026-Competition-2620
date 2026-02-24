@@ -47,7 +47,8 @@ public class Turret extends SubsystemBase {
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
 
-    
+    cancoder = new CANcoder(Constants.TURRET_CANCODER_ID, CANBus.roboRIO());
+
     LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
     LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
@@ -95,6 +96,8 @@ public class Turret extends SubsystemBase {
   public void manualRun(double voltage){
     this.rotateTurretVoltage = voltage;
   }
+
+  
 
   @Override
   public void periodic() {

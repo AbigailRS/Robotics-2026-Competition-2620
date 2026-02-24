@@ -18,6 +18,7 @@ public class Constants {
     public static final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
     public static final double CAMERA_1_TRANSLATION_X = 0.3429;
     public static final double CAMERA_1_TRANSLATION_Y = 0.1143;
@@ -35,20 +36,20 @@ public class Constants {
     public static final double CAMERA_2_ROTATION_YAW = 0.0;
     public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(30.0);
 
-    public static final double CAMERA_3_TRANSLATION_X = 0.0;
-    public static final double CAMERA_3_TRANSLATION_Y = 0.0;
-    public static final double CAMERA_3_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_3_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_3_TRANSLATION_Y = 0.344805;
+    public static final double CAMERA_3_TRANSLATION_Z = 0.0522732;
 
     public static final double CAMERA_3_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_3_ROTATION_YAW = 0.0;
+    public static final double CAMERA_3_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_3_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_4_TRANSLATION_X = 0.0;
-    public static final double CAMERA_4_TRANSLATION_Y = 0.0;
-    public static final double CAMERA_4_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_4_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_4_TRANSLATION_Y = -0.344805;
+    public static final double CAMERA_4_TRANSLATION_Z = 0.0522732;
 
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_4_ROTATION_YAW = 0.0;
+    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
@@ -70,7 +71,9 @@ public class Constants {
     public static final double TURRET_STALL_VELOCITY = 5;
     public static final double TURRET_STALL_CURRENT = 10.0;
 
-    
+    public static final int TURRET_CANCODER_ID = 35;
+    public static final double TURRET_LEFT_LIMIT = -100.0;
+    public static final double TURRET_RIGHT_LIMIT = 100.0; 
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -94,8 +97,8 @@ public class Constants {
     public static final double RIGHT_SLING_MAX_VOLTAGE = 12;
     public static final double VOLTAGE_PERCENTAGE_RIGHT = 1.0;
 
-    public static final double VELOCITY_LEFT_SLING = 90.0;
-    public static final double VELOCITY_RIGHT_SLING = 90.0;
+    public static final double VELOCITY_LEFT_SLING = 50.0;
+    public static final double VELOCITY_RIGHT_SLING = 50.0;
 
     public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;

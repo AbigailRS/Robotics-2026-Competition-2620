@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.6360057061340925,
+        "y": 0.6774179743223976
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.458587731811697,
+        "y": 3.4462910128388025
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Loading Wall"
+    },
+    {
+      "anchor": {
+        "x": 2.2535235378031384,
+        "y": 2.6311554921540665
+      },
+      "prevControl": {
+        "x": 5.061212553495007,
+        "y": 2.4370756062767476
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Loading Side Score"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -95.19442890773519
+  },
+  "useDefaultConstraints": true
+}

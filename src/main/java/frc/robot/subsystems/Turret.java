@@ -29,6 +29,7 @@ public class Turret extends SubsystemBase {
   private double rotateTurretVoltage;
   private CANcoder cancoder;
   private CANcoderConfiguration cancoderConfig;
+  private boolean disableTurret;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret");
@@ -97,7 +98,13 @@ public class Turret extends SubsystemBase {
     this.rotateTurretVoltage = voltage;
   }
 
+  public void setDisableTurret(boolean disableTurret){
+    this.disableTurret = disableTurret;
+  }
   
+  public boolean getIfTurretDisabled(){
+    return this.disableTurret;
+  }
 
   @Override
   public void periodic() {

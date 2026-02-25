@@ -4,12 +4,16 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -38,7 +42,8 @@ public class Turret extends SubsystemBase {
                                 sec_ll_tx_pub = table.getDoubleTopic("Secondary LL tx").publish(),
                                 turret_voltage_pub = table.getDoubleTopic("Turret Voltage").publish(),
                                 turret_current_pub = table.getDoubleTopic("Turret Current").publish(),
-                                turret_velocity_pub = table.getDoubleTopic("Turret Velocity").publish();
+                                turret_velocity_pub = table.getDoubleTopic("Turret Velocity").publish(),
+                                fused_encoder_pub = table.getDoubleTopic("Fused Encoder Pos").publish();
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
@@ -48,9 +53,18 @@ public class Turret extends SubsystemBase {
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
-    rotateTurret.getConfigurator().apply(rotateTurretConfig);
 
     cancoder = new CANcoder(Constants.TURRET_CANCODER_ID, CANBus.roboRIO());
+    cancoderConfig = new CANcoderConfiguration();
+    cancoderConfig.MagnetSensor.withAbsoluteSensorDiscontinuityPoint(Rotations.of(0.5));
+    cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    cancoderConfig.MagnetSensor.withMagnetOffset(Rotations.of(Constants.TURRET_CANCODER_OFFSET));
+    cancoder.getConfigurator().apply(cancoderConfig);
+
+    rotateTurretConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    rotateTurretConfig.Feedback.RotorToSensorRatio = Constants.TURRET_ROTOR_TO_CANCODER_RATIO;
+    rotateTurret.getConfigurator().apply(rotateTurretConfig);
+
 
     LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
     LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
@@ -121,6 +135,7 @@ public class Turret extends SubsystemBase {
     turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
     turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
     turret_velocity_pub.set(rotateTurret.getVelocity().getValueAsDouble());
+    fused_encoder_pub.set(rotateTurret.getPosition().getValueAsDouble());
   }
 
 }

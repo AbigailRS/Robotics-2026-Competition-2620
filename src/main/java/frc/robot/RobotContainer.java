@@ -162,17 +162,19 @@ public class RobotContainer {
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        // operator.rightBumper().whileTrue(new LeftUp(index));
-        // operator.rightBumper().whileTrue(new RightUp(index));
-        // operator.rightBumper().whileTrue(new converyforword(index));
-        // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
-        // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
-        operator.rightTrigger().whileTrue(new Shoot(shooter, index));
+
+        operator.rightBumper().whileTrue(new LeftUp(index));
+        operator.rightBumper().whileTrue(new RightUp(index));
+        operator.rightBumper().whileTrue(new converyforword(index));
+        operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
+        operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        operator.x().whileTrue(new SearchForTarget(turret));
+        //operator.rightTrigger().whileTrue(new Shoot(shooter, index));
         // operator.rightTrigger().whileTrue(new converybackwards(index));
         // operator.rightTrigger().whileTrue(new RightDown(index));
         // operator.rightTrigger().whileTrue(new LeftDown(index));
-        operator.povLeft().whileTrue(new ManualRotate(turret, 1.0));
-        operator.povRight().whileTrue(new ManualRotate(turret, -1.0));
+        operator.povLeft().whileTrue(new ManualRotate(turret, 12.0));
+        operator.povRight().whileTrue(new ManualRotate(turret, -12.0));
         operator.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         operator.povDown().whileTrue(new TESTSetHoodsLow(hoods));
 

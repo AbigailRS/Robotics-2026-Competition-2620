@@ -11,6 +11,7 @@ import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -44,11 +45,11 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   private int shotCount = 0, laserCanLeftLastMeasurement = 0, laserCanRightLastMeasurement = 0;
 
-  private boolean leftShooterVeloControlMode = true, rightShooterVeloControlMode = true;
+  private boolean leftShooterVeloControlMode = false, rightShooterVeloControlMode = false;
 
 
   Slot1Configs slot1Configs = new Slot1Configs();
-  Slot2Configs slot2Configs = new Slot2Configs();
+  Slot1Configs rightSlotConfigs = new Slot1Configs();
   final VelocityVoltage v_rightVelocityVoltage = new VelocityVoltage(0).withSlot(1);
   final VelocityVoltage v_leftVelocityVoltage = new VelocityVoltage(0).withSlot(1);
 
@@ -64,17 +65,24 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
-    slot1Configs.kP = 1.0;
+    slot1Configs.kP = 1.5;
     slot1Configs.kI = 0;
     slot1Configs.kD = 0.0;
-    rightSlingShot.getConfigurator().apply(slot1Configs);
-    leftSlingShot.getConfigurator().apply(slot1Configs);
+    rightSlotConfigs.kP = 1.5;
+    rightSlotConfigs.kI = 0.0;
+    rightSlotConfigs.kD = 0.0;
+    rightSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    leftSlingShotConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    rightSlingShotConfig.withSlot1(rightSlotConfigs);
+    leftSlingShotConfig.withSlot1(slot1Configs);
+    rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
+    leftSlingShot.getConfigurator().apply(leftSlingShotConfig);
 
     //ramprateConfig.withVoltageClosedLoopRampPeriod(50);
     // leftSlingShot.getConfigurator().apply(ramprateConfig);
     // rightSlingShot.getConfigurator().apply(ramprateConfig);
 
-    rightSlingShotConfig.MotorOutput.withInverted(Constants.RIGHT_SHOOTER_INVERT); //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
+    //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
     //   leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
     //   leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
     //   rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
@@ -104,6 +112,7 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   public void setRightSlingVelocity(double velocity){
     this.rightVelocity = velocity;
+    System.out.println("Right set" + velocity);
     rightShooterVeloControlMode = true;
   }
 
@@ -154,6 +163,7 @@ public class tinyPebbleShooter extends SubsystemBase {
       leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
     }
     if(rightShooterVeloControlMode){
+      System.out.println("Right Control Set: " + rightVelocity);
       rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity).withEnableFOC(true));
     }
     else{

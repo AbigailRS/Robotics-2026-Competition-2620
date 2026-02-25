@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -36,7 +37,8 @@ public class Turret extends SubsystemBase {
   private final DoublePublisher pri_ll_tx_pub = table.getDoubleTopic("Primary LL tx").publish(),
                                 sec_ll_tx_pub = table.getDoubleTopic("Secondary LL tx").publish(),
                                 turret_voltage_pub = table.getDoubleTopic("Turret Voltage").publish(),
-                                turret_current_pub = table.getDoubleTopic("Turret Current").publish();
+                                turret_current_pub = table.getDoubleTopic("Turret Current").publish(),
+                                turret_velocity_pub = table.getDoubleTopic("Turret Velocity").publish();
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
@@ -118,6 +120,7 @@ public class Turret extends SubsystemBase {
     sec_ll_tx_pub.set(LimelightHelpers.getTX(Constants.SECONDARY_LL_NAME));
     turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
     turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
+    turret_velocity_pub.set(rotateTurret.getVelocity().getValueAsDouble());
   }
 
 }

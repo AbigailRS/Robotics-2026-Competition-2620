@@ -68,7 +68,7 @@ public class Constants {
     public static final double TURRET_CURRENT_LIMIT = 15; //amps
     public static final NeutralModeValue TURRET_NEUTRALMODE = NeutralModeValue.Coast;
     public static final double TURRET_SEARCH_VOLTAGE = 2.0;
-    public static final double TURRET_STALL_VELOCITY = 5;
+    public static final double TURRET_STALL_VELOCITY = 2;
     public static final double TURRET_STALL_CURRENT = 10.0;
 
     public static final int TURRET_CANCODER_ID = 35;
@@ -93,12 +93,12 @@ public class Constants {
     public static final int RIGHT_LASERCAN_CANID = 24;
     
     public static final double LEFT_SLING_MAX_VOLTAGE = 12;
-    public static final double VOLTAGE_PERCENTAGE_LEFT = 1.0;
+    public static final double VOLTAGE_PERCENTAGE_LEFT = 0.95;
     public static final double RIGHT_SLING_MAX_VOLTAGE = 12;
-    public static final double VOLTAGE_PERCENTAGE_RIGHT = 1.0;
+    public static final double VOLTAGE_PERCENTAGE_RIGHT = 0.95;
 
-    public static final double VELOCITY_LEFT_SLING = 50.0;
-    public static final double VELOCITY_RIGHT_SLING = 50.0;
+    public static final double VELOCITY_LEFT_SLING = 65.0;
+    public static final double VELOCITY_RIGHT_SLING = 65.0;
 
     public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;
@@ -109,8 +109,6 @@ public class Constants {
 
     public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
-
-    public static final InvertedValue RIGHT_SHOOTER_INVERT = InvertedValue.Clockwise_Positive;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -134,11 +132,11 @@ public class Constants {
     public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final int LEFT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.4;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.35;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
-    public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.75;
+    public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;
-    public static final double RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.75;
+    public static final double RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
 
     public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.Clockwise_Positive;
     public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.Clockwise_Positive;

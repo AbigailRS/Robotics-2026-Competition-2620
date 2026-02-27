@@ -57,9 +57,9 @@ public class Constants {
 
 
     //Turret Constants
-    public static final String PRIMARY_LL_NAME = "PrimaryLL";
-    public static final String SECONDARY_LL_NAME = "SecondaryLL";
-    public static final double TURRET_P = 1.0;
+    public static final String PRIMARY_LL_NAME = "limelight-left";
+    public static final String SECONDARY_LL_NAME = "limelight-right";
+    public static final double TURRET_P = 0.1;
     public static final double TURRET_I = 0.0;
     public static final double TURRET_D = 0.0;
     public static final double TURRET_MAX_OUTPUT_VOLTS = 3.0;
@@ -67,9 +67,9 @@ public class Constants {
     public static final InvertedValue TURRET_INVERSION = InvertedValue.Clockwise_Positive;
     public static final double TURRET_CURRENT_LIMIT = 15; //amps
     public static final NeutralModeValue TURRET_NEUTRALMODE = NeutralModeValue.Coast;
-    public static final double TURRET_SEARCH_VOLTAGE = 2.0;
-    public static final double TURRET_STALL_VELOCITY = 2;
-    public static final double TURRET_STALL_CURRENT = 10.0;
+    public static final double TURRET_SEARCH_VOLTAGE = 4.0;
+    public static final double TURRET_STALL_VELOCITY = 0.2;
+    public static final double TURRET_STALL_CURRENT = 15.0;
 
     public static final int TURRET_CANCODER_ID = 35;
     public static final double TURRET_LEFT_LIMIT = -100.0;
@@ -152,5 +152,9 @@ public class Constants {
     //Hoods
     public static final int LEFT_HOOD_SERVO = 0;
     public static final int RIGHT_HOOD_SERVO = 1;
+    public static final double HOOD_LEFT_HIGH_POSITION = .95;
+    public static final double HOOD_LEFT_LOW_POSITION = 0.01;
+    public static final double HOOD_RIGHT_HIGH_POSITION = 0.01;
+    public static final double HOOD_RIGHT_LOW_POSITION = .95;
 
 }

@@ -45,6 +45,7 @@ import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.Commands.Turret.SearchForTarget;
+import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -162,6 +163,7 @@ public class RobotContainer {
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
+        driver.x().whileTrue(new TrackHub(drivetrain, turret));
 
         operator.rightBumper().whileTrue(new LeftUp(index));
         operator.rightBumper().whileTrue(new RightUp(index));
@@ -169,14 +171,14 @@ public class RobotContainer {
         operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
         operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
         operator.x().whileTrue(new SearchForTarget(turret));
-        //operator.rightTrigger().whileTrue(new Shoot(shooter, index));
+        driver.rightTrigger().whileTrue(new Shoot(shooter, index, hoods));
         // operator.rightTrigger().whileTrue(new converybackwards(index));
         // operator.rightTrigger().whileTrue(new RightDown(index));
         // operator.rightTrigger().whileTrue(new LeftDown(index));
         operator.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         operator.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        operator.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-        operator.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
 
     }
 

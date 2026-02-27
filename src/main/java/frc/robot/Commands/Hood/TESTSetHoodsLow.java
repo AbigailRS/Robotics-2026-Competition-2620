@@ -5,6 +5,7 @@
 package frc.robot.Commands.Hood;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Hoods;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -24,8 +25,8 @@ public class TESTSetHoodsLow extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hoodSubsystem.setRightServoPosition(0.25);
-    hoodSubsystem.setLeftServoPosition(0.25);
+    hoodSubsystem.setRightServoPosition(Constants.HOOD_RIGHT_LOW_POSITION);
+    hoodSubsystem.setLeftServoPosition(Constants.HOOD_LEFT_LOW_POSITION);
   }
 
   // Called once the command ends or is interrupted.

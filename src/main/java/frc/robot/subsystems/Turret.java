@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -38,12 +39,13 @@ public class Turret extends SubsystemBase {
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret");
-  private final DoublePublisher pri_ll_tx_pub = table.getDoubleTopic("Primary LL tx").publish(),
-                                sec_ll_tx_pub = table.getDoubleTopic("Secondary LL tx").publish(),
+  private final DoublePublisher pri_ll_ty_pub = table.getDoubleTopic("Primary LL tx").publish(),
+                                sec_ll_ty_pub = table.getDoubleTopic("Secondary LL tx").publish(),
                                 turret_voltage_pub = table.getDoubleTopic("Turret Voltage").publish(),
                                 turret_current_pub = table.getDoubleTopic("Turret Current").publish(),
                                 turret_velocity_pub = table.getDoubleTopic("Turret Velocity").publish(),
                                 fused_encoder_pub = table.getDoubleTopic("Fused Encoder Pos").publish();
+  private final BooleanPublisher stalled_pub = table.getBooleanTopic("isStalled").publish();
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
@@ -54,20 +56,20 @@ public class Turret extends SubsystemBase {
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
 
-    cancoder = new CANcoder(Constants.TURRET_CANCODER_ID, CANBus.roboRIO());
-    cancoderConfig = new CANcoderConfiguration();
-    cancoderConfig.MagnetSensor.withAbsoluteSensorDiscontinuityPoint(Rotations.of(0.5));
-    cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    cancoderConfig.MagnetSensor.withMagnetOffset(Rotations.of(Constants.TURRET_CANCODER_OFFSET));
-    cancoder.getConfigurator().apply(cancoderConfig);
+    // cancoder = new CANcoder(Constants.TURRET_CANCODER_ID, CANBus.roboRIO());
+    // cancoderConfig = new CANcoderConfiguration();
+    // cancoderConfig.MagnetSensor.withAbsoluteSensorDiscontinuityPoint(Rotations.of(0.5));
+    // cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    // cancoderConfig.MagnetSensor.withMagnetOffset(Rotations.of(Constants.TURRET_CANCODER_OFFSET));
+    // cancoder.getConfigurator().apply(cancoderConfig);
 
     rotateTurretConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     rotateTurretConfig.Feedback.RotorToSensorRatio = Constants.TURRET_ROTOR_TO_CANCODER_RATIO;
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
 
 
-    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
-    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
+    // LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
+    // LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   public void setTurretVoltage(double voltage){
@@ -102,7 +104,7 @@ public class Turret extends SubsystemBase {
   }
 
   public boolean isStalled(){
-    if(rotateTurret.getStatorCurrent().getValueAsDouble() > Constants.TURRET_STALL_CURRENT && Math.abs(rotateTurret.getVelocity().getValueAsDouble()) > Constants.TURRET_STALL_VELOCITY){
+    if(rotateTurret.getStatorCurrent().getValueAsDouble() > Constants.TURRET_STALL_CURRENT && Math.abs(rotateTurret.getVelocity().getValueAsDouble()) < Constants.TURRET_STALL_VELOCITY){
       return true;
     }
     else{
@@ -130,12 +132,13 @@ public class Turret extends SubsystemBase {
   }
 
   public void updateLogging(){
-    pri_ll_tx_pub.set(LimelightHelpers.getTX(Constants.PRIMARY_LL_NAME));
-    sec_ll_tx_pub.set(LimelightHelpers.getTX(Constants.SECONDARY_LL_NAME));
-    turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
-    turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
-    turret_velocity_pub.set(rotateTurret.getVelocity().getValueAsDouble());
-    fused_encoder_pub.set(rotateTurret.getPosition().getValueAsDouble());
+    // pri_ll_ty_pub.set(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME));
+    // sec_ll_ty_pub.set(LimelightHelpers.getTY(Constants.SECONDARY_LL_NAME));
+    // turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
+    // turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
+    // turret_velocity_pub.set(rotateTurret.getVelocity().getValueAsDouble());
+    // fused_encoder_pub.set(rotateTurret.getPosition().getValueAsDouble());
+    // stalled_pub.set(isStalled());
   }
 
 }

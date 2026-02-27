@@ -8,6 +8,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
@@ -16,15 +17,17 @@ public class Shoot extends Command {
   /** Creates a new Shoot. */
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
+  Hoods hoods;
   boolean leftSpeedReached, rightSpeedReached;
 
   InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
 
 
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer) {
+  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, Hoods hoods) {
     this.indexer = indexer;
     this.shooter = shooter;
-    addRequirements(indexer, shooter);
+    this.hoods = hoods;
+    addRequirements(indexer, shooter, hoods);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -76,6 +79,7 @@ public class Shoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Test");
     shooter.setLeftSlingShotVoltage(0);
     shooter.setRightSlingShotVoltage(0);
     indexer.setConveryVoltage(0.0);

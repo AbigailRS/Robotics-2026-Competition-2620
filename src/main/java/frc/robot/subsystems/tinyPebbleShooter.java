@@ -65,10 +65,12 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
-    slot1Configs.kP = 1.5;
+    slot1Configs.kV = 0.11;
+    slot1Configs.kP = 0.025;
     slot1Configs.kI = 0;
     slot1Configs.kD = 0.0;
-    rightSlotConfigs.kP = 1.5;
+    rightSlotConfigs.kV = 0.11;
+    rightSlotConfigs.kP = 0.025;
     rightSlotConfigs.kI = 0.0;
     rightSlotConfigs.kD = 0.0;
     rightSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
@@ -163,7 +165,6 @@ public class tinyPebbleShooter extends SubsystemBase {
       leftSlingShot.setVoltage(Constants.LEFT_SLING_MAX_VOLTAGE * leftVoltage);
     }
     if(rightShooterVeloControlMode){
-      System.out.println("Right Control Set: " + rightVelocity);
       rightSlingShot.setControl(v_rightVelocityVoltage.withVelocity(rightVelocity).withEnableFOC(true));
     }
     else{

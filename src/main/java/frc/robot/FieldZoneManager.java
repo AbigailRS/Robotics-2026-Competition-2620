@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -27,6 +28,15 @@ public class FieldZoneManager {
         }
         else{
             return false;
+        }
+    }
+
+    public static double getDistanceTogoal(Translation2d robotTranslation){
+        if(DriverStation.getAlliance().get() == Alliance.Red){
+            return Math.sqrt(Math.pow(Constants.POSE_RED_HUB.getX() - robotTranslation.getX(), 2) + Math.pow(Constants.POSE_RED_HUB.getY() - robotTranslation.getY(), 2));
+        }
+        else{
+            return Math.sqrt(Math.pow(Constants.POSE_BLUE_HUB.getX() - robotTranslation.getX(), 2) + Math.pow(Constants.POSE_BLUE_HUB.getY() - robotTranslation.getY(), 2));
         }
     }
 }

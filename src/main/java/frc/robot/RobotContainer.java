@@ -163,7 +163,7 @@ public class RobotContainer {
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        driver.x().whileTrue(new TrackHub(drivetrain, turret));
+        driver.x().whileTrue(new TrackHub(drivetrain, turret, hoods));
 
         operator.rightBumper().whileTrue(new LeftUp(index));
         operator.rightBumper().whileTrue(new RightUp(index));
@@ -171,7 +171,7 @@ public class RobotContainer {
         operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
         operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
         operator.x().whileTrue(new SearchForTarget(turret));
-        driver.rightTrigger().whileTrue(new Shoot(shooter, index, hoods));
+        driver.rightTrigger().whileTrue(new Shoot(shooter, index));
         // operator.rightTrigger().whileTrue(new converybackwards(index));
         // operator.rightTrigger().whileTrue(new RightDown(index));
         // operator.rightTrigger().whileTrue(new LeftDown(index));

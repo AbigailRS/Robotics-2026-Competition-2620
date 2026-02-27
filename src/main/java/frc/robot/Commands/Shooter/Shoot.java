@@ -23,10 +23,9 @@ public class Shoot extends Command {
   InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
 
 
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, Hoods hoods) {
+  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer) {
     this.indexer = indexer;
     this.shooter = shooter;
-    this.hoods = hoods;
     addRequirements(indexer, shooter, hoods);
     // Use addRequirements() here to declare subsystem dependencies.
   }

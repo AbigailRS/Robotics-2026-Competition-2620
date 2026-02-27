@@ -17,4 +17,16 @@ public class FieldZoneManager {
         }
         return false;
     }
+
+    public static boolean inBumpzone(double x){
+        if(x > 4.0 && x < 5.5){
+            return true;
+        }
+        else if(x > 11.0 && x < 12.5){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

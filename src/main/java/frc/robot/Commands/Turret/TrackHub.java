@@ -44,10 +44,12 @@ public class TrackHub extends Command {
   public void execute() {
     turret.updateTargetTags();
     if(turret.priLLHasTarget()){
-      voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.PRIMARY_LL_NAME), 0);
+      voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME), 0);
+      System.out.print("Pri has Target: " + voltage);
     }
     else if(turret.secLLHasTarget()){
-      voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTX(Constants.SECONDARY_LL_NAME), 0);
+      voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTY(Constants.SECONDARY_LL_NAME), 0);
+      System.out.print("Sec has Target: " + voltage);
     }
     else{
       //Add code for pose based aiming
@@ -59,8 +61,8 @@ public class TrackHub extends Command {
   @Override
   public void end(boolean interrupted) {
     turret.setTurretVoltage(0);
-    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
-    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
+    // LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
+    // LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   // Returns true when the command should end.

@@ -5,29 +5,30 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Shoot extends Command {
+public class AutoShoot extends Command {
   /** Creates a new Shoot. */
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
-  Hoods hoods;
   boolean leftSpeedReached, rightSpeedReached;
+  double timeOut;
+  Timer timeoutTimer;
 
   InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
 
 
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, Hoods hoods) {
+  public AutoShoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, double timeOut) {
     this.indexer = indexer;
     this.shooter = shooter;
-    this.hoods = hoods;
-    addRequirements(indexer, shooter, hoods);
+    this.timeOut = timeOut;
+    addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -36,6 +37,9 @@ public class Shoot extends Command {
   public void initialize() {
     leftSpeedReached = false;
     rightSpeedReached = false;
+    timeoutTimer = new Timer();
+    timeoutTimer.reset();
+    timeoutTimer.start();
 
     velocityIPMap.put(0.5, 90.0);
     velocityIPMap.put(1.0, 92.0);
@@ -79,17 +83,20 @@ public class Shoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Test");
     shooter.setLeftSlingShotVoltage(0);
     shooter.setRightSlingShotVoltage(0);
     indexer.setConveryVoltage(0.0);
     indexer.setLeftRockSumusherVoltage(0.0);
     indexer.setRightRockSmusherVoltage(0.0);
+    timeoutTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(timeoutTimer.get() > timeOut){
+      return true;
+    }
     return false;
   }
 }

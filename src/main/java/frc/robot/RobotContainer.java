@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,6 +45,7 @@ import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.Commands.Turret.SearchForTarget;
+import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -105,7 +107,7 @@ public class RobotContainer {
                                                         );
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Start Left Neutral Zone Climb");
+        autoChooser = AutoBuilder.buildAutoChooser("Start Loading Side Neutral Zone Climb");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -117,7 +119,7 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? -driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
                     .withVelocityY(-driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
@@ -161,19 +163,22 @@ public class RobotContainer {
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        // operator.rightBumper().whileTrue(new LeftUp(index));
-        // operator.rightBumper().whileTrue(new RightUp(index));
-        // operator.rightBumper().whileTrue(new converyforword(index));
-        // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
-        // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
-        operator.rightTrigger().whileTrue(new Shoot(shooter, index));
+        driver.x().whileTrue(new TrackHub(drivetrain, turret));
+
+        operator.rightBumper().whileTrue(new LeftUp(index));
+        operator.rightBumper().whileTrue(new RightUp(index));
+        operator.rightBumper().whileTrue(new converyforword(index));
+        operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
+        operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        operator.x().whileTrue(new SearchForTarget(turret));
+        driver.rightTrigger().whileTrue(new Shoot(shooter, index, hoods));
         // operator.rightTrigger().whileTrue(new converybackwards(index));
         // operator.rightTrigger().whileTrue(new RightDown(index));
         // operator.rightTrigger().whileTrue(new LeftDown(index));
-        operator.povLeft().whileTrue(new ManualRotate(turret, 1.0));
-        operator.povRight().whileTrue(new ManualRotate(turret, -1.0));
-        operator.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-        operator.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        operator.povLeft().whileTrue(new ManualRotate(turret, 12.0));
+        operator.povRight().whileTrue(new ManualRotate(turret, -12.0));
+        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
 
     }
 

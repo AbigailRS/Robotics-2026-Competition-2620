@@ -18,6 +18,7 @@ public class Constants {
     public static final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
     public static final double CAMERA_1_TRANSLATION_X = 0.3429;
     public static final double CAMERA_1_TRANSLATION_Y = 0.1143;
@@ -35,20 +36,20 @@ public class Constants {
     public static final double CAMERA_2_ROTATION_YAW = 0.0;
     public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(30.0);
 
-    public static final double CAMERA_3_TRANSLATION_X = 0.0;
-    public static final double CAMERA_3_TRANSLATION_Y = 0.0;
-    public static final double CAMERA_3_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_3_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_3_TRANSLATION_Y = 0.344805;
+    public static final double CAMERA_3_TRANSLATION_Z = 0.0522732;
 
     public static final double CAMERA_3_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_3_ROTATION_YAW = 0.0;
+    public static final double CAMERA_3_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_3_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_4_TRANSLATION_X = 0.0;
-    public static final double CAMERA_4_TRANSLATION_Y = 0.0;
-    public static final double CAMERA_4_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_4_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_4_TRANSLATION_Y = -0.344805;
+    public static final double CAMERA_4_TRANSLATION_Z = 0.0522732;
 
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_4_ROTATION_YAW = 0.0;
+    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
@@ -56,9 +57,9 @@ public class Constants {
 
 
     //Turret Constants
-    public static final String PRIMARY_LL_NAME = "PrimaryLL";
-    public static final String SECONDARY_LL_NAME = "SecondaryLL";
-    public static final double TURRET_P = 1.0;
+    public static final String PRIMARY_LL_NAME = "limelight-left";
+    public static final String SECONDARY_LL_NAME = "limelight-right";
+    public static final double TURRET_P = 0.1;
     public static final double TURRET_I = 0.0;
     public static final double TURRET_D = 0.0;
     public static final double TURRET_MAX_OUTPUT_VOLTS = 3.0;
@@ -66,11 +67,15 @@ public class Constants {
     public static final InvertedValue TURRET_INVERSION = InvertedValue.Clockwise_Positive;
     public static final double TURRET_CURRENT_LIMIT = 15; //amps
     public static final NeutralModeValue TURRET_NEUTRALMODE = NeutralModeValue.Coast;
-    public static final double TURRET_SEARCH_VOLTAGE = 2.0;
-    public static final double TURRET_STALL_VELOCITY = 5;
-    public static final double TURRET_STALL_CURRENT = 10.0;
+    public static final double TURRET_SEARCH_VOLTAGE = 4.0;
+    public static final double TURRET_STALL_VELOCITY = 0.2;
+    public static final double TURRET_STALL_CURRENT = 15.0;
 
-    
+    public static final int TURRET_CANCODER_ID = 35;
+    public static final double TURRET_LEFT_LIMIT = -100.0;
+    public static final double TURRET_RIGHT_LIMIT = 100.0; 
+    public static final double TURRET_CANCODER_OFFSET = 0.0;
+    public static final double TURRET_ROTOR_TO_CANCODER_RATIO = 25.0;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -90,12 +95,12 @@ public class Constants {
     public static final int RIGHT_LASERCAN_CANID = 24;
     
     public static final double LEFT_SLING_MAX_VOLTAGE = 12;
-    public static final double VOLTAGE_PERCENTAGE_LEFT = 1.0;
+    public static final double VOLTAGE_PERCENTAGE_LEFT = 0.95;
     public static final double RIGHT_SLING_MAX_VOLTAGE = 12;
-    public static final double VOLTAGE_PERCENTAGE_RIGHT = 1.0;
+    public static final double VOLTAGE_PERCENTAGE_RIGHT = 0.95;
 
-    public static final double VELOCITY_LEFT_SLING = 90.0;
-    public static final double VELOCITY_RIGHT_SLING = 90.0;
+    public static final double VELOCITY_LEFT_SLING = 65.0;
+    public static final double VELOCITY_RIGHT_SLING = 65.0;
 
     public static final double LAZY_SUSAN_STOP = 0.0;
     public static final double LEFT_SLING_STOP = 0.0;
@@ -106,8 +111,6 @@ public class Constants {
 
     public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
-
-    public static final InvertedValue RIGHT_SHOOTER_INVERT = InvertedValue.Clockwise_Positive;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -135,11 +138,11 @@ public class Constants {
     public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final int LEFT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.4;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.35;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
-    public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.75;
+    public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;
-    public static final double RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.75;
+    public static final double RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
 
     public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.Clockwise_Positive;
     public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.Clockwise_Positive;
@@ -153,5 +156,9 @@ public class Constants {
     //Hoods
     public static final int LEFT_HOOD_SERVO = 0;
     public static final int RIGHT_HOOD_SERVO = 1;
+    public static final double HOOD_LEFT_HIGH_POSITION = .95;
+    public static final double HOOD_LEFT_LOW_POSITION = 0.01;
+    public static final double HOOD_RIGHT_HIGH_POSITION = 0.01;
+    public static final double HOOD_RIGHT_LOW_POSITION = .95;
 
 }

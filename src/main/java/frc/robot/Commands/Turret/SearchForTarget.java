@@ -33,10 +33,10 @@ public class SearchForTarget extends Command {
   @Override
   public void execute() {
     if(leftPhase){
-      turret.setTurretVoltage(-Constants.TURRET_SEARCH_VOLTAGE);
+      turret.setTurretVoltage(Constants.TURRET_SEARCH_VOLTAGE);
     }
     else{
-      turret.setTurretVoltage(Constants.TURRET_SEARCH_VOLTAGE);
+      turret.setTurretVoltage(-Constants.TURRET_SEARCH_VOLTAGE);
     }
 
     if(turret.isStalled()){

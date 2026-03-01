@@ -31,6 +31,7 @@ public class ManualRotate extends Command {
   @Override
   public void execute() {
     turret.manualRun(this.voltage);
+    turret.setManualRotate(true);
   }
 
   // Called once the command ends or is interrupted.

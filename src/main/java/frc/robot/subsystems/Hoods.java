@@ -21,7 +21,7 @@ public class Hoods extends SubsystemBase {
   private double leftServoPos, rightServoPos;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  private final NetworkTable table = inst.getTable("Indexer");
+  private final NetworkTable table = inst.getTable("Hoods");
   private final DoublePublisher hoodLeftSetPositionPublisher = table.getDoubleTopic("Hood Left Position SetPoint").publish(),
                                 hoodRightSetPositionPublisher = table.getDoubleTopic("Hood Right Position SetPoint").publish(),
                                 hoodLeftPositionPublisher = table.getDoubleTopic("Hood Left Position").publish(),
@@ -46,10 +46,10 @@ public class Hoods extends SubsystemBase {
     leftHoodieServo.set(leftServoPos);
     rightHoodieServo.set(rightServoPos);
 
-    hoodLeftSetPositionPublisher.set(leftServoPos);
-    hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
-    hoodRightSetPositionPublisher.set(rightServoPos);
-    hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
+    // hoodLeftSetPositionPublisher.set(leftServoPos);
+    // hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
+    // hoodRightSetPositionPublisher.set(rightServoPos);
+    // hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
 
   }
 }

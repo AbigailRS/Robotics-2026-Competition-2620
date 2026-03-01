@@ -42,31 +42,29 @@ public class TrackHub extends Command {
   public void initialize() {
     rotateTurretPIDController = new PIDController(Constants.TURRET_P, Constants.TURRET_I, Constants.TURRET_D);
     voltage = 0.0;
-    LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
-    LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
 
-    leftHoodIMap.put(1.0, 0.1);
-    leftHoodIMap.put(3.0, 0.15);
-    leftHoodIMap.put(5.0, 0.4);
-    leftHoodIMap.put(10.0, 0.8);
+    leftHoodIMap.put(1.0, 0.01);
+    leftHoodIMap.put(2.0, 0.05);
+    leftHoodIMap.put(3.0, 0.05);
+    leftHoodIMap.put(5.0, 0.2);
 
-    rightHoodIMap.put(1.0, 0.9);
-    rightHoodIMap.put(3.0, 0.85);
-    rightHoodIMap.put(5.0, 0.6);
-    rightHoodIMap.put(10.0, 0.2);
+    rightHoodIMap.put(1.0, 0.99);
+    rightHoodIMap.put(2.0, 0.95);
+    rightHoodIMap.put(3.0, 0.95);
+    rightHoodIMap.put(5.0, 0.8);
+
+    turret.updateTargetTags();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.updateTargetTags();
 
     if(turret.priLLHasTarget()){
       voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME), 0);
     }
     else if(turret.secLLHasTarget()){
-      voltage = rotateTurretPIDController.calculate(LimelightHelpers.getTY(Constants.SECONDARY_LL_NAME), 0);
-
+      voltage = rotateTurretPIDController.calculate(-LimelightHelpers.getTY(Constants.SECONDARY_LL_NAME), 0);
     }
     else{
       //Add code for pose based aiming
@@ -80,8 +78,6 @@ public class TrackHub extends Command {
   @Override
   public void end(boolean interrupted) {
     turret.setTurretVoltage(0);
-    // LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
-    // LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   // Returns true when the command should end.

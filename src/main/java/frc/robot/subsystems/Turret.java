@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,6 +37,9 @@ public class Turret extends SubsystemBase {
   private CANcoder cancoder;
   private CANcoderConfiguration cancoderConfig;
   private boolean disableTurret;
+  private Timer lastSightedTimer = new Timer();
+  private boolean lastSeenDirectionLeft = true;
+  private boolean manualRotation = false;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret");
@@ -67,9 +71,6 @@ public class Turret extends SubsystemBase {
     rotateTurretConfig.Feedback.RotorToSensorRatio = Constants.TURRET_ROTOR_TO_CANCODER_RATIO;
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
 
-
-    // LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
-    // LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
   }
 
   public void setTurretVoltage(double voltage){
@@ -124,10 +125,40 @@ public class Turret extends SubsystemBase {
     return this.disableTurret;
   }
 
+  public double getTimeSinceLastSighted(){
+    return lastSightedTimer.get();
+  }
+
+  public boolean getLastSeenDriectionLeft(){
+    return lastSeenDirectionLeft;
+  }
+
+  public void setManualRotate(boolean manualRotateValue){
+    manualRotation = manualRotateValue;
+  }
+
+  public boolean manualRotateEnabled(){
+    return manualRotation;
+  }
+
   @Override
   public void periodic() {
     rotateTurret.setVoltage(rotateTurretVoltage);
-    updateLogging();
+    if(!priLLHasTarget() && !secLLHasTarget()){
+      lastSightedTimer.start();
+    }
+    else{
+      lastSightedTimer.reset();
+      lastSightedTimer.stop();
+    }
+
+    if(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME) > 15.0){
+      lastSeenDirectionLeft = false;
+    }
+    else if(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME) < -15.0){
+      lastSeenDirectionLeft = true;
+    }
+    //updateLogging();
     
   }
 

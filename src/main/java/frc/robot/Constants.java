@@ -23,15 +23,15 @@ public class Constants {
     public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
     public static final double CAMERA_1_TRANSLATION_X = 0.1;
-    public static final double CAMERA_1_TRANSLATION_Y = 0.344805;
+    public static final double CAMERA_1_TRANSLATION_Y = 0.3;
     public static final double CAMERA_1_TRANSLATION_Z = 0.0;
 
     public static final double CAMERA_1_ROTATION_ROLL = 0.0;
     public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(15.0);
     public static final double CAMERA_1_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_2_TRANSLATION_X = 0.3429;
-    public static final double CAMERA_2_TRANSLATION_Y = -0.344805;
+    public static final double CAMERA_2_TRANSLATION_X = -0.1;
+    public static final double CAMERA_2_TRANSLATION_Y = -0.3;
     public static final double CAMERA_2_TRANSLATION_Z = 0.0;
 
     public static final double CAMERA_2_ROTATION_ROLL = 0.0;

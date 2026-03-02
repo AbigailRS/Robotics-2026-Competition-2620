@@ -78,8 +78,9 @@ public class TrackHub_SOM extends Command {
 
     // LimelightHelpers.setFiducial3DOffset(Constants.PRIMARY_LL_NAME, xSpeedMap.get(drivetrain.getSpeedx()) - 0.5, ySpeedMap.get(drivetrain.getSpeedy()), 0.0);
     // LimelightHelpers.setFiducial3DOffset(Constants.SECONDARY_LL_NAME, xSpeedMap.get(drivetrain.getSpeedx()) - 0.5, ySpeedMap.get(drivetrain.getSpeedy()), 0.0);
-    // double[] offsetArray = {xSpeedMap.get(drivetrain.getSpeedx()) - 0.5, ySpeedMap.get(drivetrain.getSpeedy()), 0.0};
-    // NetworkTableInstance.getDefault().getTable(Constants.PRIMARY_LL_NAME).getEntry("fiducial_offset_set").setDoubleArray(offsetArray);
+    double[] offsetArray = {xSpeedMap.get(drivetrain.getSpeedx()) - 0.5, ySpeedMap.get(drivetrain.getSpeedy()), 0.0};
+    NetworkTableInstance.getDefault().getTable(Constants.PRIMARY_LL_NAME).getEntry("fiducial_offset_set").setDoubleArray(offsetArray);
+    NetworkTableInstance.getDefault().getTable(Constants.SECONDARY_LL_NAME).getEntry("fiducial_offset_set").setDoubleArray(offsetArray);
 
 
     if(turret.priLLHasTarget()){

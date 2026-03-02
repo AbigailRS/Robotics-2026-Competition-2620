@@ -1,9 +1,18 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class FieldZoneManager {
+
+    private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private static final NetworkTable table = inst.getTable("Field Zone Manager");
+    private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
+
     public static boolean inOwnZone(double x){
         if(DriverStation.getAlliance().get() == Alliance.Blue){
             if(x < 4.0){
@@ -28,5 +37,17 @@ public class FieldZoneManager {
         else{
             return false;
         }
+    }
+
+    public static double getDistanceTogoal(Translation2d robotTranslation){
+        double dist = 0;
+        if(DriverStation.getAlliance().get() == Alliance.Red){
+            dist =  Math.sqrt(Math.pow(Constants.POSE_RED_HUB.getX() - robotTranslation.getX(), 2) + Math.pow(Constants.POSE_RED_HUB.getY() - robotTranslation.getY(), 2));
+        }
+        else{
+            dist =  Math.sqrt(Math.pow(Constants.POSE_BLUE_HUB.getX() - robotTranslation.getX(), 2) + Math.pow(Constants.POSE_BLUE_HUB.getY() - robotTranslation.getY(), 2));
+        }
+        distToGoalPub.set(Math.abs(dist));
+        return Math.abs(dist);
     }
 }

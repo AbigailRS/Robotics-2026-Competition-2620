@@ -61,12 +61,12 @@ public class bigRockIntake extends SubsystemBase {
     rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);
     rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * extendVoltage /*Constants.EXTEND_VOLTAGE_PERCENTAGE*/);
 
-    IntakeVoltageSetPublisher.set(intakeVoltage);
-    IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
-    ExtendVoltageSetPublisher.set(extendVoltage);
-    ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
-    ExtendPositionSetPublisher.set(extendPosition);
-    ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
+    // IntakeVoltageSetPublisher.set(intakeVoltage);
+    // IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
+    // ExtendVoltageSetPublisher.set(extendVoltage);
+    // ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
+    // ExtendPositionSetPublisher.set(extendPosition);
+    // ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
 
 
 

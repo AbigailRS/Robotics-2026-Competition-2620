@@ -11,6 +11,7 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -43,9 +44,11 @@ import frc.robot.Commands.Shooter.leftSlingShot;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
 import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
+import frc.robot.Commands.Turret.DisableManualRotate;
 import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.Commands.Turret.SearchForTarget;
 import frc.robot.Commands.Turret.TrackHub;
+import frc.robot.Commands.Turret.TrackHub_SOM;
 import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -80,6 +83,9 @@ public class RobotContainer {
     public final Turret turret = new Turret();
     public final Hoods hoods = new Hoods();
 
+    SlewRateLimiter xLimiter = new SlewRateLimiter(5.0);
+    SlewRateLimiter yLimiter = new SlewRateLimiter(5.0);
+
     public final GameStateManager gameStateManager = new GameStateManager();
 
     public final CameraSystem photonCamera1 = new CameraSystem("Photon Camera 1", new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
@@ -96,15 +102,18 @@ public class RobotContainer {
     
     private final SendableChooser<Command> autoChooser;
 
-    private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()));
+    // private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()));
 
-    private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
-                                                            DriverStation.getMatchTime() == 129.0 ||
-                                                            DriverStation.getMatchTime() == 104.0 ||
-                                                            DriverStation.getMatchTime() == 79.0 ||
-                                                            DriverStation.getMatchTime() == 54.0 ||
-                                                            DriverStation.getMatchTime() == 29.0
-                                                        );
+    // private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
+    //                                                         DriverStation.getMatchTime() == 129.0 ||
+    //                                                         DriverStation.getMatchTime() == 104.0 ||
+    //                                                         DriverStation.getMatchTime() == 79.0 ||
+    //                                                         DriverStation.getMatchTime() == 54.0 ||
+    //                                                         DriverStation.getMatchTime() == 29.0
+    //                                                     );
+
+    private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
+    private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
 
     public RobotContainer() {
         autoChooser = AutoBuilder.buildAutoChooser("Start Loading Side Neutral Zone Climb");
@@ -119,9 +128,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? -driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
+                    .withVelocityY(driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -151,8 +160,8 @@ public class RobotContainer {
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        updateGameState.onTrue(new UpdateGameState(gameStateManager));
-        inOwnZone.whileTrue(new SearchForTarget(turret));
+        //updateGameState.onTrue(new UpdateGameState(gameStateManager));
+        // inOwnZone.whileTrue(new SearchForTarget(turret));
 
 
         // OPERATOR CONTROLS
@@ -163,22 +172,24 @@ public class RobotContainer {
         // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
         // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        driver.x().whileTrue(new TrackHub(drivetrain, turret));
+        //driver.x().whileTrue(new TrackHub(drivetrain, turret, hoods));
+        //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
+        ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
+        noApriltagsForTurret.whileTrue(new SearchForTarget(turret));
 
-        operator.rightBumper().whileTrue(new LeftUp(index));
-        operator.rightBumper().whileTrue(new RightUp(index));
-        operator.rightBumper().whileTrue(new converyforword(index));
-        operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
-        operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
-        operator.x().whileTrue(new SearchForTarget(turret));
-        driver.rightTrigger().whileTrue(new Shoot(shooter, index, hoods));
-        // operator.rightTrigger().whileTrue(new converybackwards(index));
-        // operator.rightTrigger().whileTrue(new RightDown(index));
-        // operator.rightTrigger().whileTrue(new LeftDown(index));
-        operator.povLeft().whileTrue(new ManualRotate(turret, 12.0));
-        operator.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        // operator.rightBumper().whileTrue(new LeftUp(index));
+        // operator.rightBumper().whileTrue(new RightUp(index));
+        // operator.rightBumper().whileTrue(new converyforword(index));
+        // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
+        // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
+        // operator.x().whileTrue(new SearchForTarget(turret));
+        driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
+        // // operator.rightTrigger().whileTrue(new converybackwards(index));
+        // // operator.rightTrigger().whileTrue(new RightDown(index));
+        // // operator.rightTrigger().whileTrue(new LeftDown(index));
+        driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
+        driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
+        driver.povDown().whileTrue(new DisableManualRotate(turret));
 
     }
 

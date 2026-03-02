@@ -9,6 +9,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import frc.robot.generated.TunerConstants;
@@ -20,21 +22,21 @@ public class Constants {
 
     public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
-    public static final double CAMERA_1_TRANSLATION_X = 0.3429;
-    public static final double CAMERA_1_TRANSLATION_Y = 0.1143;
+    public static final double CAMERA_1_TRANSLATION_X = 0.1;
+    public static final double CAMERA_1_TRANSLATION_Y = 0.3;
     public static final double CAMERA_1_TRANSLATION_Z = 0.0;
 
     public static final double CAMERA_1_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_1_ROTATION_YAW = 0.0;
-    public static final double CAMERA_1_ROTATION_PITCH = Math.toRadians(30.0);
+    public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(15.0);
+    public static final double CAMERA_1_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_2_TRANSLATION_X = 0.3429;
-    public static final double CAMERA_2_TRANSLATION_Y = -0.1143;
+    public static final double CAMERA_2_TRANSLATION_X = -0.1;
+    public static final double CAMERA_2_TRANSLATION_Y = -0.3;
     public static final double CAMERA_2_TRANSLATION_Z = 0.0;
 
     public static final double CAMERA_2_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_2_ROTATION_YAW = 0.0;
-    public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(30.0);
+    public static final double CAMERA_2_ROTATION_YAW = Math.toRadians(-15.0);
+    public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final double CAMERA_3_TRANSLATION_X = 0.288829369;
     public static final double CAMERA_3_TRANSLATION_Y = 0.344805;
@@ -52,6 +54,9 @@ public class Constants {
     public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
+    public static final Translation2d POSE_RED_HUB = new Translation2d(12.0, 4.0);
+    public static final Translation2d POSE_BLUE_HUB = new Translation2d(4.5, 4.0);
+
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
@@ -63,11 +68,11 @@ public class Constants {
     public static final double TURRET_I = 0.0;
     public static final double TURRET_D = 0.0;
     public static final double TURRET_MAX_OUTPUT_VOLTS = 3.0;
-    public static final double TURRET_RAMPRATE = 0.2;   //Defined as amount of time to go from 0 to 12v
+    public static final double TURRET_RAMPRATE = 0.0;   //Defined as amount of time to go from 0 to 12v
     public static final InvertedValue TURRET_INVERSION = InvertedValue.Clockwise_Positive;
     public static final double TURRET_CURRENT_LIMIT = 15; //amps
     public static final NeutralModeValue TURRET_NEUTRALMODE = NeutralModeValue.Coast;
-    public static final double TURRET_SEARCH_VOLTAGE = 4.0;
+    public static final double TURRET_SEARCH_VOLTAGE = 6.0;
     public static final double TURRET_STALL_VELOCITY = 0.2;
     public static final double TURRET_STALL_CURRENT = 15.0;
 

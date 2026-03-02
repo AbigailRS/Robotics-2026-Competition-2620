@@ -48,9 +48,9 @@ public class mountainClimber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    climbLeftMotorSetPositionPublisher.set(climbingLeftPosition);
-    climbLeftMotorPositionPublisher.set(mountainClimbingLeft.getPosition().getValueAsDouble());
-    climbRightMotorSetPositionPublisher.set(climbingRightPosition);
-    climbRightMotorPositionPublisher.set(mountainClimbingRight.getPosition().getValueAsDouble());
+    // climbLeftMotorSetPositionPublisher.set(climbingLeftPosition);
+    // climbLeftMotorPositionPublisher.set(mountainClimbingLeft.getPosition().getValueAsDouble());
+    // climbRightMotorSetPositionPublisher.set(climbingRightPosition);
+    // climbRightMotorPositionPublisher.set(mountainClimbingRight.getPosition().getValueAsDouble());
   }
 }

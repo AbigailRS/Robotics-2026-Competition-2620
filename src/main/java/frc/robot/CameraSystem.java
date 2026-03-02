@@ -81,7 +81,7 @@ public class CameraSystem {
 
                 currentPose2d = est.estimatedPose.toPose2d();
             });
-        cameraPosePublisher.set(currentPose2d);
+        //cameraPosePublisher.set(currentPose2d);
         return currentPose2d;
     }
 

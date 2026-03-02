@@ -71,10 +71,10 @@ public class rockDestroyerInxder extends SubsystemBase {
     leftRockSmusher.setVoltage(Constants.MAX_LEFT_SMUSHER_VOLTAGE * leftRockSmusherVoltage);
     rightRockSmusher.setVoltage(Constants.MAX_RIGHT_SMUSHER_VOLTAGE * rightRockSmusherVoltage);
     
-    indexLeftTowerVoltageSetPublisher.set(leftRockSmusherVoltage);
-    indexLeftTowerVoltagePublisher.set(leftRockSmusher.getSupplyVoltage().getValueAsDouble());
-    indexRightTowerVoltageSetPublisher.set(rightRockSmusherVoltage);
-    indexRightTowerVoltagePublisher.set(rightRockSmusher.getSupplyVoltage().getValueAsDouble());
+    // indexLeftTowerVoltageSetPublisher.set(leftRockSmusherVoltage);
+    // indexLeftTowerVoltagePublisher.set(leftRockSmusher.getSupplyVoltage().getValueAsDouble());
+    // indexRightTowerVoltageSetPublisher.set(rightRockSmusherVoltage);
+    // indexRightTowerVoltagePublisher.set(rightRockSmusher.getSupplyVoltage().getValueAsDouble());
 
     // This method will be called once per scheduler run
   }

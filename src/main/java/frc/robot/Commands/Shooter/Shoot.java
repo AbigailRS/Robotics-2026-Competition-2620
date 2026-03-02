@@ -7,7 +7,9 @@ package frc.robot.Commands.Shooter;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.FieldZoneManager;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
@@ -17,17 +19,18 @@ public class Shoot extends Command {
   /** Creates a new Shoot. */
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
-  Hoods hoods;
   boolean leftSpeedReached, rightSpeedReached;
+  CommandSwerveDrivetrain drivetrain;
 
   InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
 
 
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, Hoods hoods) {
+  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain) {
     this.indexer = indexer;
     this.shooter = shooter;
-    this.hoods = hoods;
-    addRequirements(indexer, shooter, hoods);
+    this.drivetrain = drivetrain;
+
+    addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -37,18 +40,20 @@ public class Shoot extends Command {
     leftSpeedReached = false;
     rightSpeedReached = false;
 
-    velocityIPMap.put(0.5, 90.0);
-    velocityIPMap.put(1.0, 92.0);
-    velocityIPMap.put(2.0, 93.0);
-    velocityIPMap.put(3.0, 93.5);
+    velocityIPMap.put(0.5, 40.0);
+    velocityIPMap.put(1.0, 42.0);
+    velocityIPMap.put(2.0, 45.0);
+    velocityIPMap.put(3.0, 53.0);
+    velocityIPMap.put(4.0, 57.0);
+    velocityIPMap.put(5.0, 62.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    shooter.setLeftSlingVelocity(Constants.VELOCITY_LEFT_SLING);
-    shooter.setRightSlingVelocity(Constants.VELOCITY_RIGHT_SLING);
+    shooter.setLeftSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
+    shooter.setRightSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
     if (shooter.atLeftShootVelocity()) {

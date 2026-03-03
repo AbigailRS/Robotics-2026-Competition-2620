@@ -80,7 +80,7 @@ public class Constants {
     public static final double TURRET_LEFT_LIMIT = -100.0;
     public static final double TURRET_RIGHT_LIMIT = 100.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
-    public static final double TURRET_ROTOR_TO_CANCODER_RATIO = 25.0;
+    public static final double TURRET_MOTOR_TO_TURRET_RATIO = 100.0;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;

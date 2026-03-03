@@ -51,6 +51,7 @@ import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.DisableManualRotate;
 import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.Commands.Turret.SearchForTarget;
+import frc.robot.Commands.Turret.SearchForTargetV2;
 import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.Commands.Turret.TrackHub_SOM;
 import frc.robot.enums.GameState;
@@ -134,7 +135,7 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
+                drive.withVelocityX(driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
@@ -181,8 +182,9 @@ public class RobotContainer {
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
         //driver.x().whileTrue(new TrackHub(drivetrain, turret, hoods));
         //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
-        ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
-        noApriltagsForTurret.whileTrue(new SearchForTarget(turret));
+        //ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
+        //noApriltagsForTurret.whileTrue(new SearchForTargetV2(turret, drivetrain));
+        driver.leftBumper().whileTrue(new SearchForTargetV2(turret, drivetrain));
 
         // operator.rightBumper().whileTrue(new LeftUp(index));
         // operator.rightBumper().whileTrue(new RightUp(index));

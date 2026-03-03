@@ -88,8 +88,8 @@ public class Constants {
 
     public static final double LEFT_CLIMB_MAX_VOLTAGE = 12;
     public static final double LEFT_CLIMB_VOLTAGE_PERCENTAGE = 0.75;
-    public static final double RIGHT_CLIMB_MAX_VOLTAGE = 12;
-    public static final double RIGHT_CLIMB_VOLTAGE_PERCENTAGE = 0.75; 
+    public static final double RETRACT_CLIMB_MAX_VOLTAGE = -12;
+    public static final double RETRACT_CLIMB_VOLTAGE_PERCENTAGE = -0.75; 
 
     //Shooter Constants
     public static final int TURRET_CANID = 20;
@@ -128,9 +128,10 @@ public class Constants {
     public static final double EXTEND_POSITION_OUT = 20.0;
     public static final double EXTEND_POSITION_IN = 0.0;
 
+    public static final double INTAKE_POSITION_IN = 0.0;
+    public static final double INTAKE_POSITION_OUT = 12.0;
 
-
-    public static final double INTAKE_STOP = 0;
+    public static final double INTAKE_STOP = 0.0;
 
 
 

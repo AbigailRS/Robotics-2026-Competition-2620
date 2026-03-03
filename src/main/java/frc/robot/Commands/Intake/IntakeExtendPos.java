@@ -9,21 +9,16 @@ import frc.robot.Constants;
 import frc.robot.subsystems.bigRockIntake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IntakeExtend extends Command {
+public class IntakeExtendPos extends Command {
 
-  bigRockIntake intakeExtender;
-  /** Creates a new IntakeExtend. */
-  public IntakeExtend(bigRockIntake intakeExtender) {
-    this.intakeExtender = intakeExtender;
+  bigRockIntake rockIntake;
+
+  /** Creates a new IntakeExtendPos. */
+  public IntakeExtendPos(bigRockIntake rockIntake) {
+    this.rockIntake = rockIntake;
+    addRequirements(rockIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-
-  private double intakeExtendPostionForward = 15;
-  private double intakeExtendPostionBackwards = -15;
-
-
-   private boolean intakeExtendPostionBackwardsControl = true, intakeExtendPostionForwardControl = true;
-
 
   // Called when the command is initially scheduled.
   @Override
@@ -32,23 +27,14 @@ public class IntakeExtend extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeExtender.setExtendVoltage(Constants.EXTEND_VOLTAGE_PERCENTAGE);
-  }
-
-  public void setIntakeExtendPostionForward(double postion){
-    this.intakeExtendPostionForward = postion;
-    intakeExtendPostionForwardControl = true;
-  }
-
-  public void setIntakeExtendPostionBackwards(double postion){
-    this.intakeExtendPostionBackwards = postion;
-    intakeExtendPostionBackwardsControl = true;
+    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
+    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakeExtender.setExtendVoltage(Constants.INTAKE_STOP);
+    
   }
 
   // Returns true when the command should end.

@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
+import frc.robot.Commands.climbOff;
+import frc.robot.Commands.climbOn;
 import frc.robot.Commands.Conveyor.LeftDown;
 import frc.robot.Commands.Conveyor.LeftUp;
 import frc.robot.Commands.Conveyor.RightDown;
@@ -36,6 +38,8 @@ import frc.robot.Commands.Conveyor.converyforword;
 import frc.robot.Commands.Hood.TESTSetHoodsHigh;
 import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
+import frc.robot.Commands.Intake.IntakeExtendPos;
+import frc.robot.Commands.Intake.IntakeRetractPos;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
@@ -55,6 +59,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.bigRockIntake;
+import frc.robot.subsystems.mountainClimber;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
@@ -82,6 +87,7 @@ public class RobotContainer {
     public final rockDestroyerInxder index = new rockDestroyerInxder();
     public final Turret turret = new Turret();
     public final Hoods hoods = new Hoods();
+    public final mountainClimber climb = new mountainClimber();
 
     SlewRateLimiter xLimiter = new SlewRateLimiter(5.0);
     SlewRateLimiter yLimiter = new SlewRateLimiter(5.0);
@@ -147,6 +153,7 @@ public class RobotContainer {
         ));  
         
 
+        intake.setDefaultCommand(new IntakeRetractPos(intake));
         
 
         // Run SysId routines when holding back/start and X/Y.
@@ -190,7 +197,9 @@ public class RobotContainer {
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
-
+        driver.x().toggleOnTrue(new IntakeExtendPos(intake));
+        driver.a().whileTrue(new climbOn(climb));
+        driver.b().whileTrue(new climbOff(climb));
     }
 
     public Command getAutonomousCommand() {

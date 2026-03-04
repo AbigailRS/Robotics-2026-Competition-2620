@@ -136,8 +136,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX()) * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -194,7 +194,7 @@ public class RobotContainer {
         // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
         // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
         // operator.x().whileTrue(new SearchForTarget(turret));
-        //driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
+        driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
         // // operator.rightTrigger().whileTrue(new converybackwards(index));
         // // operator.rightTrigger().whileTrue(new RightDown(index));
         // // operator.rightTrigger().whileTrue(new LeftDown(index));

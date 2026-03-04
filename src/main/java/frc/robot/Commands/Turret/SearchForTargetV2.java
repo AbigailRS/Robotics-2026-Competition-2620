@@ -51,12 +51,12 @@ public class SearchForTargetV2 extends Command {
   @Override
   public void execute() {
     if(DriverStation.getAlliance().get() == Alliance.Blue){
-      deltaX = driveTrain.getState().Pose.getX() - Constants.POSE_BLUE_HUB.getX();
-      deltaY = driveTrain.getState().Pose.getY() - Constants.POSE_BLUE_HUB.getY();
+      deltaX = Constants.POSE_BLUE_HUB.getX() - driveTrain.getState().Pose.getX();
+      deltaY = Constants.POSE_BLUE_HUB.getY() - driveTrain.getState().Pose.getY();
     }
     else{
-      deltaX = driveTrain.getState().Pose.getX() - Constants.POSE_RED_HUB.getX();
-      deltaY = driveTrain.getState().Pose.getY() - Constants.POSE_RED_HUB.getY();
+      deltaX = Constants.POSE_RED_HUB.getX() - driveTrain.getState().Pose.getX();
+      deltaY = Constants.POSE_RED_HUB.getY() - driveTrain.getState().Pose.getY();
     }
     deltaXpub.set(deltaX);
     deltaYpub.set(deltaY);
@@ -64,6 +64,13 @@ public class SearchForTargetV2 extends Command {
     angleToGoalDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
     rawAngleToGoalPub.set(angleToGoalDegrees);
     angleToGoalDegrees = angleToGoalDegrees - driveTrain.getState().Pose.getRotation().getDegrees();
+
+    if(angleToGoalDegrees > 180){
+      angleToGoalDegrees = angleToGoalDegrees - 360;
+    }
+    else if(angleToGoalDegrees < -180){
+      angleToGoalDegrees = angleToGoalDegrees + 360;
+    }
     
 
     adjustedAngleToGoalPub.set(angleToGoalDegrees);

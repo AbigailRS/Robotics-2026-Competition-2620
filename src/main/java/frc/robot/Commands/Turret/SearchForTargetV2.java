@@ -23,12 +23,16 @@ public class SearchForTargetV2 extends Command {
   CommandSwerveDrivetrain driveTrain;
 
   double deltaX, deltaY, angleToGoalDegrees;
+  int remainder;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Turret Search V2");
   private final DoublePublisher rawAngleToGoalPub = table.getDoubleTopic("Raw Angle To Goal").publish(),
                                 adjustedAngleToGoalPub = table.getDoubleTopic("Adjusted Angle To Goal").publish(),
-                                pigeonAnglePub = table.getDoubleTopic("Pigeon Angle").publish();
+                                pigeonAnglePub = table.getDoubleTopic("Pigeon Angle").publish(),
+                                deltaXpub = table.getDoubleTopic("deltaX").publish(),
+                                deltaYpub = table.getDoubleTopic("deltaY").publish();
+                                
 
   public SearchForTargetV2(Turret turret, CommandSwerveDrivetrain driveTrain) {
     this.turret = turret;
@@ -47,16 +51,21 @@ public class SearchForTargetV2 extends Command {
   @Override
   public void execute() {
     if(DriverStation.getAlliance().get() == Alliance.Blue){
-      deltaX = Constants.POSE_BLUE_HUB.getX() - driveTrain.getState().Pose.getX();
-      deltaY = Constants.POSE_BLUE_HUB.getY() - driveTrain.getState().Pose.getY();
+      deltaX = driveTrain.getState().Pose.getX() - Constants.POSE_BLUE_HUB.getX();
+      deltaY = driveTrain.getState().Pose.getY() - Constants.POSE_BLUE_HUB.getY();
     }
     else{
-      deltaX = Constants.POSE_RED_HUB.getX() - driveTrain.getState().Pose.getX();
-      deltaY = Constants.POSE_RED_HUB.getY() - driveTrain.getState().Pose.getY();
+      deltaX = driveTrain.getState().Pose.getX() - Constants.POSE_RED_HUB.getX();
+      deltaY = driveTrain.getState().Pose.getY() - Constants.POSE_RED_HUB.getY();
     }
-    angleToGoalDegrees = Math.atan2(deltaY, deltaX);
+    deltaXpub.set(deltaX);
+    deltaYpub.set(deltaY);
+    
+    angleToGoalDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
     rawAngleToGoalPub.set(angleToGoalDegrees);
     angleToGoalDegrees = angleToGoalDegrees - driveTrain.getState().Pose.getRotation().getDegrees();
+    
+
     adjustedAngleToGoalPub.set(angleToGoalDegrees);
     pigeonAnglePub.set(driveTrain.getState().Pose.getRotation().getDegrees());
     turret.setTurretPosition(angleToGoalDegrees);
@@ -66,7 +75,7 @@ public class SearchForTargetV2 extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    turret.setTurretVoltage(0);
   }
 
   // Returns true when the command should end.

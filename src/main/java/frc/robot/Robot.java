@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
 
         if(updatePoseTimer.get() > 0.1){
             Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
-            Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.001, 0.001, 1.0);
+            Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.001, 0.001, 10000.0);
 
             if(m_robotContainer.photonCamera1.photonCamera.isConnected() && m_robotContainer.photonCamera1.hasTarget()){
                 numberValidCameras++;
@@ -81,7 +81,9 @@ public class Robot extends TimedRobot {
             combinedPose = new Pose2d(combinedPose.getX() / numberValidCameras, combinedPose.getY() / numberValidCameras, new Rotation2d());
 
             cameraPosePublisher.set(combinedPose);
-            m_robotContainer.drivetrain.addVisionMeasurement(combinedPose, Utils.getSystemTimeSeconds(), stdDevs1);
+            if(numberValidCameras > 2){
+                m_robotContainer.drivetrain.addVisionMeasurement(combinedPose, Utils.getSystemTimeSeconds(), stdDevs1);
+            }
             updatePoseTimer.reset();
             updatePoseTimer.start();
         }

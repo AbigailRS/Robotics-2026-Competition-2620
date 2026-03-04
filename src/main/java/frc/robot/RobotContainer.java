@@ -50,6 +50,7 @@ import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.DisableManualRotate;
 import frc.robot.Commands.Turret.ManualRotate;
+import frc.robot.Commands.Turret.ResetTurretEncoder;
 import frc.robot.Commands.Turret.SearchForTarget;
 import frc.robot.Commands.Turret.SearchForTargetV2;
 import frc.robot.Commands.Turret.TrackHub;
@@ -135,8 +136,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-driver.getLeftY() * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -184,7 +185,8 @@ public class RobotContainer {
         //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
         //ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
         //noApriltagsForTurret.whileTrue(new SearchForTargetV2(turret, drivetrain));
-        driver.leftBumper().whileTrue(new SearchForTargetV2(turret, drivetrain));
+        driver.y().whileTrue(new SearchForTargetV2(turret, drivetrain));
+        driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
         // operator.rightBumper().whileTrue(new LeftUp(index));
         // operator.rightBumper().whileTrue(new RightUp(index));
@@ -192,7 +194,7 @@ public class RobotContainer {
         // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
         // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
         // operator.x().whileTrue(new SearchForTarget(turret));
-        driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
+        //driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
         // // operator.rightTrigger().whileTrue(new converybackwards(index));
         // // operator.rightTrigger().whileTrue(new RightDown(index));
         // // operator.rightTrigger().whileTrue(new LeftDown(index));

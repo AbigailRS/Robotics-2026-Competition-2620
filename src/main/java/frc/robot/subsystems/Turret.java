@@ -43,7 +43,7 @@ public class Turret extends SubsystemBase {
   private boolean lastSeenDirectionLeft = true;
   private boolean manualRotation = false;
   private boolean positionControlMode = true;
-  private double turrretPosition = 0.0;
+  private double turretPosition = 0.0;
 
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0).withSlot(0);
 
@@ -54,6 +54,7 @@ public class Turret extends SubsystemBase {
                                 turret_voltage_pub = table.getDoubleTopic("Turret Voltage").publish(),
                                 turret_current_pub = table.getDoubleTopic("Turret Current").publish(),
                                 turret_velocity_pub = table.getDoubleTopic("Turret Velocity").publish(),
+                                encoder_setpoint_pub = table.getDoubleTopic("Turret Setpoint Pos").publish(),
                                 encoder_pos_pub = table.getDoubleTopic("Turret Encoder Pos").publish();
   private final BooleanPublisher stalled_pub = table.getBooleanTopic("isStalled").publish();
 
@@ -61,21 +62,21 @@ public class Turret extends SubsystemBase {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
     rotateTurretConfig = new TalonFXConfiguration();
     rotateTurretConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.TURRET_RAMPRATE);
-    rotateTurretConfig.MotorOutput.withInverted(Constants.TURRET_INVERSION);
+    rotateTurretConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
 
-    rotateTurretConfig.Slot0.kP = 1.0;
+    rotateTurretConfig.Slot0.kV = 0.12;
+    rotateTurretConfig.Slot0.kP = 3.0;
     rotateTurretConfig.Slot0.kI = 0.0;
-    rotateTurretConfig.Slot0.kD = 0.1;
+    rotateTurretConfig.Slot0.kD = 0.0;
     
     rotateTurretConfig.SoftwareLimitSwitch.withForwardSoftLimitEnable(true);
     rotateTurretConfig.SoftwareLimitSwitch.withForwardSoftLimitThreshold(170.0);
     rotateTurretConfig.SoftwareLimitSwitch.withReverseSoftLimitEnable(true);
     rotateTurretConfig.SoftwareLimitSwitch.withReverseSoftLimitThreshold(-170.0);
 
-    rotateTurretConfig.Feedback.RotorToSensorRatio = Constants.TURRET_MOTOR_TO_TURRET_RATIO;
     rotateTurret.getConfigurator().apply(rotateTurretConfig);
 
   }
@@ -86,7 +87,10 @@ public class Turret extends SubsystemBase {
   }
 
   public void setTurretPosition(double position){
-    this.turrretPosition = position / 360.0;
+    turretPosition = position * Constants.TURRET_MOTOR_TO_TURRET_RATIO;
+    turretPosition = turretPosition / 360;
+    positionControlMode = true;
+    
   }
 
   public boolean priLLHasTarget(){
@@ -160,7 +164,7 @@ public class Turret extends SubsystemBase {
   @Override
   public void periodic() {
     if(positionControlMode){
-      rotateTurret.setControl(m_positionVoltage.withPosition(turrretPosition).withEnableFOC(true));
+      rotateTurret.setControl(m_positionVoltage.withPosition(turretPosition).withEnableFOC(true));
     }
     else{
       rotateTurret.setVoltage(rotateTurretVoltage);
@@ -173,7 +177,7 @@ public class Turret extends SubsystemBase {
       lastSightedTimer.reset();
       lastSightedTimer.stop();
     }
-    //updateLogging();
+    updateLogging();
     
   }
 
@@ -183,6 +187,7 @@ public class Turret extends SubsystemBase {
     turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
     turret_current_pub.set(rotateTurret.getStatorCurrent().getValueAsDouble());
     turret_velocity_pub.set(rotateTurret.getVelocity().getValueAsDouble());
+    encoder_setpoint_pub.set(turretPosition);
     encoder_pos_pub.set(rotateTurret.getPosition().getValueAsDouble());
     stalled_pub.set(isStalled());
   }

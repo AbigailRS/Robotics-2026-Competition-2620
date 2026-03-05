@@ -22,9 +22,9 @@ public class Constants {
 
     public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
-    public static final double CAMERA_1_TRANSLATION_X = 0.1;
+    public static final double CAMERA_1_TRANSLATION_X = -0.1;
     public static final double CAMERA_1_TRANSLATION_Y = 0.3;
-    public static final double CAMERA_1_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_1_TRANSLATION_Z = -0.0;
 
     public static final double CAMERA_1_ROTATION_ROLL = 0.0;
     public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(15.0);
@@ -38,7 +38,7 @@ public class Constants {
     public static final double CAMERA_2_ROTATION_YAW = Math.toRadians(-15.0);
     public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_3_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_3_TRANSLATION_X = -0.4;
     public static final double CAMERA_3_TRANSLATION_Y = 0.344805;
     public static final double CAMERA_3_TRANSLATION_Z = 0.0522732;
 
@@ -46,7 +46,7 @@ public class Constants {
     public static final double CAMERA_3_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_3_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_4_TRANSLATION_X = 0.288829369;
+    public static final double CAMERA_4_TRANSLATION_X = -0.4;
     public static final double CAMERA_4_TRANSLATION_Y = -0.344805;
     public static final double CAMERA_4_TRANSLATION_Z = 0.0522732;
 
@@ -80,7 +80,7 @@ public class Constants {
     public static final double TURRET_LEFT_LIMIT = -100.0;
     public static final double TURRET_RIGHT_LIMIT = 100.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
-    public static final double TURRET_ROTOR_TO_CANCODER_RATIO = 25.0;
+    public static final double TURRET_MOTOR_TO_TURRET_RATIO = 97.65;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -88,8 +88,8 @@ public class Constants {
 
     public static final double LEFT_CLIMB_MAX_VOLTAGE = 12;
     public static final double LEFT_CLIMB_VOLTAGE_PERCENTAGE = 0.75;
-    public static final double RIGHT_CLIMB_MAX_VOLTAGE = 12;
-    public static final double RIGHT_CLIMB_VOLTAGE_PERCENTAGE = 0.75; 
+    public static final double RETRACT_CLIMB_MAX_VOLTAGE = -12;
+    public static final double RETRACT_CLIMB_VOLTAGE_PERCENTAGE = -0.75; 
 
     //Shooter Constants
     public static final int TURRET_CANID = 20;
@@ -128,9 +128,10 @@ public class Constants {
     public static final double EXTEND_POSITION_OUT = 20.0;
     public static final double EXTEND_POSITION_IN = 0.0;
 
+    public static final double INTAKE_POSITION_IN = 0.0;
+    public static final double INTAKE_POSITION_OUT = 12.0;
 
-
-    public static final double INTAKE_STOP = 0;
+    public static final double INTAKE_STOP = 0.0;
 
 
 

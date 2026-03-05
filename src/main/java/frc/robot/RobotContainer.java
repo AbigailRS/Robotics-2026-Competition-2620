@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
+import frc.robot.Commands.climbOff;
+import frc.robot.Commands.climbOn;
 import frc.robot.Commands.Conveyor.LeftDown;
 import frc.robot.Commands.Conveyor.LeftUp;
 import frc.robot.Commands.Conveyor.RightDown;
@@ -36,6 +38,8 @@ import frc.robot.Commands.Conveyor.converyforword;
 import frc.robot.Commands.Hood.TESTSetHoodsHigh;
 import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
+import frc.robot.Commands.Intake.IntakeExtendPos;
+import frc.robot.Commands.Intake.IntakeRetractPos;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
@@ -46,7 +50,11 @@ import frc.robot.Commands.Shooter.rightSlingShot;
 import frc.robot.Commands.Shooter.rightSlingVelocity;
 import frc.robot.Commands.Turret.DisableManualRotate;
 import frc.robot.Commands.Turret.ManualRotate;
+import frc.robot.Commands.Turret.ResetTurretEncoder;
 import frc.robot.Commands.Turret.SearchForTarget;
+import frc.robot.Commands.Turret.SearchForTargetV2;
+import frc.robot.Commands.Turret.SearchForTargetV2_SOM;
+import frc.robot.Commands.Turret.TargetAllianceWall;
 import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.Commands.Turret.TrackHub_SOM;
 import frc.robot.enums.GameState;
@@ -55,6 +63,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.Turret;
 import frc.robot.subsystems.bigRockIntake;
+import frc.robot.subsystems.mountainClimber;
 import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
@@ -82,9 +91,7 @@ public class RobotContainer {
     public final rockDestroyerInxder index = new rockDestroyerInxder();
     public final Turret turret = new Turret();
     public final Hoods hoods = new Hoods();
-
-    SlewRateLimiter xLimiter = new SlewRateLimiter(5.0);
-    SlewRateLimiter yLimiter = new SlewRateLimiter(5.0);
+    public final mountainClimber climb = new mountainClimber();
 
     public final GameStateManager gameStateManager = new GameStateManager();
 
@@ -115,8 +122,11 @@ public class RobotContainer {
     private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
     private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
 
+    private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
+    private final Trigger outOfZone = new Trigger(() -> !FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
+    
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Start Loading Side Neutral Zone Climb");
+        autoChooser = AutoBuilder.buildAutoChooser("Test");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -128,8 +138,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
-                    .withVelocityY(driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX()) * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -147,6 +157,7 @@ public class RobotContainer {
         ));  
         
 
+        intake.setDefaultCommand(new IntakeRetractPos(intake));
         
 
         // Run SysId routines when holding back/start and X/Y.
@@ -174,8 +185,12 @@ public class RobotContainer {
         // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
         //driver.x().whileTrue(new TrackHub(drivetrain, turret, hoods));
         //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
-        ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
-        noApriltagsForTurret.whileTrue(new SearchForTarget(turret));
+        //ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
+        //noApriltagsForTurret.whileTrue(new SearchForTargetV2(turret, drivetrain));
+        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        inOwnZone.whileTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        outOfZone.whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
         // operator.rightBumper().whileTrue(new LeftUp(index));
         // operator.rightBumper().whileTrue(new RightUp(index));
@@ -190,7 +205,9 @@ public class RobotContainer {
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
-
+        driver.x().toggleOnTrue(new IntakeExtendPos(intake));
+        driver.a().whileTrue(new climbOn(climb));
+        driver.b().whileTrue(new climbOff(climb));
     }
 
     public Command getAutonomousCommand() {

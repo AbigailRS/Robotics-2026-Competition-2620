@@ -81,7 +81,7 @@ public class CameraSystem {
 
                 currentPose2d = est.estimatedPose.toPose2d();
             });
-        //cameraPosePublisher.set(currentPose2d);
+        cameraPosePublisher.set(currentPose2d);
         return currentPose2d;
     }
 
@@ -90,6 +90,13 @@ public class CameraSystem {
             return false;
         }
         return photonCamera.getLatestResult().hasTargets();
+    }
+
+    public boolean hasMultipleTargets(){
+        if(photonCamera.getLatestResult().targets.size() > 1){
+            return true;
+        }
+        return false;
     }
 
 

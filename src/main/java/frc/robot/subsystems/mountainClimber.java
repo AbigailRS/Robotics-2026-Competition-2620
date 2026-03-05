@@ -17,10 +17,8 @@ import frc.robot.Constants;
 public class mountainClimber extends SubsystemBase {
 
   private TalonFX mountainClimbingLeft = new TalonFX(Constants.CLIMB_LEFT_CANID, CANBus.roboRIO());
-  private TalonFX mountainClimbingRight = new TalonFX(Constants.CLIMB_RIGHT_CANID, CANBus.roboRIO());
 
   private TalonFXConfiguration leftClimbConfig = new TalonFXConfiguration();
-  private TalonFXConfiguration rightClimbConfig = new TalonFXConfiguration();
 
   /* 
   private double climbingLeftVoltage = 0.0;
@@ -28,7 +26,8 @@ public class mountainClimber extends SubsystemBase {
   */
 
   private double climbingLeftPosition = 0.0;
-  private double climbingRightPosition = 0.0;
+
+  private double climbVoltage = 0.0;
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Indexer");
@@ -42,7 +41,10 @@ public class mountainClimber extends SubsystemBase {
 
 
     mountainClimbingLeft.getConfigurator().apply(leftClimbConfig);
-    mountainClimbingRight.getConfigurator().apply(rightClimbConfig);
+  }
+
+  public void setClimbVoltage(double climbVoltage){
+    this.climbVoltage = climbVoltage;
   }
 
   @Override

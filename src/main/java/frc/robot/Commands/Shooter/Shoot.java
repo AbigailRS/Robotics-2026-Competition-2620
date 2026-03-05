@@ -84,7 +84,6 @@ public class Shoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Test");
     shooter.setLeftSlingShotVoltage(0);
     shooter.setRightSlingShotVoltage(0);
     indexer.setConveryVoltage(0.0);

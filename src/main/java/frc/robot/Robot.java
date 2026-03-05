@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.MountPoseConfigs;
+import com.ctre.phoenix6.configs.Pigeon2Configuration;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -15,6 +19,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,38 +55,38 @@ public class Robot extends TimedRobot {
 
         if(updatePoseTimer.get() > 0.1){
             Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
-            Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.001, 0.001, 10000.0);
+            Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.0001, 0.0001, 10000.0);
 
-            if(m_robotContainer.photonCamera1.photonCamera.isConnected() && m_robotContainer.photonCamera1.hasTarget()){
+            if(m_robotContainer.photonCamera1.photonCamera.isConnected() && m_robotContainer.photonCamera1.hasTarget() && m_robotContainer.photonCamera1.hasMultipleTargets()){
                 numberValidCameras++;
                 combinedPose = new Pose2d(combinedPose.getX() + pose1.getX(), combinedPose.getY() + pose1.getY(), new Rotation2d());
             }
             
             Pose2d pose2 = m_robotContainer.photonCamera2.getRobotPose();
 
-            if(m_robotContainer.photonCamera2.photonCamera.isConnected() && m_robotContainer.photonCamera2.hasTarget()){
+            if(m_robotContainer.photonCamera2.photonCamera.isConnected() && m_robotContainer.photonCamera2.hasTarget() && m_robotContainer.photonCamera2.hasMultipleTargets()){
                 numberValidCameras++;
                 combinedPose = new Pose2d(combinedPose.getX() + pose2.getX(), combinedPose.getY() + pose2.getY(), new Rotation2d());
             }
 
             Pose2d pose3 = m_robotContainer.photonCamera3.getRobotPose();
 
-            if(m_robotContainer.photonCamera3.photonCamera.isConnected() && m_robotContainer.photonCamera3.hasTarget()){
+            if(m_robotContainer.photonCamera3.photonCamera.isConnected() && m_robotContainer.photonCamera3.hasTarget() && m_robotContainer.photonCamera3.hasMultipleTargets()){
                 numberValidCameras++;
                 combinedPose = new Pose2d(combinedPose.getX() + pose3.getX(), combinedPose.getY() + pose3.getY(), new Rotation2d());
             }
 
             Pose2d pose4 = m_robotContainer.photonCamera4.getRobotPose();
 
-            if(m_robotContainer.photonCamera4.photonCamera.isConnected() && m_robotContainer.photonCamera4.hasTarget()){
+            if(m_robotContainer.photonCamera4.photonCamera.isConnected() && m_robotContainer.photonCamera4.hasTarget() && m_robotContainer.photonCamera4.hasMultipleTargets()){
                 numberValidCameras++;
                 combinedPose = new Pose2d(combinedPose.getX() + pose4.getX(), combinedPose.getY() + pose4.getY(), new Rotation2d());
             }
 
             combinedPose = new Pose2d(combinedPose.getX() / numberValidCameras, combinedPose.getY() / numberValidCameras, new Rotation2d());
 
-            cameraPosePublisher.set(combinedPose);
-            if(numberValidCameras > 2){
+            if(numberValidCameras > 0){
+                cameraPosePublisher.set(combinedPose);
                 m_robotContainer.drivetrain.addVisionMeasurement(combinedPose, Utils.getSystemTimeSeconds(), stdDevs1);
             }
             updatePoseTimer.reset();

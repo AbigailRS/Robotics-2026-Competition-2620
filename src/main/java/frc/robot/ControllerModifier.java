@@ -15,15 +15,15 @@ public class ControllerModifier {
 
     public static double modifyX(double input){
         if(DriverStation.getAlliance().get() == Alliance.Red){
-            return xRateLimiter.calculate(input);
+            return xRateLimiter.calculate(-input);
         }
-        return xRateLimiter.calculate(-input);
+        return xRateLimiter.calculate(input);
     }
 
     public static double modifyY(double input){
         if(DriverStation.getAlliance().get() == Alliance.Red){
-            return yRateLimiter.calculate(input);
+            return yRateLimiter.calculate(-input);
         }
-        return yRateLimiter.calculate(-input);
+        return yRateLimiter.calculate(input);
     }
 }

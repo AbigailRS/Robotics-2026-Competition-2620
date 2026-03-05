@@ -67,7 +67,7 @@ public class Turret extends SubsystemBase {
     rotateTurretConfig.CurrentLimits.withStatorCurrentLimit(Constants.TURRET_CURRENT_LIMIT);
     rotateTurret.setNeutralMode(Constants.TURRET_NEUTRALMODE);
 
-    rotateTurretConfig.Slot0.kV = 0.12;
+    rotateTurretConfig.Slot0.kV = 0.5;
     rotateTurretConfig.Slot0.kP = 3.0;
     rotateTurretConfig.Slot0.kI = 0.0;
     rotateTurretConfig.Slot0.kD = 0.0;

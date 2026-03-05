@@ -53,6 +53,8 @@ import frc.robot.Commands.Turret.ManualRotate;
 import frc.robot.Commands.Turret.ResetTurretEncoder;
 import frc.robot.Commands.Turret.SearchForTarget;
 import frc.robot.Commands.Turret.SearchForTargetV2;
+import frc.robot.Commands.Turret.SearchForTargetV2_SOM;
+import frc.robot.Commands.Turret.TargetAllianceWall;
 import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.Commands.Turret.TrackHub_SOM;
 import frc.robot.enums.GameState;
@@ -91,9 +93,6 @@ public class RobotContainer {
     public final Hoods hoods = new Hoods();
     public final mountainClimber climb = new mountainClimber();
 
-    SlewRateLimiter xLimiter = new SlewRateLimiter(5.0);
-    SlewRateLimiter yLimiter = new SlewRateLimiter(5.0);
-
     public final GameStateManager gameStateManager = new GameStateManager();
 
     public final CameraSystem photonCamera1 = new CameraSystem("Photon Camera 1", new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
@@ -123,8 +122,11 @@ public class RobotContainer {
     private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
     private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
 
+    private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
+    private final Trigger outOfZone = new Trigger(() -> !FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
+    
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Start Loading Side Neutral Zone Climb");
+        autoChooser = AutoBuilder.buildAutoChooser("Test");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -185,7 +187,9 @@ public class RobotContainer {
         //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
         //ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
         //noApriltagsForTurret.whileTrue(new SearchForTargetV2(turret, drivetrain));
-        driver.y().whileTrue(new SearchForTargetV2(turret, drivetrain));
+        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        inOwnZone.whileTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        outOfZone.whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
         driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
         // operator.rightBumper().whileTrue(new LeftUp(index));

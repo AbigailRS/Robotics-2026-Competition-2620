@@ -4,39 +4,50 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.enums.FieldZone;
 
 public class FieldZoneManager {
 
     private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
     private static final NetworkTable table = inst.getTable("Field Zone Manager");
     private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
+    private static final StringPublisher zonePub = table.getStringTopic("Zone").publish();
+    private static FieldZone zone;
+    private static Alliance alliance;
 
-    public static boolean inOwnZone(double x){
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-            if(x < 4.0){
-                return true;
-            }
+    public static FieldZone getFieldZone(Translation2d translation){
+        if(translation.getX() < 4.0){
+            return FieldZone.BLUE;
+        }
+        else if(translation.getX() < 6.0){
+            return FieldZone.BLUEBUMP;
+        }
+        else if(translation.getX() < 10.0){
+            return FieldZone.NEUTRAL;
+        }
+        else if(translation.getX() < 12.0){
+            return FieldZone.REDBUMP;
         }
         else{
-            if(x > 12.5){
-                return true;
-            }
+            return FieldZone.RED;
         }
-        return false;
+        
     }
 
-    public static boolean inBumpzone(double x){
-        if(x > 4.0 && x < 5.5){
+    public static boolean inOwnZone(Translation2d translation){
+        zone = getFieldZone(translation);
+        zonePub.set(zone.name());
+        alliance = DriverStation.getAlliance().get();
+        if(alliance == Alliance.Red && zone == FieldZone.RED){
             return true;
         }
-        else if(x > 11.0 && x < 12.5){
+        else if(alliance == Alliance.Blue && zone == FieldZone.BLUE){
             return true;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
     public static double getDistanceTogoal(Translation2d robotTranslation){

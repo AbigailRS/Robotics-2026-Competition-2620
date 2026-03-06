@@ -72,6 +72,13 @@ public class bigRockIntake extends SubsystemBase {
       this.intakeVoltage = voltageIN;
   }
 
+  public boolean intakeInPosition(){
+    if(Math.abs(rockPusher.getPosition().getValueAsDouble() - extendPos) < Constants.INTAKE_IN_POSITION_ERROR){
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public void periodic() {
     rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);

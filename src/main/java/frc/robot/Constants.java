@@ -116,6 +116,9 @@ public class Constants {
 
     public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
+
+    public static final double SHOOTER_PASS_VELOCITY = 90.0;
+    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.60;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -133,7 +136,7 @@ public class Constants {
 
     public static final double INTAKE_STOP = 0.0;
 
-
+    public static final double INTAKE_IN_POSITION_ERROR = 0.25;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;
@@ -158,6 +161,11 @@ public class Constants {
     public static final double RIGHT_INDEXER_STOP = 0.0;
     public static final double CONVEYOR_FORWARDS_STOP = 0.0;
     public static final double CONVEYOR_BACKWARDS_STOP = 0.0;
+
+    public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
+    public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
+    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 20.0;
+    
 
     //Hoods
     public static final int LEFT_HOOD_SERVO = 0;

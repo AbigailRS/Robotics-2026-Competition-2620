@@ -44,6 +44,13 @@ public class rockDestroyerInxder extends SubsystemBase {
     rightIndexerConfig.MotorOutput.withInverted(Constants.INDEX_RIGHT_INVERT);
     converyIndexConfig.MotorOutput.withInverted(Constants.INDEX_CONVERY_INVERT);
 
+    leftIndexerConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
+    leftIndexerConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_LEFT_CURRENT_LIMIT);
+    rightIndexerConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
+    rightIndexerConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_RIGHT_CURRENT_LIMIT);
+    converyIndexConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
+    converyIndexConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_CONVEYOR_CURRENT_LIMIT);
+
     leftRockSmusher.getConfigurator().apply(leftIndexerConfig);
     rightRockSmusher.getConfigurator().apply(rightIndexerConfig);
     converyIndex.getConfigurator().apply(converyIndexConfig);

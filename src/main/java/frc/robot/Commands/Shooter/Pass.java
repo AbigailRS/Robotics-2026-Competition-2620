@@ -5,7 +5,6 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.FieldZoneManager;
@@ -16,32 +15,17 @@ import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Shoot extends Command {
+public class Pass extends Command {
   /** Creates a new Shoot. */
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
   boolean leftSpeedReached, rightSpeedReached;
   CommandSwerveDrivetrain drivetrain;
-  Timer timeoutTimer;
-  double timeoutTime;
 
-  InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
-
-
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain) {
+  public Pass(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain) {
     this.indexer = indexer;
     this.shooter = shooter;
     this.drivetrain = drivetrain;
-
-    addRequirements(indexer, shooter);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain, double timeoutTime) {
-    this.indexer = indexer;
-    this.shooter = shooter;
-    this.drivetrain = drivetrain;
-    this.timeoutTime = timeoutTime;
 
     addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,26 +34,16 @@ public class Shoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    leftSpeedReached = false;
-    rightSpeedReached = false;
-    timeoutTimer = new Timer();
-    timeoutTimer.reset();
-    timeoutTimer.start();
 
-    velocityIPMap.put(0.5, 40.0);
-    velocityIPMap.put(1.0, 42.0);
-    velocityIPMap.put(2.0, 45.0);
-    velocityIPMap.put(3.0, 53.0);
-    velocityIPMap.put(4.0, 57.0);
-    velocityIPMap.put(5.0, 62.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    shooter.setLeftSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
-    shooter.setRightSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
+    shooter.setLeftSlingVelocity(Constants.SHOOTER_PASS_VELOCITY);
+    shooter.setRightSlingVelocity(Constants.SHOOTER_PASS_VELOCITY);
+
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
     if (shooter.atLeftShootVelocity()) {
@@ -80,19 +54,18 @@ public class Shoot extends Command {
       rightSpeedReached = true; 
     }
 
-    if(leftSpeedReached){
+    if(leftSpeedReached && FieldZoneManager.inCenterY(drivetrain.getState().Pose.getTranslation())){
       indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
     }
-    if(rightSpeedReached){
+    if(rightSpeedReached && FieldZoneManager.inCenterY(drivetrain.getState().Pose.getTranslation())){
       indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
       indexer.setRightRockSmusherVoltage(0.0);
     }
-
 
   }
 
@@ -110,9 +83,6 @@ public class Shoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timeoutTimer.get() > timeoutTime){
-      return true;
-    }
     return false;
   }
 }

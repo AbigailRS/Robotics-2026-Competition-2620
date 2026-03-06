@@ -16,32 +16,16 @@ import frc.robot.subsystems.rockDestroyerInxder;
 import frc.robot.subsystems.tinyPebbleShooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class Shoot extends Command {
+public class ManualShoot extends Command {
   /** Creates a new Shoot. */
   tinyPebbleShooter shooter;
   rockDestroyerInxder indexer;
-  boolean leftSpeedReached, rightSpeedReached;
   CommandSwerveDrivetrain drivetrain;
-  Timer timeoutTimer;
-  double timeoutTime;
+  Timer shootDelayTimer;
 
-  InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
-
-
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain) {
+  public ManualShoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer) {
     this.indexer = indexer;
     this.shooter = shooter;
-    this.drivetrain = drivetrain;
-
-    addRequirements(indexer, shooter);
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  public Shoot(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain, double timeoutTime) {
-    this.indexer = indexer;
-    this.shooter = shooter;
-    this.drivetrain = drivetrain;
-    this.timeoutTime = timeoutTime;
 
     addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,50 +34,27 @@ public class Shoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    leftSpeedReached = false;
-    rightSpeedReached = false;
-    timeoutTimer = new Timer();
-    timeoutTimer.reset();
-    timeoutTimer.start();
+    shootDelayTimer = new Timer();
+    shootDelayTimer.start();
 
-    velocityIPMap.put(0.5, 40.0);
-    velocityIPMap.put(1.0, 42.0);
-    velocityIPMap.put(2.0, 45.0);
-    velocityIPMap.put(3.0, 53.0);
-    velocityIPMap.put(4.0, 57.0);
-    velocityIPMap.put(5.0, 62.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    shooter.setLeftSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
-    shooter.setRightSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
+    shooter.setLeftSlingShotVoltage(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
+    shooter.setRightSlingVelocity(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
-    if (shooter.atLeftShootVelocity()) {
-      leftSpeedReached = true; 
-    }
-
-    if (shooter.atRightShootVelocity()) {
-      rightSpeedReached = true; 
-    }
-
-    if(leftSpeedReached){
+    if (shootDelayTimer.get() > 1.0) {
+      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
       indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
-    }
-    if(rightSpeedReached){
-      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
-    }
-    else{
       indexer.setRightRockSmusherVoltage(0.0);
     }
-
-
   }
 
 
@@ -105,14 +66,13 @@ public class Shoot extends Command {
     indexer.setConveryVoltage(0.0);
     indexer.setLeftRockSumusherVoltage(0.0);
     indexer.setRightRockSmusherVoltage(0.0);
+    shootDelayTimer.reset();
+    shootDelayTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timeoutTimer.get() > timeoutTime){
-      return true;
-    }
     return false;
   }
 }

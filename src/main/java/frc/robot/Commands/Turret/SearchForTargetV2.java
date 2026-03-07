@@ -75,7 +75,13 @@ public class SearchForTargetV2 extends Command {
 
     adjustedAngleToGoalPub.set(angleToGoalDegrees);
     pigeonAnglePub.set(driveTrain.getState().Pose.getRotation().getDegrees());
-    turret.setTurretPosition(angleToGoalDegrees);
+
+    if(turret.manualRotateEnabled()){
+      turret.setTurretVoltage(0);
+    }
+    else{
+      turret.setTurretPosition(angleToGoalDegrees);
+    }
 
   }
 

@@ -14,6 +14,7 @@ public class DisableManualRotate extends Command {
 
   public DisableManualRotate(Turret turret) {
     this.turret = turret;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,6 +35,9 @@ public class DisableManualRotate extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(turret.manualRotateEnabled()){
+      return true;
+    }
     return false;
   }
 }

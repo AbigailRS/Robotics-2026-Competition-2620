@@ -15,7 +15,7 @@ public class leftSlingVelocity extends Command {
   /** Creates a new leftSlingVelocity. */
   public leftSlingVelocity(tinyPebbleShooter pebbleShooter) {
     this.pebbleShooter = pebbleShooter;
-    addRequirements(pebbleShooter);
+    //addRequirements(pebbleShooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

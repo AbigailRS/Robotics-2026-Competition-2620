@@ -23,7 +23,7 @@ public class Shoot extends Command {
   boolean leftSpeedReached, rightSpeedReached;
   CommandSwerveDrivetrain drivetrain;
   Timer timeoutTimer;
-  double timeoutTime;
+  double timeoutTime = 0;
 
   InterpolatingDoubleTreeMap velocityIPMap = new InterpolatingDoubleTreeMap();
 
@@ -52,16 +52,18 @@ public class Shoot extends Command {
   public void initialize() {
     leftSpeedReached = false;
     rightSpeedReached = false;
-    timeoutTimer = new Timer();
-    timeoutTimer.reset();
-    timeoutTimer.start();
+    if(timeoutTime != 0){
+      timeoutTimer = new Timer();
+      timeoutTimer.reset();
+      timeoutTimer.start();
+    }
 
-    velocityIPMap.put(0.5, 40.0);
-    velocityIPMap.put(1.0, 42.0);
-    velocityIPMap.put(2.0, 45.0);
-    velocityIPMap.put(3.0, 53.0);
-    velocityIPMap.put(4.0, 57.0);
-    velocityIPMap.put(5.0, 62.0);
+    velocityIPMap.put(0.5, 43.0);
+    velocityIPMap.put(1.0, 47.0);
+    velocityIPMap.put(2.0, 50.0);
+    velocityIPMap.put(3.0, 54.0);
+    velocityIPMap.put(4.0, 62.0);
+    velocityIPMap.put(5.0, 70.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -110,8 +112,10 @@ public class Shoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(timeoutTimer.get() > timeoutTime){
-      return true;
+    if(timeoutTime != 0){
+      if(timeoutTimer.get() > timeoutTime){
+        return true;
+      }
     }
     return false;
   }

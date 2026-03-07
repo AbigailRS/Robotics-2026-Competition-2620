@@ -43,6 +43,7 @@ public class bigRockIntake extends SubsystemBase {
                                 ExtendVoltageSetPublisher = table.getDoubleTopic("Extend Voltage SetPoint").publish(),
                                 IntakeVoltagePublisher = table.getDoubleTopic("Intake Voltage").publish(),
                                 ExtendVoltagePublisher = table.getDoubleTopic("Extend Voltage").publish(),
+                                ExtendPositionPublisher = table.getDoubleTopic("Extend Position").publish(),
                                 intakeExtendPostionForwardsPublisher = table.getDoubleTopic("Extend Forwards").publish(),
                                 intakeExtendPostionBackwardsPublisher = table.getDoubleTopic("Extend Backwards").publish();
   /** Creates a new rockDestroyerInxder. */
@@ -89,6 +90,7 @@ public class bigRockIntake extends SubsystemBase {
     ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
     intakeExtendPostionBackwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
     intakeExtendPostionForwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
+    ExtendPositionPublisher.set(extendPos);
 
     if(posControlOn){
       rockPusher.setControl(positionVoltage.withPosition(extendPos).withEnableFOC(true));

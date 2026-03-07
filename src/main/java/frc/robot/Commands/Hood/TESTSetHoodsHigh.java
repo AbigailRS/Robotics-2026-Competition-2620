@@ -14,7 +14,7 @@ public class TESTSetHoodsHigh extends Command {
   Hoods hoodSubsystem;
   public TESTSetHoodsHigh(Hoods hoodSubsystem) {
     this.hoodSubsystem = hoodSubsystem;
-    addRequirements(this.hoodSubsystem);
+    //addRequirements(this.hoodSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

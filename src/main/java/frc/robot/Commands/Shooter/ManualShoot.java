@@ -27,7 +27,7 @@ public class ManualShoot extends Command {
     this.indexer = indexer;
     this.shooter = shooter;
 
-    addRequirements(indexer, shooter);
+    //addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -44,7 +44,7 @@ public class ManualShoot extends Command {
   public void execute() {
 
     shooter.setLeftSlingShotVoltage(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
-    shooter.setRightSlingVelocity(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
+    shooter.setRightSlingShotVoltage(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
     if (shootDelayTimer.get() > 1.0) {

@@ -20,7 +20,7 @@ public class SearchForTarget extends Command {
 
   public SearchForTarget(Turret turret) {
     this.turret = turret;
-    addRequirements(turret);
+    //addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -70,7 +70,7 @@ public class Constants {
     public static final double TURRET_MAX_OUTPUT_VOLTS = 3.0;
     public static final double TURRET_RAMPRATE = 0.0;   //Defined as amount of time to go from 0 to 12v
     public static final InvertedValue TURRET_INVERSION = InvertedValue.Clockwise_Positive;
-    public static final double TURRET_CURRENT_LIMIT = 15; //amps
+    public static final double TURRET_CURRENT_LIMIT = 18; //amps
     public static final NeutralModeValue TURRET_NEUTRALMODE = NeutralModeValue.Coast;
     public static final double TURRET_SEARCH_VOLTAGE = 6.0;
     public static final double TURRET_STALL_VELOCITY = 0.2;
@@ -80,7 +80,7 @@ public class Constants {
     public static final double TURRET_LEFT_LIMIT = -100.0;
     public static final double TURRET_RIGHT_LIMIT = 100.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
-    public static final double TURRET_MOTOR_TO_TURRET_RATIO = 97.65;
+    public static final double TURRET_MOTOR_TO_TURRET_RATIO = 35.15;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -118,7 +118,7 @@ public class Constants {
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
-    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.60;
+    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.40;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -140,8 +140,8 @@ public class Constants {
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;
-    public static final int RIGHT_INDEXER_CANID = 51;
-    public static final int LEFT_INDEXER_CANID = 52;
+    public static final int RIGHT_INDEXER_CANID = 52;
+    public static final int LEFT_INDEXER_CANID = 51;
 
     public static final int CONVEYOR_VOLTAGE = 4;
     public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
@@ -153,8 +153,8 @@ public class Constants {
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;
     public static final double RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
 
-    public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.Clockwise_Positive;
-    public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue INDEX_CONVERY_INVERT  = InvertedValue.Clockwise_Positive;
 
     public static final double LEFT_INDEXER_STOP = 0.0;
@@ -170,9 +170,9 @@ public class Constants {
     //Hoods
     public static final int LEFT_HOOD_SERVO = 0;
     public static final int RIGHT_HOOD_SERVO = 1;
-    public static final double HOOD_LEFT_HIGH_POSITION = .95;
-    public static final double HOOD_LEFT_LOW_POSITION = 0.01;
+    public static final double HOOD_LEFT_HIGH_POSITION = .01;
+    public static final double HOOD_LEFT_LOW_POSITION = 0.99;
     public static final double HOOD_RIGHT_HIGH_POSITION = 0.01;
-    public static final double HOOD_RIGHT_LOW_POSITION = .95;
+    public static final double HOOD_RIGHT_LOW_POSITION = .99;
 
 }

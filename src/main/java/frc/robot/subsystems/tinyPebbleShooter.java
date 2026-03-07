@@ -65,16 +65,16 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
-    slot1Configs.kV = 0.2;
-    slot1Configs.kP = 0.025;
+    slot1Configs.kV = 0.105;
+    slot1Configs.kP = 0.01;
     slot1Configs.kI = 0;
     slot1Configs.kD = 0.0;
-    rightSlotConfigs.kV = 0.2;
-    rightSlotConfigs.kP = 0.025;
+    rightSlotConfigs.kV = 0.105;
+    rightSlotConfigs.kP = 0.01;
     rightSlotConfigs.kI = 0.0;
     rightSlotConfigs.kD = 0.0;
     rightSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
-    leftSlingShotConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    leftSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     rightSlingShotConfig.withSlot1(rightSlotConfigs);
     leftSlingShotConfig.withSlot1(slot1Configs);
     rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
@@ -114,7 +114,6 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   public void setRightSlingVelocity(double velocity){
     this.rightVelocity = velocity;
-    System.out.println("Right set" + velocity);
     rightShooterVeloControlMode = true;
   }
 
@@ -161,13 +160,13 @@ public class tinyPebbleShooter extends SubsystemBase {
   }
 
   public void updateLogging(){
-    // shooterLeftVelocitySetPointPublisher.set(leftVelocity);
-    // shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
-    // shooterRightVelocitySetPointPublisher.set(rightVelocity);
-    // shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
-    // shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
-    // shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
-    // atLeftVeloPub.set(this.atLeftShootVelocity());
-    // atRightVeloPub.set(this.atRightShootVelocity());
+    shooterLeftVelocitySetPointPublisher.set(leftVelocity);
+    shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
+    shooterRightVelocitySetPointPublisher.set(rightVelocity);
+    shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
+    shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
+    shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
+    atLeftVeloPub.set(this.atLeftShootVelocity());
+    atRightVeloPub.set(this.atRightShootVelocity());
   }
 }

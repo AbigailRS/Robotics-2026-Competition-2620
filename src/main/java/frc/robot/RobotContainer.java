@@ -130,10 +130,9 @@ public class RobotContainer {
 
     private final Trigger shootTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
     private final Trigger passTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
-    private final Trigger manualTrigger = new Trigger(() -> turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger manualTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && turret.manualRotateEnabled() && !DriverStation.isDisabled());
     private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
     // private final Trigger passOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled());
-
     
     public RobotContainer() {
 
@@ -143,7 +142,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("RetractIntake", new IntakeRetractPos(intake));
         NamedCommands.registerCommand("Wait3s", new AutoWait(3.0));
 
-        autoChooser = AutoBuilder.buildAutoChooser("Test");
+        autoChooser = AutoBuilder.buildAutoChooser("");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -186,12 +185,14 @@ public class RobotContainer {
 
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
+        turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+
         // OPERATOR CONTROLS
 
         driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
-        inOwnZoneTrigger.whileTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
-        outOfZoneTrigger.whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
-        driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
+        // inOwnZoneTrigger.onTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        outOfZoneTrigger.onTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        //driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
         shootTrigger.whileTrue(new ParallelCommandGroup(new Shoot(shooter, index, drivetrain), new IntakeRetractPos(intake)));
         shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
@@ -199,10 +200,13 @@ public class RobotContainer {
         manualTrigger.whileTrue(new ManualShoot(shooter, index));
 
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
+        driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
+        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));
         driver.a().whileTrue(new climbOn(climb));
         driver.b().whileTrue(new climbOff(climb));

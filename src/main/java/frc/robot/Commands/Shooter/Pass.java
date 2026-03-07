@@ -5,6 +5,7 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.FieldZoneManager;
@@ -21,6 +22,7 @@ public class Pass extends Command {
   rockDestroyerInxder indexer;
   boolean leftSpeedReached, rightSpeedReached;
   CommandSwerveDrivetrain drivetrain;
+  Timer shootDelayTimer;
 
   public Pass(tinyPebbleShooter shooter, rockDestroyerInxder indexer, CommandSwerveDrivetrain drivetrain) {
     this.indexer = indexer;
@@ -34,36 +36,24 @@ public class Pass extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    shootDelayTimer = new Timer();
+    shootDelayTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    shooter.setLeftSlingVelocity(Constants.SHOOTER_PASS_VELOCITY);
-    shooter.setRightSlingVelocity(Constants.SHOOTER_PASS_VELOCITY);
-
+    shooter.setLeftSlingShotVoltage(0.95);
+    shooter.setRightSlingShotVoltage(0.95);
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
-    if (shooter.atLeftShootVelocity()) {
-      leftSpeedReached = true; 
-    }
-
-    if (shooter.atRightShootVelocity()) {
-      rightSpeedReached = true; 
-    }
-
-    if(leftSpeedReached && FieldZoneManager.inCenterY(drivetrain.getState().Pose.getTranslation())){
+    if (shootDelayTimer.get() > 1.0) {
+      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
       indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
-    }
-    if(rightSpeedReached && FieldZoneManager.inCenterY(drivetrain.getState().Pose.getTranslation())){
-      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
-    }
-    else{
       indexer.setRightRockSmusherVoltage(0.0);
     }
 
@@ -78,6 +68,8 @@ public class Pass extends Command {
     indexer.setConveryVoltage(0.0);
     indexer.setLeftRockSumusherVoltage(0.0);
     indexer.setRightRockSmusherVoltage(0.0);
+    shootDelayTimer.reset();
+    shootDelayTimer.stop();
   }
 
   // Returns true when the command should end.

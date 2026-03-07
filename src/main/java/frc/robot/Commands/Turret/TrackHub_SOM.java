@@ -35,7 +35,7 @@ public class TrackHub_SOM extends Command {
     this.drivetrain = drivetrain;
     this.turret = turret;
     this.hoods = hoods;
-    addRequirements(turret);
+    //addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

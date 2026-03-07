@@ -66,11 +66,11 @@ public class tinyPebbleShooter extends SubsystemBase {
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
     slot1Configs.kV = 0.10;
-    slot1Configs.kP = 0.4;
+    slot1Configs.kP = 0.375;
     slot1Configs.kI = 0;
     slot1Configs.kD = 0.0;
     rightSlotConfigs.kV = 0.10;
-    rightSlotConfigs.kP = 0.4;
+    rightSlotConfigs.kP = 0.375;
     rightSlotConfigs.kI = 0.0;
     rightSlotConfigs.kD = 0.0;
     rightSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);

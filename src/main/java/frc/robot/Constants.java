@@ -143,9 +143,9 @@ public class Constants {
     public static final int RIGHT_INDEXER_CANID = 52;
     public static final int LEFT_INDEXER_CANID = 51;
 
-    public static final int CONVEYOR_VOLTAGE = 4;
-    public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
-    public static final int LEFT_ROCK_SMUSHER_VOLTAGE = 4;
+    public static final double CONVEYOR_VOLTAGE = 4;
+    public static final double RIGHT_ROCK_SMUSHER_VOLTAGE = 1.5;
+    public static final double LEFT_ROCK_SMUSHER_VOLTAGE = 1.5;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
     public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.60;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;

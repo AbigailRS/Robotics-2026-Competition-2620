@@ -60,8 +60,8 @@ public class Shoot extends Command {
 
     velocityIPMap.put(0.5, 44.0);
     velocityIPMap.put(1.0, 45.0);
-    velocityIPMap.put(2.0, 46.0);
-    velocityIPMap.put(3.0, 52.0);
+    velocityIPMap.put(2.0, 49.0);
+    velocityIPMap.put(3.0, 58.5);
     velocityIPMap.put(4.0, 62.0);
     velocityIPMap.put(5.0, 70.0);
   }
@@ -83,13 +83,13 @@ public class Shoot extends Command {
     }
 
     if(leftSpeedReached){
-      indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
+      indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
     }
     if(rightSpeedReached){
-      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
+      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
     }
     else{
       indexer.setRightRockSmusherVoltage(0.0);

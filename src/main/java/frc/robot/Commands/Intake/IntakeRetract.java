@@ -15,6 +15,7 @@ public class IntakeRetract extends Command {
   /** Creates a new IntakeExtend. */
   public IntakeRetract(bigRockIntake intakeExtender) {
     this.intakeExtender = intakeExtender;
+    addRequirements(intakeExtender);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -26,13 +27,13 @@ public class IntakeRetract extends Command {
   @Override
   public void execute() {
     //intakeExtender.setExtendVoltage(-Constants.EXTEND_VOLTAGE_PERCENTAGE);
-    intakeExtender.setExtendPosition(Constants.EXTEND_POSITION_IN);
+    intakeExtender.setExtendVoltage(-Constants.EXTEND_VOLTAGE_PERCENTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //intakeExtender.setExtendVoltage(Constants.INTAKE_STOP);
+    intakeExtender.setExtendVoltage(Constants.INTAKE_STOP);
   }
 
   // Returns true when the command should end.

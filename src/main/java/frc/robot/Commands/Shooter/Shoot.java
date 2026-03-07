@@ -58,10 +58,10 @@ public class Shoot extends Command {
       timeoutTimer.start();
     }
 
-    velocityIPMap.put(0.5, 41.0);
-    velocityIPMap.put(1.0, 43.0);
-    velocityIPMap.put(2.0, 45.0);
-    velocityIPMap.put(3.0, 50.0);
+    velocityIPMap.put(0.5, 44.0);
+    velocityIPMap.put(1.0, 45.0);
+    velocityIPMap.put(2.0, 46.0);
+    velocityIPMap.put(3.0, 52.0);
     velocityIPMap.put(4.0, 62.0);
     velocityIPMap.put(5.0, 70.0);
   }
@@ -74,21 +74,21 @@ public class Shoot extends Command {
     shooter.setRightSlingVelocity(velocityIPMap.get(FieldZoneManager.getDistanceTogoal(drivetrain.getState().Pose.getTranslation())));
     indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
-    // if (shooter.atLeftShootVelocity()) {
-    //   leftSpeedReached = true; 
-    // }
+    if (shooter.atLeftShootVelocity()) {
+      leftSpeedReached = true; 
+    }
 
-    // if (shooter.atRightShootVelocity()) {
-    //   rightSpeedReached = true; 
-    // }
+    if (leftSpeedReached) {
+      rightSpeedReached = true; 
+    }
 
-    if(shooter.atLeftShootVelocity()){
+    if(leftSpeedReached){
       indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
     }
-    if(shooter.atRightShootVelocity()){
+    if(rightSpeedReached){
       indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
     }
     else{

@@ -25,7 +25,7 @@ public class climbOff extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climbMountain.setClimbVoltage(Constants.RETRACT_CLIMB_VOLTAGE_PERCENTAGE);
+    climbMountain.setClimbVoltage(-5);
   }
 
   // Called once the command ends or is interrupted.

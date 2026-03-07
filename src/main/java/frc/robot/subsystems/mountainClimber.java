@@ -16,7 +16,7 @@ import frc.robot.Constants;
 
 public class mountainClimber extends SubsystemBase {
 
-  private TalonFX mountainClimbingLeft = new TalonFX(Constants.CLIMB_LEFT_CANID, CANBus.roboRIO());
+  private TalonFX mountainClimbingLeft = new TalonFX(Constants.CLIMB_LEFT_CANID, "*");
 
   private TalonFXConfiguration leftClimbConfig = new TalonFXConfiguration();
 
@@ -49,6 +49,8 @@ public class mountainClimber extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    mountainClimbingLeft.setVoltage(climbVoltage);
     // This method will be called once per scheduler run
     // climbLeftMotorSetPositionPublisher.set(climbingLeftPosition);
     // climbLeftMotorPositionPublisher.set(mountainClimbingLeft.getPosition().getValueAsDouble());

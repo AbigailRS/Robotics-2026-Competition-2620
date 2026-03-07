@@ -134,7 +134,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
+                //drive.withVelocityX(FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()) ? driver.getLeftY() * Constants.MaxSpeed : -driver.getLeftY() * Constants.MaxSpeed * Constants.SLOW_SPEED_MULTIPLIER) // Drive forward with negative Y (forward)
+                    drive.withVelocityX(driver.getLeftY() * Constants.MaxSpeed)
                     .withVelocityY(driver.getLeftX() * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
@@ -198,8 +199,8 @@ public class RobotContainer {
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));
-        driver.a().whileTrue(new climbOn(climb));
-        driver.b().whileTrue(new climbOff(climb));
+        driver.y().whileTrue(new climbOn(climb));
+        driver.povUp().whileTrue(new climbOff(climb));
     }
 
     public Command getAutonomousCommand() {

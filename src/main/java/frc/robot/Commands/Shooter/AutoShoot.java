@@ -28,7 +28,7 @@ public class AutoShoot extends Command {
     this.indexer = indexer;
     this.shooter = shooter;
     this.timeOut = timeOut;
-    addRequirements(indexer, shooter);
+    //addRequirements(indexer, shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

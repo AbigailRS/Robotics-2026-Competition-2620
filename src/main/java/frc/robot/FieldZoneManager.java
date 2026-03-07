@@ -7,7 +7,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.enums.FieldZone;
+import frc.robot.enums.FieldZoneX;
+import frc.robot.enums.FieldZoneY;
 
 public class FieldZoneManager {
 
@@ -15,39 +16,62 @@ public class FieldZoneManager {
     private static final NetworkTable table = inst.getTable("Field Zone Manager");
     private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
     private static final StringPublisher zonePub = table.getStringTopic("Zone").publish();
-    private static FieldZone zone;
+    private static FieldZoneX zoneX;
+    private static FieldZoneY zoneY;
     private static Alliance alliance;
 
-    public static FieldZone getFieldZone(Translation2d translation){
+    public static FieldZoneX getFieldZoneX(Translation2d translation){
         if(translation.getX() < 4.0){
-            return FieldZone.BLUE;
+            return FieldZoneX.BLUE;
         }
         else if(translation.getX() < 6.0){
-            return FieldZone.BLUEBUMP;
+            return FieldZoneX.BLUEBUMP;
         }
         else if(translation.getX() < 10.0){
-            return FieldZone.NEUTRAL;
+            return FieldZoneX.NEUTRAL;
         }
         else if(translation.getX() < 12.0){
-            return FieldZone.REDBUMP;
+            return FieldZoneX.REDBUMP;
         }
         else{
-            return FieldZone.RED;
+            return FieldZoneX.RED;
+        }
+        
+    }
+    public static FieldZoneY getFieldZoneY(Translation2d translation){
+        if(translation.getX() < 3.0){
+            return FieldZoneY.SCORING_TABLE_ADJACENT;
+        }
+        else if(translation.getX() < 4.5){
+            return FieldZoneY.CENTER;
+        }
+        else {
+            return FieldZoneY.SCORING_TABLE_OPPOSITE;
         }
         
     }
 
-    public static boolean inOwnZone(Translation2d translation){
-        zone = getFieldZone(translation);
-        zonePub.set(zone.name());
+    public static boolean inOwnZoneX(Translation2d translation){
+        zoneX = getFieldZoneX(translation);
+        zonePub.set(zoneX.name());
         alliance = DriverStation.getAlliance().get();
-        if(alliance == Alliance.Red && zone == FieldZone.RED){
+        if(alliance == Alliance.Red && zoneX == FieldZoneX.RED){
             return true;
         }
-        else if(alliance == Alliance.Blue && zone == FieldZone.BLUE){
+        else if(alliance == Alliance.Blue && zoneX == FieldZoneX.BLUE){
             return true;
         }
         return false;
+    }
+
+    public static boolean inCenterY(Translation2d translation){
+        zoneY = getFieldZoneY(translation);
+        if(zoneY == FieldZoneY.CENTER){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public static double getDistanceTogoal(Translation2d robotTranslation){

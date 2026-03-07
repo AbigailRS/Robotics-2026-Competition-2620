@@ -2,31 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Turret;
+package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Turret;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DisableManualRotate extends Command {
-  /** Creates a new DisableManualrotate. */
-  private Turret turret;
-
-  public DisableManualRotate(Turret turret) {
-    this.turret = turret;
-    addRequirements(turret);
+public class AutoWait extends Command {
+  Timer waitTimer;
+  double waitTime;
+  /** Creates a new AutoWait. */
+  public AutoWait(double waitTime) {
+    this.waitTime = waitTime;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    waitTimer = new Timer();
+    waitTimer.reset();
+    waitTimer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    turret.setManualRotate(false);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -35,7 +36,7 @@ public class DisableManualRotate extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(turret.manualRotateEnabled()){
+    if(waitTimer.get() > waitTime){
       return true;
     }
     return false;

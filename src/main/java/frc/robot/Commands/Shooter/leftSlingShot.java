@@ -16,7 +16,7 @@ public class leftSlingShot extends Command {
   /** Creates a new lazySusanTurn. */
   public leftSlingShot(tinyPebbleShooter pebbleShooter) {
     this.pebbleShooter = pebbleShooter;
-    addRequirements(pebbleShooter);
+    //addRequirements(pebbleShooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

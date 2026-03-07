@@ -53,15 +53,15 @@ public class SearchForTargetV2_SOM extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    leftHoodIMap.put(1.0, 0.01);
-    leftHoodIMap.put(2.0, 0.05);
-    leftHoodIMap.put(3.0, 0.05);
-    leftHoodIMap.put(5.0, 0.2);
+    leftHoodIMap.put(1.0, 0.99);
+    leftHoodIMap.put(2.0, 0.90);
+    leftHoodIMap.put(3.0, 0.85);
+    leftHoodIMap.put(5.0, 0.5);
 
     rightHoodIMap.put(1.0, 0.99);
-    rightHoodIMap.put(2.0, 0.95);
-    rightHoodIMap.put(3.0, 0.95);
-    rightHoodIMap.put(5.0, 0.8);
+    rightHoodIMap.put(2.0, 0.90);
+    rightHoodIMap.put(3.0, 0.85);
+    rightHoodIMap.put(5.0, 0.5);
 
   }
 
@@ -104,7 +104,12 @@ public class SearchForTargetV2_SOM extends Command {
 
     adjustedAngleToGoalPub.set(angleToGoalDegrees);
     pigeonAnglePub.set(driveTrain.getState().Pose.getRotation().getDegrees());
-    turret.setTurretPosition(angleToGoalDegrees);
+    if(turret.manualRotateEnabled()){
+      turret.setTurretVoltage(0);
+    }
+    else{
+      turret.setTurretPosition(angleToGoalDegrees);
+    }
 
     hoods.setLeftServoPosition(leftHoodIMap.get(FieldZoneManager.getDistanceTogoal(projectedPosition)));
     hoods.setRightServoPosition(rightHoodIMap.get(FieldZoneManager.getDistanceTogoal(projectedPosition)));

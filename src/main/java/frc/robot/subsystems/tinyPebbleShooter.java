@@ -65,16 +65,16 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   /** Creates a new tinyPebbleShooter. */
   public tinyPebbleShooter() {
-    slot1Configs.kV = 0.11;
-    slot1Configs.kP = 0.025;
+    slot1Configs.kV = 0.105;
+    slot1Configs.kP = 0.01;
     slot1Configs.kI = 0;
     slot1Configs.kD = 0.0;
-    rightSlotConfigs.kV = 0.11;
-    rightSlotConfigs.kP = 0.025;
+    rightSlotConfigs.kV = 0.105;
+    rightSlotConfigs.kP = 0.01;
     rightSlotConfigs.kI = 0.0;
     rightSlotConfigs.kD = 0.0;
     rightSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
-    leftSlingShotConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive);
+    leftSlingShotConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     rightSlingShotConfig.withSlot1(rightSlotConfigs);
     leftSlingShotConfig.withSlot1(slot1Configs);
     rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
@@ -114,7 +114,6 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   public void setRightSlingVelocity(double velocity){
     this.rightVelocity = velocity;
-    System.out.println("Right set" + velocity);
     rightShooterVeloControlMode = true;
   }
 
@@ -143,21 +142,6 @@ public class tinyPebbleShooter extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // LaserCan.Measurement leftLCMeasurement = leftLaserCan.getMeasurement();
-    // if (leftLCMeasurement != null && leftLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-    //   if(leftLCMeasurement.distance_mm > Constants.LASERCAN_LEFT_THRESHOLD_MM && leftLCMeasurement.distance_mm < Constants.LASERCAN_LEFT_THRESHOLD_MM){
-    //     shotCount++;
-    //   }
-    //   laserCanLeftLastMeasurement = leftLCMeasurement.distance_mm;
-    // } 
-    // LaserCan.Measurement rightLCMeasurement = rightLaserCan.getMeasurement();
-    // if (rightLCMeasurement != null && rightLCMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-    //   if(rightLCMeasurement.distance_mm > Constants.LASERCAN_RIGHT_THRESHOLD_MM && rightLCMeasurement.distance_mm < Constants.LASERCAN_RIGHT_THRESHOLD_MM){
-    //     shotCount++;
-    //   }
-    //   laserCanRightLastMeasurement = rightLCMeasurement.distance_mm;
-    // } 
-
     if(leftShooterVeloControlMode){
       leftSlingShot.setControl(v_leftVelocityVoltage.withVelocity(leftVelocity).withEnableFOC(true));
     }
@@ -176,13 +160,13 @@ public class tinyPebbleShooter extends SubsystemBase {
   }
 
   public void updateLogging(){
-    // shooterLeftVelocitySetPointPublisher.set(leftVelocity);
-    // shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
-    // shooterRightVelocitySetPointPublisher.set(rightVelocity);
-    // shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
-    // shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
-    // shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
-    // atLeftVeloPub.set(this.atLeftShootVelocity());
-    // atRightVeloPub.set(this.atRightShootVelocity());
+    shooterLeftVelocitySetPointPublisher.set(leftVelocity);
+    shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
+    shooterRightVelocitySetPointPublisher.set(rightVelocity);
+    shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
+    shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
+    shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
+    atLeftVeloPub.set(this.atLeftShootVelocity());
+    atRightVeloPub.set(this.atRightShootVelocity());
   }
 }

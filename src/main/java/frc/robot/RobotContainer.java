@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,10 +22,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Commands.AutoWait;
 import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
 import frc.robot.Commands.climbOff;
@@ -43,6 +46,8 @@ import frc.robot.Commands.Intake.IntakeRetractPos;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
+import frc.robot.Commands.Shooter.ManualShoot;
+import frc.robot.Commands.Shooter.Pass;
 import frc.robot.Commands.Shooter.Shoot;
 import frc.robot.Commands.Shooter.leftSlingShot;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
@@ -109,24 +114,35 @@ public class RobotContainer {
     
     private final SendableChooser<Command> autoChooser;
 
-    // private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getX()));
+    private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
+                                                            DriverStation.getMatchTime() == 129.0 ||
+                                                            DriverStation.getMatchTime() == 104.0 ||
+                                                            DriverStation.getMatchTime() == 79.0 ||
+                                                            DriverStation.getMatchTime() == 54.0 ||
+                                                            DriverStation.getMatchTime() == 29.0
+                                                        );
 
-    // private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
-    //                                                         DriverStation.getMatchTime() == 129.0 ||
-    //                                                         DriverStation.getMatchTime() == 104.0 ||
-    //                                                         DriverStation.getMatchTime() == 79.0 ||
-    //                                                         DriverStation.getMatchTime() == 54.0 ||
-    //                                                         DriverStation.getMatchTime() == 29.0
-    //                                                     );
+    // private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
+    // private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
 
-    private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
-    private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
+    private final Trigger inOwnZoneTrigger = new Trigger(() -> FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()));
+    private final Trigger outOfZoneTrigger = new Trigger(() -> !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()));
 
-    private final Trigger inOwnZone = new Trigger(() -> FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
-    private final Trigger outOfZone = new Trigger(() -> !FieldZoneManager.inOwnZone(drivetrain.getState().Pose.getTranslation()));
+    private final Trigger shootTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger passTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger manualTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    // private final Trigger passOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled());
     
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Test");
+
+        NamedCommands.registerCommand("Shoot7s", new Shoot(shooter, index, drivetrain, 7.0));
+        NamedCommands.registerCommand("Shoot10s", new Shoot(shooter, index, drivetrain, 10.0));
+        NamedCommands.registerCommand("ExtendIntake", new IntakeExtendPos(intake));
+        NamedCommands.registerCommand("RetractIntake", new IntakeRetractPos(intake));
+        NamedCommands.registerCommand("Wait3s", new AutoWait(3.0));
+
+        autoChooser = AutoBuilder.buildAutoChooser("");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
@@ -156,10 +172,6 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
         ));  
         
-
-        intake.setDefaultCommand(new IntakeRetractPos(intake));
-        
-
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         // driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -171,40 +183,30 @@ public class RobotContainer {
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        //updateGameState.onTrue(new UpdateGameState(gameStateManager));
-        // inOwnZone.whileTrue(new SearchForTarget(turret));
+        updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
+        turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
 
         // OPERATOR CONTROLS
-        // operator.x().whileTrue(new IntakeExtend(intake));
-        // operator.b().whileTrue(new IntakeRetract(intake));
-        // operator.leftBumper().whileTrue(new IntakeIn(intake));
-        // operator.leftBumper().whileTrue(new converyforword(index));
-        // operator.leftTrigger().whileTrue(new IntakeRefund(intake));
-        // operator.rightBumper().whileTrue(new leftSlingShot(shooter));
-        // operator.rightBumper().whileTrue(new rightSlingShot(shooter));
-        //driver.x().whileTrue(new TrackHub(drivetrain, turret, hoods));
-        //ApriltagsFoundForTurret.whileTrue(new TrackHub(drivetrain, turret, hoods));
-        //ApriltagsFoundForTurret.whileTrue(new TrackHub_SOM(drivetrain, turret, hoods));
-        //noApriltagsForTurret.whileTrue(new SearchForTargetV2(turret, drivetrain));
-        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
-        inOwnZone.whileTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
-        outOfZone.whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
-        driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
-        // operator.rightBumper().whileTrue(new LeftUp(index));
-        // operator.rightBumper().whileTrue(new RightUp(index));
-        // operator.rightBumper().whileTrue(new converyforword(index));
-        // operator.rightTrigger().whileTrue(new leftSlingShot(shooter));
-        // operator.rightTrigger().whileTrue(new rightSlingShot(shooter));
-        // operator.x().whileTrue(new SearchForTarget(turret));
-        driver.rightTrigger().whileTrue(new Shoot(shooter, index, drivetrain));
-        // // operator.rightTrigger().whileTrue(new converybackwards(index));
-        // // operator.rightTrigger().whileTrue(new RightDown(index));
-        // // operator.rightTrigger().whileTrue(new LeftDown(index));
+        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        // inOwnZoneTrigger.onTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        outOfZoneTrigger.onTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        //driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
+
+        shootTrigger.whileTrue(new ParallelCommandGroup(new Shoot(shooter, index, drivetrain), new IntakeRetractPos(intake)));
+        shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
+        passTrigger.whileTrue(new Pass(shooter, index, drivetrain));
+        manualTrigger.whileTrue(new ManualShoot(shooter, index));
+
+        shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
+        driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
+
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
+        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));
         driver.a().whileTrue(new climbOn(climb));
         driver.b().whileTrue(new climbOff(climb));

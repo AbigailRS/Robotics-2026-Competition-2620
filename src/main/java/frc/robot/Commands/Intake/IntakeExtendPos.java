@@ -16,7 +16,7 @@ public class IntakeExtendPos extends Command {
   /** Creates a new IntakeExtendPos. */
   public IntakeExtendPos(bigRockIntake rockIntake) {
     this.rockIntake = rockIntake;
-    addRequirements(rockIntake);
+    //addRequirements(rockIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -40,6 +40,6 @@ public class IntakeExtendPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return rockIntake.intakeInPosition();
   }
 }

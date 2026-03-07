@@ -1,6 +1,6 @@
 package frc.robot.enums;
 
-public enum FieldZone {
+public enum FieldZoneX {
     RED,
     REDBUMP,
     NEUTRAL,

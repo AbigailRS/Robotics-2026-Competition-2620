@@ -114,8 +114,8 @@ public class Constants {
     public static final int LASERCAN_LEFT_THRESHOLD_MM = 5;
     public static final int LASERCAN_RIGHT_THRESHOLD_MM = 5;
 
-    public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2;
-    public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2;
+    public static final double SHOOTER_LEFT_ALLOWABLE_ERROR = 2.0;
+    public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2.0;
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
     public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.40;
@@ -147,7 +147,7 @@ public class Constants {
     public static final int RIGHT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final int LEFT_ROCK_SMUSHER_VOLTAGE = 4;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.35;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.60;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;

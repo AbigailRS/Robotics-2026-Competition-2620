@@ -15,15 +15,9 @@ public class IntakeExtend extends Command {
   /** Creates a new IntakeExtend. */
   public IntakeExtend(bigRockIntake intakeExtender) {
     this.intakeExtender = intakeExtender;
+    addRequirements(intakeExtender);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-
-  private double intakeExtendPostionForward = 15;
-  private double intakeExtendPostionBackwards = -15;
-
-
-   private boolean intakeExtendPostionBackwardsControl = true, intakeExtendPostionForwardControl = true;
-
 
   // Called when the command is initially scheduled.
   @Override
@@ -33,16 +27,6 @@ public class IntakeExtend extends Command {
   @Override
   public void execute() {
     intakeExtender.setExtendVoltage(Constants.EXTEND_VOLTAGE_PERCENTAGE);
-  }
-
-  public void setIntakeExtendPostionForward(double postion){
-    this.intakeExtendPostionForward = postion;
-    intakeExtendPostionForwardControl = true;
-  }
-
-  public void setIntakeExtendPostionBackwards(double postion){
-    this.intakeExtendPostionBackwards = postion;
-    intakeExtendPostionBackwardsControl = true;
   }
 
   // Called once the command ends or is interrupted.

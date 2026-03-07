@@ -186,6 +186,7 @@ public class RobotContainer {
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
         turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        //intake.setDefaultCommand(new IntakeRetract(intake));
 
         // OPERATOR CONTROLS
 
@@ -207,9 +208,9 @@ public class RobotContainer {
         driver.povDown().whileTrue(new DisableManualRotate(turret));
         driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
         driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-        driver.x().toggleOnTrue(new IntakeExtendPos(intake));
-        driver.a().whileTrue(new climbOn(climb));
-        driver.b().whileTrue(new climbOff(climb));
+        //driver.x().toggleOnTrue(new IntakeExtend(intake));
+        driver.a().whileTrue(new IntakeExtend(intake));
+        driver.b().whileTrue(new IntakeRetract(intake));
     }
 
     public Command getAutonomousCommand() {

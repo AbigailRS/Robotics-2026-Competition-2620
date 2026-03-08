@@ -132,11 +132,13 @@ public class Constants {
     public static final double EXTEND_POSITION_IN = 0.0;
 
     public static final double INTAKE_POSITION_IN = 0.0;
-    public static final double INTAKE_POSITION_OUT = 12.0;
+    public static final double INTAKE_POSITION_OUT = 30.0;
 
     public static final double INTAKE_STOP = 0.0;
 
     public static final double INTAKE_IN_POSITION_ERROR = 0.25;
+    public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 20.0;
+    public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;

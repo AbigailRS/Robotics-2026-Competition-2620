@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
@@ -17,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Commands.Intake.IntakeExtend;
 
 public class bigRockIntake extends SubsystemBase {
 
@@ -57,6 +59,9 @@ public class bigRockIntake extends SubsystemBase {
     configs.kD = 0.0;
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     extendConfig.withSlot1(configs);
+    extendConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
+    extendConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_EXTENSION_CURRENT_LIMIT);
+    rockPusher.setNeutralMode(NeutralModeValue.Brake);
     rockGrabber.getConfigurator().apply(intakeConfig);
     rockPusher.getConfigurator().apply(extendConfig);
   }
@@ -71,6 +76,17 @@ public class bigRockIntake extends SubsystemBase {
 
   public void setIntakeVoltage(double voltageIN){
       this.intakeVoltage = voltageIN;
+  }
+
+  public void setExtendEncoder(double position){
+    rockPusher.setPosition(position);
+  }
+
+  public boolean intakeRetracted(){
+    if(Math.abs(rockPusher.getVelocity().getValueAsDouble()) < 1.0 && rockPusher.getStatorCurrent().getValueAsDouble() > Constants.INTAKE_CURRENT_THRESHOLD){
+      return true;
+    }
+    return false;
   }
 
   public boolean intakeInPosition(){
@@ -98,8 +114,6 @@ public class bigRockIntake extends SubsystemBase {
     else{
       rockPusher.setVoltage(Constants.MAX_EXTEND_VOLTAGE * extendVoltage);
     }
-
-
     // This method will be called once per scheduler run
   }
 }

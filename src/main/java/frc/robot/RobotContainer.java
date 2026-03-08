@@ -43,6 +43,7 @@ import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeExtendPos;
 import frc.robot.Commands.Intake.IntakeRetractPos;
+import frc.robot.Commands.Intake.ZeroIntake;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
@@ -202,6 +203,7 @@ public class RobotContainer {
 
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
         driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
+        driver.leftBumper().whileTrue(new ZeroIntake(intake));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));

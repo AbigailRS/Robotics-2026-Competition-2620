@@ -25,7 +25,6 @@ public class SearchForTargetV2_SOM extends Command {
   /** Creates a new SearchForTarget. */
   Turret turret;
   CommandSwerveDrivetrain driveTrain;
-  Hoods hoods;
 
   double deltaX, deltaY, angleToGoalDegrees;
   int remainder;
@@ -38,14 +37,11 @@ public class SearchForTargetV2_SOM extends Command {
                                 projectedPosX = table.getDoubleTopic("Proj X").publish(),
                                 projectedPosY = table.getDoubleTopic("Proj Y").publish();
 
-  InterpolatingDoubleTreeMap leftHoodIMap = new InterpolatingDoubleTreeMap();
-  InterpolatingDoubleTreeMap rightHoodIMap = new InterpolatingDoubleTreeMap();
                                 
 
-  public SearchForTargetV2_SOM(Turret turret, CommandSwerveDrivetrain driveTrain, Hoods hoods) {
+  public SearchForTargetV2_SOM(Turret turret, CommandSwerveDrivetrain driveTrain) {
     this.turret = turret;
     this.driveTrain = driveTrain;
-    this.hoods = hoods;
     addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -53,15 +49,6 @@ public class SearchForTargetV2_SOM extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    leftHoodIMap.put(1.0, 0.99);
-    leftHoodIMap.put(2.0, 0.90);
-    leftHoodIMap.put(3.0, 0.85);
-    leftHoodIMap.put(5.0, 0.5);
-
-    rightHoodIMap.put(1.0, 0.99);
-    rightHoodIMap.put(2.0, 0.90);
-    rightHoodIMap.put(3.0, 0.85);
-    rightHoodIMap.put(5.0, 0.5);
 
   }
 
@@ -110,9 +97,6 @@ public class SearchForTargetV2_SOM extends Command {
     else{
       turret.setTurretPosition(angleToGoalDegrees);
     }
-
-    hoods.setLeftServoPosition(leftHoodIMap.get(FieldZoneManager.getDistanceTogoal(projectedPosition)));
-    hoods.setRightServoPosition(rightHoodIMap.get(FieldZoneManager.getDistanceTogoal(projectedPosition)));
 
   }
 

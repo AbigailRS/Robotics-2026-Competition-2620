@@ -40,11 +40,12 @@ public class bigRockIntake extends SubsystemBase {
   Slot1Configs configs = new Slot1Configs();
 
    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  private final NetworkTable table = inst.getTable("Indexer");
+  private final NetworkTable table = inst.getTable("Intake");
   private final DoublePublisher IntakeVoltageSetPublisher = table.getDoubleTopic("Intake Voltage SetPoint").publish(),
                                 ExtendVoltageSetPublisher = table.getDoubleTopic("Extend Voltage SetPoint").publish(),
                                 IntakeVoltagePublisher = table.getDoubleTopic("Intake Voltage").publish(),
                                 ExtendVoltagePublisher = table.getDoubleTopic("Extend Voltage").publish(),
+                                ExtendPositionSetpointPublisher = table.getDoubleTopic("Extend Position Setpoint").publish(),
                                 ExtendPositionPublisher = table.getDoubleTopic("Extend Position").publish(),
                                 intakeExtendPostionForwardsPublisher = table.getDoubleTopic("Extend Forwards").publish(),
                                 intakeExtendPostionBackwardsPublisher = table.getDoubleTopic("Extend Backwards").publish();
@@ -54,7 +55,7 @@ public class bigRockIntake extends SubsystemBase {
   public bigRockIntake() {
 
     configs.kV = 0.11;
-    configs.kP = 0.025;
+    configs.kP = 0.4;
     configs.kI = 0;
     configs.kD = 0.0;
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
@@ -67,10 +68,12 @@ public class bigRockIntake extends SubsystemBase {
   }
 
   public void setExtendVoltage(double voltageEX){
-      this.extendVoltage = voltageEX;
-    }
+    posControlOn = false;
+    this.extendVoltage = voltageEX;
+  }
 
   public void setExtendPosition(double extendPos){
+    posControlOn = true;
     this.extendPos = extendPos;
   }
 
@@ -106,7 +109,8 @@ public class bigRockIntake extends SubsystemBase {
     ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
     intakeExtendPostionBackwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
     intakeExtendPostionForwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
-    ExtendPositionPublisher.set(extendPos);
+    ExtendPositionSetpointPublisher.set(extendPos);
+    ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
 
     if(posControlOn){
       rockPusher.setControl(positionVoltage.withPosition(extendPos).withEnableFOC(true));

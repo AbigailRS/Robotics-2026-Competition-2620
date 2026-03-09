@@ -21,7 +21,7 @@ public class FieldZoneManager {
     private static Alliance alliance;
 
     public static FieldZoneX getFieldZoneX(Translation2d translation){
-        if(translation.getX() < 4.0){
+        if(translation.getX() < 3.5){
             return FieldZoneX.BLUE;
         }
         else if(translation.getX() < 6.0){
@@ -30,7 +30,7 @@ public class FieldZoneManager {
         else if(translation.getX() < 10.0){
             return FieldZoneX.NEUTRAL;
         }
-        else if(translation.getX() < 12.0){
+        else if(translation.getX() < 12.5){
             return FieldZoneX.REDBUMP;
         }
         else{
@@ -72,6 +72,15 @@ public class FieldZoneManager {
         else{
             return false;
         }
+    }
+
+    public static boolean inTrenchProtectionZone(Translation2d translation2d){
+        zoneX = getFieldZoneX(translation2d);
+        zoneY = getFieldZoneY(translation2d);
+        if((zoneX == FieldZoneX.BLUEBUMP || zoneX == FieldZoneX.REDBUMP) && zoneY != FieldZoneY.CENTER){
+            return true;
+        }
+        return false;
     }
 
     public static double getDistanceTogoal(Translation2d robotTranslation){

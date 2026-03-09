@@ -204,7 +204,7 @@ public class RobotContainer {
 
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
         //driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
-        driver.leftBumper().whileTrue(new ZeroIntake(intake));
+        driver.leftBumper().onTrue(new ZeroIntake(intake));
         driver.leftBumper().whileTrue(new ZeroTurret(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));

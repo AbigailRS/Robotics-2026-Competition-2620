@@ -25,7 +25,6 @@ public class TargetAllianceWall extends Command {
   /** Creates a new SearchForTarget. */
   Turret turret;
   CommandSwerveDrivetrain driveTrain;
-  Hoods hoods;
 
   double deltaX, deltaY, angleToWallDegrees;
   int remainder;
@@ -39,10 +38,9 @@ public class TargetAllianceWall extends Command {
                                 projectedPosY = table.getDoubleTopic("Proj Y").publish();
                                 
 
-  public TargetAllianceWall(Turret turret, CommandSwerveDrivetrain driveTrain, Hoods hoods) {
+  public TargetAllianceWall(Turret turret, CommandSwerveDrivetrain driveTrain) {
     this.turret = turret;
     this.driveTrain = driveTrain;
-    this.hoods = hoods;
     addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -68,8 +66,6 @@ public class TargetAllianceWall extends Command {
       angleToWallDegrees = angleToWallDegrees + 360;
     }
     turret.setTurretPosition(angleToWallDegrees);
-    hoods.setLeftServoPosition(Constants.HOOD_LEFT_HIGH_POSITION);
-    hoods.setRightServoPosition(Constants.HOOD_RIGHT_HIGH_POSITION);
 
   }
 

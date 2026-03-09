@@ -7,17 +7,16 @@ package frc.robot.Commands.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.bigRockIntake;
+import frc.robot.subsystems.rockDestroyerInxder;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IntakeExtendPos extends Command {
+public class ZeroIntake extends Command {
+  /** Creates a new ZeroIntake. */
+   bigRockIntake intake;
 
-  bigRockIntake rockIntake;
-
-  /** Creates a new IntakeExtendPos. */
-  public IntakeExtendPos(bigRockIntake rockIntake) {
-    this.rockIntake = rockIntake;
-    addRequirements(rockIntake);
-    //addRequirements(rockIntake);
+  public ZeroIntake(bigRockIntake intake) {
+    this.intake = intake;
+    addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -28,19 +27,20 @@ public class IntakeExtendPos extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
-    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    intake.setExtendVoltage(-Constants.INTAKE_VOLTAGE_PERCENTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rockIntake.intakeInPosition();
+    if(intake.intakeRetracted()){
+      intake.setExtendEncoder(0);
+      return true;
+    }
+    return false;
   }
 }

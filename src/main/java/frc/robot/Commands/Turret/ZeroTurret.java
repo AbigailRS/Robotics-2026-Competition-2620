@@ -2,22 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Intake;
+package frc.robot.Commands.Turret;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.bigRockIntake;
+import frc.robot.subsystems.Turret;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IntakeExtendPos extends Command {
+public class ZeroTurret extends Command {
+  /** Creates a new ZeroTurret. */
 
-  bigRockIntake rockIntake;
+  Turret turret;
 
-  /** Creates a new IntakeExtendPos. */
-  public IntakeExtendPos(bigRockIntake rockIntake) {
-    this.rockIntake = rockIntake;
-    addRequirements(rockIntake);
-    //addRequirements(rockIntake);
+  public ZeroTurret(Turret turret) {
+    this.turret = turret;
+    addRequirements(turret);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -28,19 +27,24 @@ public class IntakeExtendPos extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
-    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    turret.setTurretVoltage(12.0);
+    turret.setManualRotate(true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    turret.setManualRotate(false);
+    turret.setTurretVoltage(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rockIntake.intakeInPosition();
+    if(turret.isStalled()){
+      turret.setRotateEncoder(Constants.TURRET_LEFT_ENDSTOP_OFFSET);
+      return true;
+    }
+    return false;
   }
 }

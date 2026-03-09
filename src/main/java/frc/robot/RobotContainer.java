@@ -43,6 +43,7 @@ import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeExtendPos;
 import frc.robot.Commands.Intake.IntakeRetractPos;
+import frc.robot.Commands.Intake.ZeroIntake;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
@@ -62,6 +63,7 @@ import frc.robot.Commands.Turret.SearchForTargetV2_SOM;
 import frc.robot.Commands.Turret.TargetAllianceWall;
 import frc.robot.Commands.Turret.TrackHub;
 import frc.robot.Commands.Turret.TrackHub_SOM;
+import frc.robot.Commands.Turret.ZeroTurret;
 import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -186,7 +188,7 @@ public class RobotContainer {
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
         turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
-        //intake.setDefaultCommand(new IntakeRetract(intake));
+        intake.setDefaultCommand(new IntakeRetractPos(intake));
 
         // OPERATOR CONTROLS
 
@@ -201,14 +203,16 @@ public class RobotContainer {
         manualTrigger.whileTrue(new ManualShoot(shooter, index));
 
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
-        driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
+        //driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
+        driver.leftBumper().onTrue(new ZeroIntake(intake));
+        driver.leftBumper().whileTrue(new ZeroTurret(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
         driver.povDown().whileTrue(new DisableManualRotate(turret));
         driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
         driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-        //driver.x().toggleOnTrue(new IntakeExtend(intake));
+        driver.x().toggleOnTrue(new IntakeExtendPos(intake));
         driver.a().whileTrue(new IntakeExtend(intake));
         driver.b().whileTrue(new IntakeRetract(intake));
     }

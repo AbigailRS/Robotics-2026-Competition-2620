@@ -4,6 +4,7 @@
 
 package frc.robot.Commands.Intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.bigRockIntake;
@@ -18,7 +19,6 @@ public class IntakeRetractShoot extends Command {
   public IntakeRetractShoot(bigRockIntake rockIntake) {
     this.rockIntake = rockIntake;
     addRequirements(rockIntake);
-    //addRequirements(rockIntake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -50,6 +50,6 @@ public class IntakeRetractShoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rockIntake.intakeInPosition();
+    return rockIntake.intakeInPosition() && DriverStation.isAutonomousEnabled();
   }
 }

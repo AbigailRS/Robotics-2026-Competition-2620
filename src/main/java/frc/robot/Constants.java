@@ -61,6 +61,8 @@ public class Constants {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     public static final double LATENCY_CONSTANT = 0.5;
+    public static final double DRIVE_SHOOT_MODIFIER = 0.25;
+    public static final double DRIVE_TURN_MODIFIER = 0.65;
 
 
     //Turret Constants
@@ -139,7 +141,7 @@ public class Constants {
 
     public static final double INTAKE_STOP = 0.0;
 
-    public static final double INTAKE_IN_POSITION_ERROR = 0.25;
+    public static final double INTAKE_IN_POSITION_ERROR = 2.0;
     public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 15.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;

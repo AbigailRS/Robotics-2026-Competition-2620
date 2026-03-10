@@ -4,6 +4,7 @@
 
 package frc.robot.Commands.Intake;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.bigRockIntake;
@@ -29,7 +30,12 @@ public class IntakeExtendPos extends Command {
   @Override
   public void execute() {
     rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
-    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    if(rockIntake.intakeInPosition()){
+      rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      rockIntake.setIntakeVoltage(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +47,6 @@ public class IntakeExtendPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rockIntake.intakeInPosition();
+    return rockIntake.intakeInPosition() && DriverStation.isAutonomous();
   }
 }

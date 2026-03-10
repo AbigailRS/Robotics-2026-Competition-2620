@@ -140,8 +140,10 @@ public class RobotContainer {
     
     public RobotContainer() {
 
-        NamedCommands.registerCommand("Shoot7s", new Shoot(shooter, index, drivetrain, 7.0));
-        NamedCommands.registerCommand("Shoot10s", new Shoot(shooter, index, drivetrain, 10.0));
+        NamedCommands.registerCommand("ZeroIntake", new ZeroIntake(intake));
+        NamedCommands.registerCommand("ZeroTurret", new ZeroTurret(turret));
+        NamedCommands.registerCommand("ShootOn", new Shoot(shooter, index, drivetrain));
+        NamedCommands.registerCommand("ShootOff", new Shoot(shooter, index, drivetrain, 0.0));
         NamedCommands.registerCommand("ExtendIntake", new IntakeExtendPos(intake));
         NamedCommands.registerCommand("RetractIntake", new IntakeRetractPos(intake));
         NamedCommands.registerCommand("Wait3s", new AutoWait(3.0));
@@ -158,8 +160,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX()) * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY(), driver.rightTrigger().getAsBoolean()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX(), driver.rightTrigger().getAsBoolean()) * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );

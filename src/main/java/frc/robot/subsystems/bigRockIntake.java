@@ -55,7 +55,7 @@ public class bigRockIntake extends SubsystemBase {
   public bigRockIntake() {
 
     configs.kV = 0.11;
-    configs.kP = 0.5;
+    configs.kP = 0.65;
     configs.kI = 0;
     configs.kD = 0.0;
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
@@ -103,14 +103,14 @@ public class bigRockIntake extends SubsystemBase {
   public void periodic() {
     rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);
 
-    IntakeVoltageSetPublisher.set(intakeVoltage);
-    IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
-    ExtendVoltageSetPublisher.set(extendVoltage);
-    ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
-    intakeExtendPostionBackwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
-    intakeExtendPostionForwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
-    ExtendPositionSetpointPublisher.set(extendPos);
-    ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
+    // IntakeVoltageSetPublisher.set(intakeVoltage);
+    // IntakeVoltagePublisher.set(rockGrabber.getSupplyVoltage().getValueAsDouble());
+    // ExtendVoltageSetPublisher.set(extendVoltage);
+    // ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
+    // intakeExtendPostionBackwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
+    // intakeExtendPostionForwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
+    // ExtendPositionSetpointPublisher.set(extendPos);
+    // ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
 
     if(posControlOn){
       rockPusher.setControl(positionVoltage.withPosition(extendPos).withEnableFOC(true));

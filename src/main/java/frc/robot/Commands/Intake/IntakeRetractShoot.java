@@ -12,6 +12,7 @@ import frc.robot.subsystems.bigRockIntake;
 public class IntakeRetractShoot extends Command {
 
   bigRockIntake rockIntake;
+  boolean retractMode = false;
 
   /** Creates a new IntakeExtendPos. */
   public IntakeRetractShoot(bigRockIntake rockIntake) {
@@ -28,14 +29,22 @@ public class IntakeRetractShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_IN);
-    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    rockIntake.setUpdatedPID(0.2, 0, 0);
+    if(rockIntake.intakeInPosition() && retractMode){
+      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
+      retractMode = false;
+    }
+    else if(rockIntake.intakeInPosition() && !retractMode){
+      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
+      retractMode = true;
+    }
+    rockIntake.setIntakeVoltage(0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    rockIntake.setUpdatedPID(0.5, 0, 0);
   }
 
   // Returns true when the command should end.

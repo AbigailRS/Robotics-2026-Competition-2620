@@ -67,6 +67,14 @@ public class bigRockIntake extends SubsystemBase {
     rockPusher.getConfigurator().apply(extendConfig);
   }
 
+  public void setUpdatedPID(double p, double i, double d){
+    configs.kP = p;
+    configs.kI = i;
+    configs.kD = d;
+    extendConfig.withSlot1(configs);
+    rockPusher.getConfigurator().apply(extendConfig);
+  }
+
   public void setExtendVoltage(double voltageEX){
     posControlOn = false;
     this.extendVoltage = voltageEX;

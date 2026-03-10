@@ -38,13 +38,15 @@ import frc.robot.Commands.Conveyor.RightDown;
 import frc.robot.Commands.Conveyor.RightUp;
 import frc.robot.Commands.Conveyor.converybackwards;
 import frc.robot.Commands.Conveyor.converyforword;
+import frc.robot.Commands.Hood.RetractHoods;
+import frc.robot.Commands.Hood.SetHoodForPass;
+import frc.robot.Commands.Hood.SetHoodForShoot;
 import frc.robot.Commands.Hood.TESTSetHoodsHigh;
 import frc.robot.Commands.Hood.TESTSetHoodsLow;
 import frc.robot.Commands.Intake.IntakeExtend;
 import frc.robot.Commands.Intake.IntakeExtendPos;
 import frc.robot.Commands.Intake.IntakeRetractPos;
 import frc.robot.Commands.Intake.ZeroIntake;
-import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeRefund;
 import frc.robot.Commands.Intake.IntakeRetract;
 import frc.robot.Commands.Shooter.ManualShoot;
@@ -130,10 +132,10 @@ public class RobotContainer {
     private final Trigger inOwnZoneTrigger = new Trigger(() -> FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()));
     private final Trigger outOfZoneTrigger = new Trigger(() -> !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()));
 
-    private final Trigger shootTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger shootTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && driver.getLeftX() < 0.1 && driver.getLeftY() < 0.1);
     private final Trigger passTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
     private final Trigger manualTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && turret.manualRotateEnabled() && !DriverStation.isDisabled());
-    private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled());
+    private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && (driver.getLeftX() > 0.1 || driver.getLeftY() > 0.1));
     // private final Trigger passOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled());
     
     public RobotContainer() {
@@ -158,7 +160,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(ControllerModifier.modifyY(driver.getLeftX()) * Constants.MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -169,10 +171,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        driver.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
-        ));  
+        // driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // driver.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
+        // ));  
         
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -187,29 +189,34 @@ public class RobotContainer {
 
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
-        turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
+        turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain));
         intake.setDefaultCommand(new IntakeRetractPos(intake));
+        hoods.setDefaultCommand(new RetractHoods(hoods));
 
         // OPERATOR CONTROLS
 
-        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain));
         // inOwnZoneTrigger.onTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
-        outOfZoneTrigger.onTrue(new TargetAllianceWall(turret, drivetrain, hoods));
+        outOfZoneTrigger.whileTrue(new TargetAllianceWall(turret, drivetrain));
         //driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
-        shootTrigger.whileTrue(new ParallelCommandGroup(new Shoot(shooter, index, drivetrain), new IntakeRetractPos(intake)));
+        shootTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
+        shootTrigger.whileTrue(new SetHoodForShoot(hoods, drivetrain));
         shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
+        shootTrigger.whileTrue(new IntakeRetractPos(intake));
+        driver.rightTrigger().onFalse(new IntakeExtendPos(intake));
         passTrigger.whileTrue(new Pass(shooter, index, drivetrain));
+        passTrigger.whileTrue(new SetHoodForPass(hoods));
         manualTrigger.whileTrue(new ManualShoot(shooter, index));
 
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
         //driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
         driver.leftBumper().onTrue(new ZeroIntake(intake));
-        driver.leftBumper().whileTrue(new ZeroTurret(turret));
+        driver.leftBumper().onTrue(new ZeroTurret(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        driver.povDown().whileTrue(new DisableManualRotate(turret));
+        //driver.povDown().whileTrue(new DisableManualRotate(turret));
         driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
         driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));

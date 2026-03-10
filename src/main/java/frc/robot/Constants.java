@@ -83,7 +83,7 @@ public class Constants {
     public static final double TURRET_RIGHT_LIMIT = 100.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
     public static final double TURRET_MOTOR_TO_TURRET_RATIO = 35.15;
-    public static final double TURRET_LEFT_ENDSTOP_OFFSET = 17.78;
+    public static final double TURRET_LEFT_ENDSTOP_OFFSET = 17.8;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -128,7 +128,7 @@ public class Constants {
     public static final int UPPER_WHEEL_INTAKE_CANID = 31;
 
     public static final double MAX_INTAKE_VOLTAGE = 12;
-    public static final double INTAKE_VOLTAGE_PERCENTAGE = 0.75;
+    public static final double INTAKE_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_EXTEND_VOLTAGE = 12;
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
     public static final double EXTEND_POSITION_OUT = 20.0;
@@ -142,7 +142,7 @@ public class Constants {
     public static final double INTAKE_IN_POSITION_ERROR = 0.25;
     public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 15.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
-    public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.2;
+    public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;

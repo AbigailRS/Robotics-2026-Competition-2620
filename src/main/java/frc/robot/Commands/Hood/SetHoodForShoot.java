@@ -32,15 +32,15 @@ public class SetHoodForShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    leftHoodIMap.put(1.0, 0.99);
-    leftHoodIMap.put(2.0, 0.90);
-    leftHoodIMap.put(3.0, 0.85);
-    leftHoodIMap.put(5.0, 0.5);
+    leftHoodIMap.put(1.0, 0.85);
+    leftHoodIMap.put(2.0, 0.65);
+    leftHoodIMap.put(3.0, 0.55);
+    leftHoodIMap.put(5.0, 0.25);
 
-    rightHoodIMap.put(1.0, 0.99);
-    rightHoodIMap.put(2.0, 0.90);
-    rightHoodIMap.put(3.0, 0.85);
-    rightHoodIMap.put(5.0, 0.5);
+    rightHoodIMap.put(1.0, 0.90);
+    rightHoodIMap.put(2.0, 0.65);
+    rightHoodIMap.put(3.0, 0.55);
+    rightHoodIMap.put(5.0, 0.25);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

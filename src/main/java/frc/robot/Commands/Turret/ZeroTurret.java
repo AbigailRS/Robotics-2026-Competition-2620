@@ -27,7 +27,7 @@ public class ZeroTurret extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.setTurretVoltage(12.0);
+    turret.setTurretVoltage(3.0);
     turret.setManualRotate(true);
   }
 

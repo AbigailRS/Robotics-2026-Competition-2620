@@ -160,7 +160,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(ControllerModifier.modifyY(driver.getLeftX()) * Constants.MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -197,13 +197,14 @@ public class RobotContainer {
 
         driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain));
         // inOwnZoneTrigger.onTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
-        outOfZoneTrigger.onTrue(new TargetAllianceWall(turret, drivetrain));
+        outOfZoneTrigger.whileTrue(new TargetAllianceWall(turret, drivetrain));
         //driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
 
         shootTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
         shootTrigger.whileTrue(new SetHoodForShoot(hoods, drivetrain));
         shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
         shootTrigger.whileTrue(new IntakeRetractPos(intake));
+        driver.rightTrigger().onFalse(new IntakeExtendPos(intake));
         passTrigger.whileTrue(new Pass(shooter, index, drivetrain));
         passTrigger.whileTrue(new SetHoodForPass(hoods));
         manualTrigger.whileTrue(new ManualShoot(shooter, index));
@@ -211,11 +212,11 @@ public class RobotContainer {
         shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
         //driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
         driver.leftBumper().onTrue(new ZeroIntake(intake));
-        driver.leftBumper().whileTrue(new ZeroTurret(turret));
+        driver.leftBumper().onTrue(new ZeroTurret(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        driver.povDown().whileTrue(new DisableManualRotate(turret));
+        //driver.povDown().whileTrue(new DisableManualRotate(turret));
         driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
         driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));

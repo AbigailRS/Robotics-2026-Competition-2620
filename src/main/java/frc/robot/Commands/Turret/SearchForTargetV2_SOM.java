@@ -56,30 +56,35 @@ public class SearchForTargetV2_SOM extends Command {
   @Override
   public void execute() {
 
-    double latency = 0.5;
+    double latency = 1.0;
 
-    Translation2d projectedPosition = driveTrain.getState().Pose.getTranslation().plus(
-      new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(latency));
+    if(driveTrain.getState().Pose != null){
+      Translation2d projectedPosition = driveTrain.getState().Pose.getTranslation().plus(
+        new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(latency));
 
-    Translation2d projectedGoalLocationOffset = driveTrain.getState().Pose.getTranslation().minus(projectedPosition);
+      Translation2d projectedGoalLocationOffset = driveTrain.getState().Pose.getTranslation().minus(projectedPosition);
 
-    projectedPosX.set(projectedGoalLocationOffset.getX());
-    projectedPosY.set(projectedGoalLocationOffset.getY());
+      projectedPosX.set(projectedGoalLocationOffset.getX());
+      projectedPosY.set(projectedGoalLocationOffset.getY());
 
-    if(DriverStation.getAlliance().get() == Alliance.Blue){
-      projectedGoalLocationOffset = Constants.POSE_BLUE_HUB.minus(projectedGoalLocationOffset);
-      deltaX = projectedGoalLocationOffset.getX() - driveTrain.getState().Pose.getX();
-      deltaY = projectedGoalLocationOffset.getY() - driveTrain.getState().Pose.getY();
+      if(DriverStation.getAlliance().get() == Alliance.Blue){
+        projectedGoalLocationOffset = Constants.POSE_BLUE_HUB.minus(projectedGoalLocationOffset);
+        deltaX = projectedGoalLocationOffset.getX() - driveTrain.getState().Pose.getX();
+        deltaY = projectedGoalLocationOffset.getY() - driveTrain.getState().Pose.getY();
+      }
+      else{
+        projectedGoalLocationOffset = Constants.POSE_RED_HUB.minus(projectedGoalLocationOffset);
+        deltaX = projectedGoalLocationOffset.getX() - driveTrain.getState().Pose.getX();
+        deltaY = projectedGoalLocationOffset.getY() - driveTrain.getState().Pose.getY();
+      }
+      
+      angleToGoalDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
+      rawAngleToGoalPub.set(angleToGoalDegrees);
+      angleToGoalDegrees = angleToGoalDegrees - driveTrain.getState().Pose.getRotation().getDegrees();
     }
     else{
-      projectedGoalLocationOffset = Constants.POSE_RED_HUB.minus(projectedGoalLocationOffset);
-      deltaX = projectedGoalLocationOffset.getX() - driveTrain.getState().Pose.getX();
-      deltaY = projectedGoalLocationOffset.getY() - driveTrain.getState().Pose.getY();
+      angleToGoalDegrees = 0;
     }
-    
-    angleToGoalDegrees = Math.toDegrees(Math.atan2(deltaY, deltaX));
-    rawAngleToGoalPub.set(angleToGoalDegrees);
-    angleToGoalDegrees = angleToGoalDegrees - driveTrain.getState().Pose.getRotation().getDegrees();
 
     if(angleToGoalDegrees > 180){
       angleToGoalDegrees = angleToGoalDegrees - 360;

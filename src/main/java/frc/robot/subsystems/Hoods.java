@@ -28,8 +28,8 @@ public class Hoods extends SubsystemBase {
                                 hoodRightPositionPublisher = table.getDoubleTopic("Hood Right Position").publish();
 
   public Hoods() {
-    leftServoPos = 0.0;
-    rightServoPos = 0.0;
+    leftServoPos = Constants.HOOD_LEFT_LOW_POSITION;
+    rightServoPos = Constants.HOOD_RIGHT_LOW_POSITION;
   }
 
   public void setLeftServoPosition(double position){

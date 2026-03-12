@@ -29,12 +29,12 @@ public class IntakeRetractShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setUpdatedPID(0.2, 0, 0);
-    if(rockIntake.intakeInPosition() && retractMode){
+    rockIntake.setUpdatedPID(0.7, 0, 0);
+    if((rockIntake.intakeInPosition() || rockIntake.intakeRetracted()) && retractMode){
       rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
       retractMode = false;
     }
-    else if(rockIntake.intakeInPosition() && !retractMode){
+    else if((rockIntake.intakeInPosition() || rockIntake.intakeRetracted()) && !retractMode){
       rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
       retractMode = true;
     }

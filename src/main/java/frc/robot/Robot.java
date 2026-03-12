@@ -20,6 +20,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
         Pose2d combinedPose = new Pose2d();
         
 
-        if(updatePoseTimer.get() > 0.1){
+        if(updatePoseTimer.get() > 0.1 && !DriverStation.isAutonomous()){
             Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
             Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.0001, 0.0001, 10000.0);
 

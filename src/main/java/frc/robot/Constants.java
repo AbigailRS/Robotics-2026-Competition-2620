@@ -61,6 +61,8 @@ public class Constants {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     public static final double LATENCY_CONSTANT = 0.5;
+    public static final double DRIVE_SHOOT_MODIFIER = 0.25;
+    public static final double DRIVE_TURN_MODIFIER = 0.65;
 
 
     //Turret Constants
@@ -83,7 +85,7 @@ public class Constants {
     public static final double TURRET_RIGHT_LIMIT = 100.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
     public static final double TURRET_MOTOR_TO_TURRET_RATIO = 35.15;
-    public static final double TURRET_LEFT_ENDSTOP_OFFSET = 17.8;
+    public static final double TURRET_LEFT_ENDSTOP_OFFSET = 17.25;
 
     //Climb Constants
     public static final int CLIMB_LEFT_CANID = 40;
@@ -128,18 +130,19 @@ public class Constants {
     public static final int UPPER_WHEEL_INTAKE_CANID = 31;
 
     public static final double MAX_INTAKE_VOLTAGE = 12;
-    public static final double INTAKE_VOLTAGE_PERCENTAGE = 0.5;
+    public static final double INTAKE_VOLTAGE_PERCENTAGE = 0.45;
     public static final double MAX_EXTEND_VOLTAGE = 12;
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
     public static final double EXTEND_POSITION_OUT = 20.0;
     public static final double EXTEND_POSITION_IN = 0.0;
+    public static final double EXTEND_POSITION_OSCILLATE = 50.0;
 
     public static final double INTAKE_POSITION_IN = 0.0;
     public static final double INTAKE_POSITION_OUT = 91.0;
 
     public static final double INTAKE_STOP = 0.0;
 
-    public static final double INTAKE_IN_POSITION_ERROR = 0.25;
+    public static final double INTAKE_IN_POSITION_ERROR = 2.0;
     public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 15.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;

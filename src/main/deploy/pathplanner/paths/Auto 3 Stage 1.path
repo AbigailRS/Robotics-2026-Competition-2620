@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5326818830242506,
-        "y": 0.6774179743223976
+        "x": 3.3144935805991436,
+        "y": 4.015592011412268
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1278601997146929,
-        "y": 1.3243509272467904
+        "x": 3.055720399429386,
+        "y": 4.00265335235378
       },
       "isLocked": false,
-      "linkedName": "Loading Side to Neutral Zone Stage2-3"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.124136947218259,
-        "y": 2.2041797432239663
+        "x": 2.382910128388017,
+        "y": 4.015592011412268
       },
       "prevControl": {
-        "x": 1.6195292439372317,
-        "y": 1.6219400855920116
+        "x": 2.6416833095577745,
+        "y": 4.041469329529244
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Neutral Loading Wall"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.430645195251
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -66,7 +66,7 @@ public class TunerConstants {
         );
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
-    private static final Pigeon2Configuration pigeonConfigs = null;
+    private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration().withMountPose(new MountPoseConfigs().withMountPosePitch(180));
 
     // CAN bus that the devices are located on;
     // All swerve devices must share the same CAN bus
@@ -140,7 +140,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 10;
     private static final int kFrontRightSteerMotorId = 12;
     private static final int kFrontRightEncoderId = 11;
-    private static final Angle kFrontRightEncoderOffset = Rotations.of(0.11181640625);
+    private static final Angle kFrontRightEncoderOffset = Rotations.of(0.13181640625);
     private static final boolean kFrontRightSteerMotorInverted = true;
     private static final boolean kFrontRightEncoderInverted = false;
 
@@ -162,7 +162,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 9;
     private static final int kBackRightSteerMotorId = 7;
     private static final int kBackRightEncoderId = 8;
-    private static final Angle kBackRightEncoderOffset = Rotations.of(-0.4365234375);
+    private static final Angle kBackRightEncoderOffset = Rotations.of(-0.4565234375);
     private static final boolean kBackRightSteerMotorInverted = true;
     private static final boolean kBackRightEncoderInverted = false;
 

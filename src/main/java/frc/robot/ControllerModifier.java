@@ -13,17 +13,37 @@ public class ControllerModifier {
     private static SlewRateLimiter xRateLimiter = new SlewRateLimiter(5.0);
     private static SlewRateLimiter yRateLimiter = new SlewRateLimiter(5.0);
 
-    public static double modifyX(double input){
-        if(DriverStation.getAlliance().get() == Alliance.Red){
-            return xRateLimiter.calculate(input);
+    public static double modifyX(double input, boolean shooting){
+        if(shooting){
+            if(DriverStation.getAlliance().get() == Alliance.Red){
+                return xRateLimiter.calculate(-input * Constants.DRIVE_SHOOT_MODIFIER);
+            }
+            return xRateLimiter.calculate(-input * Constants.DRIVE_SHOOT_MODIFIER);
         }
-        return xRateLimiter.calculate(-input);
+        else{
+            if(DriverStation.getAlliance().get() == Alliance.Red){
+                return xRateLimiter.calculate(-input);
+            }
+            return xRateLimiter.calculate(-input);
+        }
     }
 
-    public static double modifyY(double input){
-        if(DriverStation.getAlliance().get() == Alliance.Red){
-            return yRateLimiter.calculate(input);
+    public static double modifyY(double input, boolean shooting){
+        if(shooting){
+            if(DriverStation.getAlliance().get() == Alliance.Red){
+                return yRateLimiter.calculate(-input * Constants.DRIVE_SHOOT_MODIFIER);
+            }
+            return yRateLimiter.calculate(-input * Constants.DRIVE_SHOOT_MODIFIER);
         }
-        return yRateLimiter.calculate(-input);
+        else{
+            if(DriverStation.getAlliance().get() == Alliance.Red){
+                return yRateLimiter.calculate(-input);
+            }
+            return yRateLimiter.calculate(-input);
+        }
+    }
+
+    public static double modifyR(double input){
+        return input * Constants.DRIVE_SHOOT_MODIFIER;
     }
 }

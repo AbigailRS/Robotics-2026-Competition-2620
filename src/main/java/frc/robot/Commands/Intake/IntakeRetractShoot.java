@@ -29,7 +29,7 @@ public class IntakeRetractShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setUpdatedPID(0.7, 0, 0);
+    rockIntake.setUpdatedPID(1.0, 0, 0);
     if((rockIntake.intakeInPosition() || rockIntake.intakeRetracted()) && retractMode){
       rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
       retractMode = false;
@@ -44,12 +44,13 @@ public class IntakeRetractShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    rockIntake.setUpdatedPID(0.5, 0, 0);
+    rockIntake.setUpdatedPID(1.0, 0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return rockIntake.intakeInPosition() && DriverStation.isAutonomousEnabled();
+    //return rockIntake.intakeInPosition() && DriverStation.isAutonomousEnabled();
+    return false;
   }
 }

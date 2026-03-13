@@ -45,6 +45,7 @@ public class CameraSystem {
     public Pose2d currentPose2d;
     public PhotonTrackedTarget target;
     private Matrix<N3, N1> curStdDevs;
+    private boolean camOn = true;
 
     StructPublisher<Pose2d> cameraPosePublisher;
     
@@ -61,6 +62,14 @@ public class CameraSystem {
         photonCamera = new PhotonCamera(name);
         cameraPosePublisher = NetworkTableInstance.getDefault().getStructTopic(cameraName + " Pose Log", Pose2d.struct).publish();
 
+    }
+
+    public void setCamOn(boolean camOn){
+        this.camOn = camOn;
+    }
+
+    public boolean getCamOn(){
+        return camOn;
     }
 
     public Pose2d getRobotPose(){

@@ -135,15 +135,15 @@ public class Constants {
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
     public static final double EXTEND_POSITION_OUT = 20.0;
     public static final double EXTEND_POSITION_IN = 0.0;
-    public static final double EXTEND_POSITION_OSCILLATE = 50.0;
+    public static final double EXTEND_POSITION_OSCILLATE = 25.0;
 
     public static final double INTAKE_POSITION_IN = 0.0;
     public static final double INTAKE_POSITION_OUT = 91.0;
 
     public static final double INTAKE_STOP = 0.0;
 
-    public static final double INTAKE_IN_POSITION_ERROR = 2.0;
-    public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 15.0;
+    public static final double INTAKE_IN_POSITION_ERROR = 5.0;
+    public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 18.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;
 

@@ -32,6 +32,7 @@ import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
 import frc.robot.Commands.climbOff;
 import frc.robot.Commands.climbOn;
+import frc.robot.Commands.Cameras.EnableCamera;
 import frc.robot.Commands.Conveyor.LeftDown;
 import frc.robot.Commands.Conveyor.LeftUp;
 import frc.robot.Commands.Conveyor.RightDown;
@@ -152,6 +153,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeRetractShoot", new IntakeRetractShoot(intake));
         NamedCommands.registerCommand("HoodsForShoot", new SetHoodForShoot(hoods, drivetrain));
         NamedCommands.registerCommand("RetractHoods", new RetractHoods(hoods));
+        NamedCommands.registerCommand("CamsOn", new EnableCamera(photonCamera1, photonCamera2, photonCamera3, photonCamera4));
+        NamedCommands.registerCommand("CamsOff", new EnableCamera(photonCamera1, photonCamera2, photonCamera3, photonCamera4));
 
         autoChooser = AutoBuilder.buildAutoChooser("");
         SmartDashboard.putData("Auto Mode", autoChooser);

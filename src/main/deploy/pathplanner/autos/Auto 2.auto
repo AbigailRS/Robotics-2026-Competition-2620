@@ -11,13 +11,19 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RetractHoods"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Auto 1 Stage 1"
+                  "pathName": "Auto 2 Stage 1"
                 }
               },
               {
@@ -51,7 +57,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Auto 1 Stage 2"
+            "pathName": "Auto 2 Stage 2"
           }
         },
         {
@@ -61,7 +67,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 10.0
                 }
               },
               {
@@ -79,13 +85,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "HoodsForShoot"
+                  "name": "IntakeRetractShoot"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeRetractShoot"
+                  "name": "HoodsForShoot"
                 }
               },
               {
@@ -95,86 +101,12 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RetractHoods"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ShootOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CamsOff"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Auto 1 Stage 3"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ExtendIntake"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.0
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "TrackHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootOn"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HoodsForShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeRetractShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CamsOn"
-                }
-              }
-            ]
           }
         }
       ]

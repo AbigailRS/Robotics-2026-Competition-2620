@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ZeroTurret"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ZeroIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto 4 Stage 1"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

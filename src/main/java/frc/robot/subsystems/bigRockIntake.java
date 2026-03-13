@@ -55,7 +55,7 @@ public class bigRockIntake extends SubsystemBase {
   public bigRockIntake() {
 
     configs.kV = 0.11;
-    configs.kP = 0.65;
+    configs.kP = 1.0;
     configs.kI = 0;
     configs.kD = 0.0;
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);

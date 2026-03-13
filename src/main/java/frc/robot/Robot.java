@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
         Pose2d combinedPose = new Pose2d();
         
 
-        if(updatePoseTimer.get() > 0.1 && !DriverStation.isAutonomous()){
+        if(updatePoseTimer.get() > 0.1 && m_robotContainer.photonCamera1.getCamOn()){
             Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
             Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.0001, 0.0001, 10000.0);
 

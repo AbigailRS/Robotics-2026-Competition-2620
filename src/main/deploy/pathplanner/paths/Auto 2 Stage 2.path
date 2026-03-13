@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.817146932947457,
-        "y": 7.32788873038102
+        "x": 7.804208273894435,
+        "y": 2.1265477888730384
       },
       "isLocked": false,
       "linkedName": "Auto 2 Stage 1-2"
     },
     {
       "anchor": {
-        "x": 4.647175463623395,
-        "y": 7.431398002853067
+        "x": 6.044550641940085,
+        "y": 0.5480313837375184
       },
       "prevControl": {
-        "x": 7.390171184022824,
-        "y": 7.379643366619116
+        "x": 8.062981455064193,
+        "y": 0.5868473609129818
       },
       "nextControl": {
-        "x": 2.499701303260925,
-        "y": 7.471916383237264
+        "x": 3.8191742572671195,
+        "y": 0.505235684032269
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.9392724679029953,
-        "y": 5.801126961483595
+        "x": 0.7914550641940081,
+        "y": 0.6774179743223976
       },
       "prevControl": {
-        "x": 3.198045649072753,
-        "y": 6.939728958630528
+        "x": 2.3699714693295286,
+        "y": 0.858559201141228
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,7 +55,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -178.49256424122478
   },
   "reversed": false,
   "folder": null,
@@ -71,5 +71,5 @@
     "velocity": 0,
     "rotation": 89.13194855025445
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

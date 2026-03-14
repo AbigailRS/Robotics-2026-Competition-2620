@@ -93,6 +93,10 @@ public class bigRockIntake extends SubsystemBase {
     rockPusher.setPosition(position);
   }
 
+  public double getExtendPosition(){
+    return rockPusher.getPosition().getValueAsDouble();
+  }
+
   public boolean intakeRetracted(){
     if(Math.abs(rockPusher.getVelocity().getValueAsDouble()) < 1.0 && rockPusher.getStatorCurrent().getValueAsDouble() > Constants.INTAKE_CURRENT_THRESHOLD){
       return true;

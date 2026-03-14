@@ -9,23 +9,23 @@
       "prevControl": null,
       "nextControl": {
         "x": 7.545435092724679,
-        "y": 7.910128388017118
+        "y": 7.910128388017117
       },
       "isLocked": false,
       "linkedName": "Auto 1 Stage 1-2"
     },
     {
       "anchor": {
-        "x": 4.789500713266761,
-        "y": 7.431398002853067
+        "x": 4.750684736091298,
+        "y": 7.379643366619116
       },
       "prevControl": {
-        "x": 6.92437945791726,
-        "y": 7.418459343794579
+        "x": 6.8844614631460335,
+        "y": 7.309846931621999
       },
       "nextControl": {
-        "x": 2.606585400930866,
-        "y": 7.4446277926248
+        "x": 1.9818116975748925,
+        "y": 7.4702139800285305
       },
       "isLocked": false,
       "linkedName": null
@@ -55,7 +55,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 1.7,
+    "maxAcceleration": 1.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

@@ -30,11 +30,11 @@ public class IntakeRetractShoot extends Command {
   @Override
   public void execute() {
     rockIntake.setUpdatedPID(1.0, 0, 0);
-    if((rockIntake.intakeInPosition() || rockIntake.intakeRetracted()) && retractMode){
-      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
+    if((rockIntake.intakeRetracted()) && retractMode){
+      rockIntake.setExtendPosition(rockIntake.getExtendPosition() +  Constants.EXTEND_POSITION_OSCILLATE);
       retractMode = false;
     }
-    else if((rockIntake.intakeInPosition() || rockIntake.intakeRetracted()) && !retractMode){
+    else if((rockIntake.intakeInPosition()) && !retractMode){
       rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
       retractMode = true;
     }

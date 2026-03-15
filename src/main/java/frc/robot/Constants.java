@@ -63,6 +63,7 @@ public class Constants {
     public static final double LATENCY_CONSTANT = 0.5;
     public static final double DRIVE_SHOOT_MODIFIER = 0.25;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
+    public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;
 
 
     //Turret Constants
@@ -135,7 +136,7 @@ public class Constants {
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
     public static final double EXTEND_POSITION_OUT = 20.0;
     public static final double EXTEND_POSITION_IN = 0.0;
-    public static final double EXTEND_POSITION_OSCILLATE = 25.0;
+    public static final double EXTEND_POSITION_OSCILLATE = 40.0;
 
     public static final double INTAKE_POSITION_IN = 0.0;
     public static final double INTAKE_POSITION_OUT = 91.0;
@@ -144,7 +145,7 @@ public class Constants {
 
     public static final double INTAKE_IN_POSITION_ERROR = 5.0;
     public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 18.0;
-    public static final double INTAKE_CURRENT_THRESHOLD = 15.0;
+    public static final double INTAKE_CURRENT_THRESHOLD = 18.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;
 
     //Indexer

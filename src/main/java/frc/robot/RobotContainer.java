@@ -139,6 +139,7 @@ public class RobotContainer {
     private final Trigger manualTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && turret.manualRotateEnabled() && !DriverStation.isDisabled() && !DriverStation.isAutonomous());
     private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && (Math.abs(driver.getLeftX()) > 0.1 || Math.abs(driver.getLeftY()) > 0.1 && !DriverStation.isAutonomous()));
     // private final Trigger passOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled());
+    private final Trigger notAuto = new Trigger(() -> !DriverStation.isAutonomous());
     
     public RobotContainer() {
 
@@ -206,6 +207,7 @@ public class RobotContainer {
         // OPERATOR CONTROLS
 
         driver.y().whileTrue(new TargetAllianceWall(turret, drivetrain));
+        //notAuto.whileTrue(new )
         // inOwnZoneTrigger.onTrue(new SearchForTargetV2_SOM(turret, drivetrain, hoods));
         outOfZoneTrigger.whileTrue(new TargetAllianceWall(turret, drivetrain));
         //driver.rightBumper().whileTrue(new ResetTurretEncoder(turret));
@@ -228,9 +230,9 @@ public class RobotContainer {
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        //driver.povDown().whileTrue(new DisableManualRotate(turret));
-        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
-        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+        driver.povDown().whileTrue(new DisableManualRotate(turret));
+        //driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        //driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));
         driver.a().whileTrue(new IntakeExtend(intake));
         driver.b().whileTrue(new IntakeRetract(intake));

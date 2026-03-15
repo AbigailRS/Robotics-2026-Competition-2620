@@ -58,10 +58,10 @@ public class Shoot extends Command {
       timeoutTimer.start();
     }
 
-    velocityIPMap.put(0.5, 45.0);
-    velocityIPMap.put(1.0, 47.0);
-    velocityIPMap.put(2.0, 50.0);
-    velocityIPMap.put(3.0, 61.5);
+    velocityIPMap.put(0.5, 37.0);
+    velocityIPMap.put(1.0, 42.0);
+    velocityIPMap.put(2.0, 52.0);
+    velocityIPMap.put(3.0, 59.5);
     velocityIPMap.put(4.0, 64.0);
     velocityIPMap.put(5.0, 70.0);
   }

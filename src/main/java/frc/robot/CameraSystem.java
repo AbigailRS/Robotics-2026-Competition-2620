@@ -102,6 +102,9 @@ public class CameraSystem {
     }
 
     public boolean hasMultipleTargets(){
+        if(!photonCamera.isConnected()){
+            return false;
+        }
         if(photonCamera.getLatestResult().targets.size() > 1){
             return true;
         }

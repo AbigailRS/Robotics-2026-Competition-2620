@@ -5,6 +5,7 @@
 package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.bigRockIntake;
@@ -13,7 +14,9 @@ import frc.robot.subsystems.bigRockIntake;
 public class IntakeRetractShoot extends Command {
 
   bigRockIntake rockIntake;
-  boolean retractMode = false;
+  boolean retractMode = true;
+  Timer timer = new Timer();
+  double extendInPos;
 
   /** Creates a new IntakeExtendPos. */
   public IntakeRetractShoot(bigRockIntake rockIntake) {
@@ -24,20 +27,29 @@ public class IntakeRetractShoot extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
+    timer.reset();
+    timer.start();
+    extendInPos = 25;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rockIntake.setUpdatedPID(1.0, 0, 0);
-    if((rockIntake.intakeRetracted()) && retractMode){
-      rockIntake.setExtendPosition(rockIntake.getExtendPosition() +  Constants.EXTEND_POSITION_OSCILLATE);
+    if(timer.get() > 4.0){
+      extendInPos = 0;
+    }
+    rockIntake.setUpdatedPID(3.0, 0, 0);
+    if((rockIntake.intakeInPosition()) && retractMode){
+      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
       retractMode = false;
     }
     else if((rockIntake.intakeInPosition()) && !retractMode){
-      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
+      rockIntake.setExtendPosition(extendInPos);
       retractMode = true;
     }
+
     rockIntake.setIntakeVoltage(0.0);
   }
 

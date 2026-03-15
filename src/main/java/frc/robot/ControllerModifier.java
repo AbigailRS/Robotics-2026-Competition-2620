@@ -22,9 +22,9 @@ public class ControllerModifier {
         }
         else{
             if(DriverStation.getAlliance().get() == Alliance.Red){
-                return xRateLimiter.calculate(-input);
+                return xRateLimiter.calculate(-input * Constants.DRIVE_MAX_SPEED_MODIFIER);
             }
-            return xRateLimiter.calculate(-input);
+            return xRateLimiter.calculate(-input * Constants.DRIVE_MAX_SPEED_MODIFIER);
         }
     }
 
@@ -37,9 +37,9 @@ public class ControllerModifier {
         }
         else{
             if(DriverStation.getAlliance().get() == Alliance.Red){
-                return yRateLimiter.calculate(-input);
+                return yRateLimiter.calculate(-input * Constants.DRIVE_MAX_SPEED_MODIFIER);
             }
-            return yRateLimiter.calculate(-input);
+            return yRateLimiter.calculate(-input * Constants.DRIVE_MAX_SPEED_MODIFIER);
         }
     }
 

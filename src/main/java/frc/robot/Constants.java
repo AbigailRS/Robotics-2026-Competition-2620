@@ -22,6 +22,11 @@ public class Constants {
 
     public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
+    public static final String CAMERA_1_NAME = "Photon Camera 1";
+    public static final String CAMERA_2_NAME = "Photon Camera 2";
+    public static final String CAMERA_3_NAME = "Photon Camera 3";
+    public static final String CAMERA_4_NAME = "Photon Camera 4";
+
     public static final double CAMERA_1_TRANSLATION_X = -0.1;
     public static final double CAMERA_1_TRANSLATION_Y = 0.3;
     public static final double CAMERA_1_TRANSLATION_Z = -0.0;
@@ -60,7 +65,7 @@ public class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final double LATENCY_CONSTANT = 0.5;
+    public static final double LATENCY_CONSTANT = 0.2;
     public static final double DRIVE_SHOOT_MODIFIER = 0.25;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
     public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;
@@ -125,6 +130,8 @@ public class Constants {
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
     public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.40;
+
+    public static final double SHOOT_V2_CONSTANT_SPEED = 70.0;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;

@@ -39,10 +39,10 @@ public class FieldZoneManager {
         
     }
     public static FieldZoneY getFieldZoneY(Translation2d translation){
-        if(translation.getX() < 3.0){
+        if(translation.getY() < 3.0){
             return FieldZoneY.SCORING_TABLE_ADJACENT;
         }
-        else if(translation.getX() < 4.5){
+        else if(translation.getY() < 4.5){
             return FieldZoneY.CENTER;
         }
         else {

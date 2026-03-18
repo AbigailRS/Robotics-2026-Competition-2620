@@ -22,6 +22,7 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -57,6 +58,8 @@ public class Turret extends SubsystemBase {
                                 encoder_setpoint_pub = table.getDoubleTopic("Turret Setpoint Pos").publish(),
                                 encoder_pos_pub = table.getDoubleTopic("Turret Encoder Pos").publish();
   private final BooleanPublisher stalled_pub = table.getBooleanTopic("isStalled").publish();
+
+  //private final DoubleLogEntry turret_voltage, turret_current, turret_velocity, turret_velocity_setpoint;
 
   public Turret() {
     rotateTurret = new TalonFX(Constants.TURRET_CANID, CANBus.roboRIO());
@@ -105,19 +108,6 @@ public class Turret extends SubsystemBase {
       return true;
     }
     return false;
-  }
-
-  public void updateTargetTags(){
-    if(!DriverStation.getAlliance().isEmpty()){
-      if(DriverStation.getAlliance().get() == Alliance.Red){
-        LimelightHelpers.SetFiducialIDFiltersOverride(Constants.PRIMARY_LL_NAME, new int[]{2, 5, 10});
-        LimelightHelpers.SetFiducialIDFiltersOverride(Constants.SECONDARY_LL_NAME, new int[]{2, 5, 10});
-      }
-      else{
-        LimelightHelpers.SetFiducialIDFiltersOverride(Constants.PRIMARY_LL_NAME, new int[]{18, 21, 26});
-        LimelightHelpers.SetFiducialIDFiltersOverride(Constants.SECONDARY_LL_NAME, new int[]{18, 21, 26});
-      }
-    }
   }
 
   public boolean isStalled(){
@@ -177,11 +167,11 @@ public class Turret extends SubsystemBase {
       lastSightedTimer.reset();
       lastSightedTimer.stop();
     }
-    //updateLogging();
+    //updateLiveLogging();
     
   }
 
-  public void updateLogging(){
+  public void updateLiveLogging(){
     pri_ll_ty_pub.set(LimelightHelpers.getTY(Constants.PRIMARY_LL_NAME));
     sec_ll_ty_pub.set(LimelightHelpers.getTY(Constants.SECONDARY_LL_NAME));
     turret_voltage_pub.set(rotateTurret.getMotorVoltage().getValueAsDouble());
@@ -190,6 +180,13 @@ public class Turret extends SubsystemBase {
     encoder_setpoint_pub.set(turretPosition);
     encoder_pos_pub.set(rotateTurret.getPosition().getValueAsDouble());
     stalled_pub.set(isStalled());
+  }
+
+  public void updateLogging(){
+    // turret_current.append(rotateTurret.getTorqueCurrent().getValueAsDouble());
+    // turret_voltage.append(rotateTurret.getMotorVoltage().getValueAsDouble());
+    // turret_velocity.append(rotateTurret.getVelocity().getValueAsDouble());
+    // turret_velocity_setpoint.append(turretPosition);
   }
 
 }

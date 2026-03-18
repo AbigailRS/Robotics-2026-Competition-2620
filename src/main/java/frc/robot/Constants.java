@@ -148,6 +148,9 @@ public class Constants {
     public static final double INTAKE_CURRENT_THRESHOLD = 18.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;
 
+    public static final double INTAKE_EXTEND_RAMP_RATE = 0.2;
+    public static final double INTAKE_ROTATE_RAMP_RATE = 0.2;
+
     //Indexer
     public static final int CONVEYOR_CANID = 50;
     public static final int RIGHT_INDEXER_CANID = 52;

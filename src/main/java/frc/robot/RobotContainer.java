@@ -65,8 +65,6 @@ import frc.robot.Commands.Turret.SearchForTarget;
 import frc.robot.Commands.Turret.SearchForTargetV2;
 import frc.robot.Commands.Turret.SearchForTargetV2_SOM;
 import frc.robot.Commands.Turret.TargetAllianceWall;
-import frc.robot.Commands.Turret.TrackHub;
-import frc.robot.Commands.Turret.TrackHub_SOM;
 import frc.robot.Commands.Turret.ZeroTurret;
 import frc.robot.enums.GameState;
 import frc.robot.generated.TunerConstants;
@@ -120,13 +118,7 @@ public class RobotContainer {
     
     private final SendableChooser<Command> autoChooser;
 
-    private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() == 139.0 ||
-                                                            DriverStation.getMatchTime() == 129.0 ||
-                                                            DriverStation.getMatchTime() == 104.0 ||
-                                                            DriverStation.getMatchTime() == 79.0 ||
-                                                            DriverStation.getMatchTime() == 54.0 ||
-                                                            DriverStation.getMatchTime() == 29.0
-                                                        );
+    private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() % 1 == 0);
 
     // private final Trigger noApriltagsForTurret = new Trigger(() -> turret.getTimeSinceLastSighted() > 0.2 && !turret.manualRotateEnabled() && DriverStation.isEnabled());
     // private final Trigger ApriltagsFoundForTurret = new Trigger(() -> (turret.priLLHasTarget() || turret.secLLHasTarget()) && !turret.manualRotateEnabled() && DriverStation.isEnabled());
@@ -137,7 +129,7 @@ public class RobotContainer {
     private final Trigger shootTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && Math.abs(driver.getLeftX()) < 0.1 && Math.abs(driver.getLeftY()) < 0.1 && !DriverStation.isAutonomous());
     private final Trigger passTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && !DriverStation.isAutonomous());
     private final Trigger manualTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && turret.manualRotateEnabled() && !DriverStation.isDisabled() && !DriverStation.isAutonomous());
-    private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightTrigger().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && (Math.abs(driver.getLeftX()) > 0.1 || Math.abs(driver.getLeftY()) > 0.1 && !DriverStation.isAutonomous()));
+    private final Trigger shootOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled() && !DriverStation.isDisabled() && !DriverStation.isAutonomous() && gameStateManager.getState() == GameState.ACTIVE);
     // private final Trigger passOnMoveTrigger = new Trigger(() -> driver.rightBumper().getAsBoolean() && !FieldZoneManager.inOwnZoneX(drivetrain.getState().Pose.getTranslation()) && !turret.manualRotateEnabled());
     private final Trigger notAuto = new Trigger(() -> !DriverStation.isAutonomous());
     

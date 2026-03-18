@@ -20,6 +20,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -30,6 +32,8 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
     private Timer updatePoseTimer = new Timer();
     StructPublisher<Pose2d> cameraPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Camera Pose Log", Pose2d.struct).publish();
+    StructPublisher<Pose2d> LLPosePublisher = NetworkTableInstance.getDefault().getStructTopic("LL Pose Log", Pose2d.struct).publish();
+    StructPublisher<Pose2d> combinedPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Combined Pose Log", Pose2d.struct).publish();
 
     private final RobotContainer m_robotContainer;
 
@@ -41,6 +45,8 @@ public class Robot extends TimedRobot {
     public Robot() {
         m_robotContainer = new RobotContainer();
         updatePoseTimer.start();
+        DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
         
     }
 
@@ -52,6 +58,8 @@ public class Robot extends TimedRobot {
 
         int numberValidCameras = 0;
         Pose2d combinedPose = new Pose2d();
+
+        LLPosePublisher.set(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME).pose);
         
 
         if(updatePoseTimer.get() > 0.1 && m_robotContainer.photonCamera1.getCamOn()){
@@ -84,7 +92,18 @@ public class Robot extends TimedRobot {
                 combinedPose = new Pose2d(combinedPose.getX() + pose4.getX(), combinedPose.getY() + pose4.getY(), new Rotation2d());
             }
 
+
+            Pose2d pose5 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME).pose;
+
+            if(LimelightHelpers.getBotPose2d(Constants.PRIMARY_LL_NAME) != null){
+                numberValidCameras++;
+                combinedPose = new Pose2d(combinedPose.getX() + pose5.getX(), combinedPose.getY() + pose5.getY(), new Rotation2d());
+            }
+            
+
             combinedPose = new Pose2d(combinedPose.getX() / numberValidCameras, combinedPose.getY() / numberValidCameras, new Rotation2d());
+
+            combinedPosePublisher.set(combinedPose);
 
             if(numberValidCameras > 0){
                 cameraPosePublisher.set(combinedPose);

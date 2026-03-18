@@ -39,7 +39,7 @@ public class bigRockIntake extends SubsystemBase {
 
   Slot1Configs configs = new Slot1Configs();
 
-   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Intake");
   private final DoublePublisher IntakeVoltageSetPublisher = table.getDoubleTopic("Intake Voltage SetPoint").publish(),
                                 ExtendVoltageSetPublisher = table.getDoubleTopic("Extend Voltage SetPoint").publish(),
@@ -62,7 +62,9 @@ public class bigRockIntake extends SubsystemBase {
     extendConfig.withSlot1(configs);
     extendConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     extendConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_EXTENSION_CURRENT_LIMIT);
+    extendConfig.ClosedLoopRamps.withVoltageClosedLoopRampPeriod(Constants.INTAKE_EXTEND_RAMP_RATE);
     rockPusher.setNeutralMode(NeutralModeValue.Brake);
+    intakeConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.INTAKE_ROTATE_RAMP_RATE);
     rockGrabber.getConfigurator().apply(intakeConfig);
     rockPusher.getConfigurator().apply(extendConfig);
   }

@@ -16,9 +16,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.Interpolator;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -44,7 +47,11 @@ public class ShootV2 extends Command {
   /**
    * Maps Distance to RPM
    */
-  private final InterpolatingDoubleTreeMap shooterTable = new InterpolatingDoubleTreeMap();
+  private InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<Double, FullShooterParams>(InverseInterpolator.forDouble(), null);
+  public record FullShooterParams(double rps, double hoodAngle, double tof) {}
+
+  private InterpolatingDoubleTreeMap inverseShooterMap = new InterpolatingDoubleTreeMap();
+  private Translation2d goalPosition;
 
   public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain)
   {
@@ -58,58 +65,85 @@ public class ShootV2 extends Command {
   @Override
   public void initialize()
   {
-    shooterTable.put(0.5, 37.0);
-    shooterTable.put(1.0, 42.0);
-    shooterTable.put(2.0, 52.0);
-    shooterTable.put(3.0, 59.5);
-    shooterTable.put(4.0, 64.0);
-    shooterTable.put(5.0, 70.0);
+    SHOOTER_MAP.put(1.5, new FullShooterParams(0.45, 35.0, 0.38));
+    SHOOTER_MAP.put(2.0, new FullShooterParams(0.5, 38.0, 0.45));
+    SHOOTER_MAP.put(2.5, new FullShooterParams(0.55, 42.0, 0.52));
+    SHOOTER_MAP.put(3.0, new FullShooterParams(0.60, 46.0, 0.60));
+    SHOOTER_MAP.put(3.5, new FullShooterParams(0.65, 50.0, 0.68));
+    SHOOTER_MAP.put(4.0, new FullShooterParams(0.7, 54.0, 0.76));
+    SHOOTER_MAP.put(4.5, new FullShooterParams(0.75, 58.0, 0.85));
+    SHOOTER_MAP.put(5.0, new FullShooterParams(0.8, 62.0, 0.94));
 
+    inverseShooterMap.put(0.45, 1.5);
+    inverseShooterMap.put(0.50, 2.0);
+    inverseShooterMap.put(0.55, 2.5);
+    inverseShooterMap.put(0.60, 3.0);
+    inverseShooterMap.put(0.65, 3.5);
+    inverseShooterMap.put(0.70, 4.0);
+    inverseShooterMap.put(0.75, 4.5);
+    inverseShooterMap.put(0.80, 5.0);
   }
 
   @Override
   public void execute()
   {
-    var robotSpeed = driveTrain.getState().Speeds;
-    // 1. LATENCY COMP
-    Translation2d futurePos = driveTrain.getState().Pose.getTranslation().plus(
-        new Translation2d(robotSpeed.vxMetersPerSecond, robotSpeed.vyMetersPerSecond).times(Constants.LATENCY_CONSTANT)
-                                                                   );
 
-    // 2. GET TARGET VECTOR
+    // 1. Project future position
+    Translation2d futurePos = driveTrain.getState().Pose.getTranslation().plus(
+      new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(Constants.LATENCY_CONSTANT)
+    );
+
+    // 2. Get target vector
     if(DriverStation.getAlliance().get() == Alliance.Red){
-      goalLocation = Constants.POSE_RED_HUB;
+      goalPosition = Constants.POSE_RED_HUB;
     }
     else{
-      goalLocation = Constants.POSE_BLUE_HUB;
+      goalPosition = Constants.POSE_BLUE_HUB;
     }
-    Translation2d targetVec    = goalLocation.minus(futurePos);
-    double        dist         = targetVec.getNorm();
+    Translation2d toGoal = goalPosition.minus(futurePos);
+    double distance = toGoal.getNorm();
+    Translation2d targetDirection = toGoal.div(distance);
 
-    // 3. CALCULATE IDEAL SHOT (Stationary)
-    // Note: This returns HORIZONTAL velocity component
-    double idealHorizontalSpeed = shooterTable.get(dist);
+    // 3. Look up baseline velocity from table
+    FullShooterParams baseline = SHOOTER_MAP.get(distance);
+    double baselineVelocity = distance / baseline.tof;
 
-    // 4. VECTOR SUBTRACTION
-    Translation2d robotVelVec = new Translation2d(robotSpeed.vxMetersPerSecond, robotSpeed.vyMetersPerSecond);
-    Translation2d shotVec     = targetVec.div(dist).times(idealHorizontalSpeed).minus(robotVelVec);
+    // 4. Build target velocity vector
+    Translation2d targetVelocity = targetDirection.times(baselineVelocity);
 
-    // 5. CONVERT TO CONTROLS
-    double turretAngle        = shotVec.getAngle().getDegrees();
-    double newHorizontalSpeed = shotVec.getNorm();
+    // 5. THE MAGIC: subtract robot velocity
+    Translation2d shotVelocity = targetVelocity.minus(new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond));
 
-    // 6. SOLVE FOR NEW PITCH/RPM
-    // Assuming constant total exit velocity, variable hood:
-    // Clamp to avoid domain errors if we need more speed than possible
-    double ratio    = Math.min(newHorizontalSpeed / totalExitVelocity, 1.0);
-    double newPitch = Math.acos(ratio);
+    // 6. Extract results
+    Rotation2d turretAngle = shotVelocity.getAngle();
+    double requiredVelocity = shotVelocity.getNorm();
 
-    // 7. SET OUTPUTS
-    turretSubsystem.setTurretPosition(turretAngle);
-    hoodSubsystem.setLeftServoAngle(newPitch);
-    hoodSubsystem.setRightServoAngle(newPitch);
-    flywheelSubsystem.setLeftSlingVelocity(shooterTable.get(shotVec.getNorm()));
-    flywheelSubsystem.setRightSlingVelocity(shooterTable.get(shotVec.getNorm()));
+    // 7. Use table in reverse: velocity → effective distance → RPM
+    double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+    double requiredRpm = SHOOTER_MAP.get(effectiveDistance).rps;
+
+    double velocityRatio = requiredVelocity / baselineVelocity;
+
+    // Split the correction: sqrt gives equal "contribution" from each
+    double rpsFactor = Math.sqrt(velocityRatio);
+    double hoodFactor = Math.sqrt(velocityRatio);
+
+    // Apply RPM scaling
+    double adjustedRps = baseline.rps * rpsFactor;
+
+    // Apply hood adjustment (changes horizontal component)
+    double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.hoodAngle));
+    double targetHorizFromHood = baselineVelocity * hoodFactor;
+    double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
+    double adjustedHood = Math.toDegrees(Math.acos(ratio));
+
+    turretSubsystem.setTurretPosition(turretAngle.getDegrees());
+    hoodSubsystem.setLeftServoAngle(adjustedHood);
+    hoodSubsystem.setRightServoAngle(adjustedHood);
+    flywheelSubsystem.setLeftSlingVelocity(adjustedRps);
+    flywheelSubsystem.setRightSlingVelocity(adjustedRps);
+
+
   }
 
   @Override
@@ -122,6 +156,20 @@ public class ShootV2 extends Command {
   public void end(boolean interrupted)
   {
 
+  }
+
+  public double getHorizontalVelocity(double distance) {
+    FullShooterParams params = SHOOTER_MAP.get(distance);
+    return distance / params.tof;
+  }
+
+  public double velocityToEffectiveDistance(double velocity) {
+    return inverseShooterMap.get(velocity);
+  }
+
+  public double calculateAdjustedRpm(double requiredVelocity) {
+    double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+    return SHOOTER_MAP.get(effectiveDistance).rps;
   }
 
 }

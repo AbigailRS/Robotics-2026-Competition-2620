@@ -29,6 +29,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
@@ -52,6 +53,11 @@ public class Vision {
     private final PhotonPoseEstimator photonEstimator;
     private Matrix<N3, N1> curStdDevs;
     private final EstimateConsumer estConsumer;
+    Optional<EstimatedRobotPose> visionEst = Optional.empty();
+    int numTags = 0;
+    double avgDist = 0;
+    Matrix<N3, N1> estStdDevs;
+    Optional<Pose3d> tagPose;
 
     // Simulation
     private PhotonCameraSim cameraSim;
@@ -69,7 +75,7 @@ public class Vision {
     }
 
     public void periodic() {
-        Optional<EstimatedRobotPose> visionEst = Optional.empty();
+        visionEst = Optional.empty();
         for (var result : camera.getAllUnreadResults()) {
             visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
             if (visionEst.isEmpty()) {
@@ -94,21 +100,20 @@ public class Vision {
      * @param estimatedPose The estimated pose to guess standard deviations for.
      * @param targets All targets in this camera frame
      */
-    private void updateEstimationStdDevs(
-            Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
             curStdDevs = Constants.kSingleTagStdDevs;
 
         } else {
             // Pose present. Start running Heuristic
-            var estStdDevs = Constants.kSingleTagStdDevs;
-            int numTags = 0;
-            double avgDist = 0;
+            estStdDevs = Constants.kSingleTagStdDevs;
+            numTags = 0;
+            avgDist = 0;
 
             // Precalculation - see how many tags we found, and calculate an average-distance metric
             for (var tgt : targets) {
-                var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+                tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
                 if (tagPose.isEmpty()) continue;
                 numTags++;
                 avgDist +=

@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "CamsOff"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -87,12 +81,6 @@
                 "data": {
                   "name": "IntakeRetractShoot"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CamsOn"
-                }
               }
             ]
           }
@@ -107,12 +95,6 @@
           "type": "named",
           "data": {
             "name": "ShootOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CamsOff"
           }
         },
         {
@@ -166,12 +148,6 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeRetractShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CamsOn"
                 }
               }
             ]

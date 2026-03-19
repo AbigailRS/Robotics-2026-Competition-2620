@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     StructPublisher<Pose2d> combinedPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Combined Pose Log", Pose2d.struct).publish();
 
     private final RobotContainer m_robotContainer;
+    private final Vision cam1, cam2, cam3, cam4;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -51,7 +52,19 @@ public class Robot extends TimedRobot {
         updatePoseTimer.start();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
-        
+        cam1 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_1_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_1_ROTATION_ROLL, Constants.CAMERA_1_ROTATION_PITCH, Constants.CAMERA_1_ROTATION_YAW)));
+        cam2 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_2_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_2_TRANSLATION_X, Constants.CAMERA_2_TRANSLATION_Y, Constants.CAMERA_2_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_2_ROTATION_ROLL, Constants.CAMERA_2_ROTATION_PITCH, Constants.CAMERA_2_ROTATION_YAW)));
+        cam3 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_3_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_3_TRANSLATION_X, Constants.CAMERA_3_TRANSLATION_Y, Constants.CAMERA_3_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_3_ROTATION_ROLL, Constants.CAMERA_3_ROTATION_PITCH, Constants.CAMERA_3_ROTATION_YAW)));
+        cam4 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_4_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW)));
+
     }
 
     @Override
@@ -59,18 +72,10 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
 
-        Vision cam1 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_1_NAME, new Transform3d(
-            new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
-            new Rotation3d(Constants.CAMERA_1_ROTATION_ROLL, Constants.CAMERA_1_ROTATION_PITCH, Constants.CAMERA_1_ROTATION_YAW)));
-        Vision cam2 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_2_NAME, new Transform3d(
-            new Translation3d(Constants.CAMERA_2_TRANSLATION_X, Constants.CAMERA_2_TRANSLATION_Y, Constants.CAMERA_2_TRANSLATION_Z), 
-            new Rotation3d(Constants.CAMERA_2_ROTATION_ROLL, Constants.CAMERA_2_ROTATION_PITCH, Constants.CAMERA_2_ROTATION_YAW)));
-        Vision cam3 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_3_NAME, new Transform3d(
-            new Translation3d(Constants.CAMERA_3_TRANSLATION_X, Constants.CAMERA_3_TRANSLATION_Y, Constants.CAMERA_3_TRANSLATION_Z), 
-            new Rotation3d(Constants.CAMERA_3_ROTATION_ROLL, Constants.CAMERA_3_ROTATION_PITCH, Constants.CAMERA_3_ROTATION_YAW)));
-        Vision cam4 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_4_NAME, new Transform3d(
-            new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
-            new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW)));
+        cam1.periodic();
+        cam2.periodic();
+        cam3.periodic();
+        cam4.periodic();
 
         // First, tell Limelight your robot's current orientation
         double robotYaw = m_robotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
@@ -80,13 +85,15 @@ public class Robot extends TimedRobot {
         LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME);
 
         // Add it to your pose estimator
-        m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-        m_robotContainer.drivetrain.addVisionMeasurement(
-            limelightMeasurement.pose,
-            limelightMeasurement.timestampSeconds
+        if(LimelightHelpers.getTargetCount(Constants.PRIMARY_LL_NAME) > 0){
+            m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+            m_robotContainer.drivetrain.addVisionMeasurement(
+                limelightMeasurement.pose,
+                limelightMeasurement.timestampSeconds
         );
+        }
         
-        
+        LLPosePublisher.set(limelightMeasurement.pose);
     }
 
     @Override
@@ -94,8 +101,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
-        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
+        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
+        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
     }
 
     @Override
@@ -127,6 +134,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
+        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
     }
 
     @Override

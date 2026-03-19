@@ -32,7 +32,7 @@ public class Constants {
     public static final double CAMERA_1_TRANSLATION_Z = -0.311;
 
     public static final double CAMERA_1_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(270);
+    public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(90);
     public static final double CAMERA_1_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final double CAMERA_2_TRANSLATION_X = -0.3429;
@@ -56,7 +56,7 @@ public class Constants {
     public static final double CAMERA_4_TRANSLATION_Z = 0.311;
 
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(90.0);
+    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(270.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final Translation2d POSE_RED_HUB = new Translation2d(12.0, 4.0);

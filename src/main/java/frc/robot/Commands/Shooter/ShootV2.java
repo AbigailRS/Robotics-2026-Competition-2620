@@ -44,10 +44,8 @@ public class ShootV2 extends Command {
   // Tuned Constants
   double totalExitVelocity = 55.0; // m/s
   Translation2d goalLocation;
-  /**
-   * Maps Distance to RPM
-   */
-  private InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<Double, FullShooterParams>(InverseInterpolator.forDouble(), null);
+
+  private InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<Double, FullShooterParams>(null, null);
   public record FullShooterParams(double rps, double hoodAngle, double tof) {}
 
   private InterpolatingDoubleTreeMap inverseShooterMap = new InterpolatingDoubleTreeMap();
@@ -155,7 +153,11 @@ public class ShootV2 extends Command {
   @Override
   public void end(boolean interrupted)
   {
-
+    turretSubsystem.setTurretPosition(0);
+    hoodSubsystem.setLeftServoAngle(0);
+    hoodSubsystem.setRightServoAngle(0);
+    flywheelSubsystem.setLeftSlingVelocity(0);
+    flywheelSubsystem.setRightSlingVelocity(0);
   }
 
   public double getHorizontalVelocity(double distance) {

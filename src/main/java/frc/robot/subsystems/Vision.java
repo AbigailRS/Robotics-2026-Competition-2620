@@ -34,6 +34,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -46,6 +48,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision {
@@ -62,6 +65,8 @@ public class Vision {
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
+    StructPublisher<Pose2d> cameraPosePublisher;
+    PhotonPipelineResult result;
 
     /**
      * @param estConsumer Lamba that will accept a pose estimate and pass it to your desired {@link
@@ -71,6 +76,7 @@ public class Vision {
         this.estConsumer = estConsumer;
         camera = new PhotonCamera(kCameraName);
         photonEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField), kRobotToCam);
+        cameraPosePublisher = NetworkTableInstance.getDefault().getStructTopic(kCameraName + " Pose Log", Pose2d.struct).publish();
 
     }
 
@@ -86,9 +92,10 @@ public class Vision {
             visionEst.ifPresent(
                     est -> {
                         // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = getEstimationStdDevs();
+                        estStdDevs = getEstimationStdDevs();
 
                         estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                        cameraPosePublisher.set(visionEst.get().estimatedPose.toPose2d());
                     });
         }
     }
@@ -152,7 +159,7 @@ public class Vision {
     }
 
     @FunctionalInterface
-    public static interface EstimateConsumer {
+    public interface EstimateConsumer {
         public void accept(Pose2d pose, double timestamp, Matrix<N3, N1> estimationStdDevs);
     }
 }

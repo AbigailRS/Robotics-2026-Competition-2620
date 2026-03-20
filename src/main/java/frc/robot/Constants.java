@@ -60,7 +60,7 @@ public class Constants {
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final Translation2d POSE_RED_HUB = new Translation2d(12.0, 4.0);
-    public static final Translation2d POSE_BLUE_HUB = new Translation2d(4.5, 4.0);
+    public static final Translation2d POSE_BLUE_HUB = new Translation2d(4.6, 4.0);
 
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);

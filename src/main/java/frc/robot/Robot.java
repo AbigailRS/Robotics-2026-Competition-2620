@@ -72,10 +72,12 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
 
-        cam1.periodic();
-        cam2.periodic();
-        cam3.periodic();
-        cam4.periodic();
+        if(!DriverStation.isDisabled()){
+            cam1.periodic();
+            cam2.periodic();
+            cam3.periodic();
+            cam4.periodic();
+        }
 
         // First, tell Limelight your robot's current orientation
         double robotYaw = m_robotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
@@ -101,8 +103,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
-        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
+        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 200);
+        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 200);
     }
 
     @Override

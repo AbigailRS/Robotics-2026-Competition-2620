@@ -17,35 +17,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ZeroTurret"
+                  "name": "ExtendIntake"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ZeroIntake"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ExtendIntake"
-                      }
-                    }
-                  ]
+                  "name": "RetractHoods"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Auto 1 Stage 2"
           }
         },
         {
@@ -55,25 +36,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 6.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "TrackHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootOn"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HoodsForShoot"
+                  "name": "ShootV2"
                 }
               },
               {
@@ -86,15 +55,28 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "RetractHoods"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootOff"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RetractHoods"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootOff"
+                }
+              }
+            ]
           }
         },
         {
@@ -104,7 +86,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Auto 1 Stage 3"
+                  "pathName": "Auto 1 Stage 2"
                 }
               },
               {
@@ -129,28 +111,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "TrackHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootOn"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HoodsForShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeRetractShoot"
+                  "name": "ShootV2"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RetractHoods"
           }
         }
       ]

@@ -8,36 +8,52 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4087874465049923,
-        "y": 4.766034236804566
+        "x": 2.4217261055634807,
+        "y": 4.830727532097005
       },
       "isLocked": false,
       "linkedName": "Auto 3 Stage 1-2"
     },
     {
       "anchor": {
-        "x": 0.700884450784593,
-        "y": 6.0081455064194005
+        "x": 2.382910128388017,
+        "y": 6.176348074179743
       },
       "prevControl": {
-        "x": 2.499358059914406,
-        "y": 5.982268188302426
+        "x": 2.124136947218259,
+        "y": 4.895420827389444
       },
       "nextControl": {
-        "x": -1.0975891583452198,
-        "y": 6.034022824536375
+        "x": 2.7327109659230704,
+        "y": 7.907862219978255
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.382910128388017,
-        "y": 4.2484878744650505
+        "x": 7.5066191155492135,
+        "y": 6.176348074179743
       },
       "prevControl": {
-        "x": 2.020627674750356,
-        "y": 6.305734664764623
+        "x": 7.131398002853067,
+        "y": 8.285349500713266
+      },
+      "nextControl": {
+        "x": 7.873835642222826,
+        "y": 4.112337941497017
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.5066191155492135,
+        "y": 0.5997860199714706
+      },
+      "prevControl": {
+        "x": 7.558373751783167,
+        "y": 2.9287446504992873
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,12 +62,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.7100213219616234,
-      "rotationDegrees": -179.65541585078736
+      "waypointRelativePos": 1.6631130063965802,
+      "rotationDegrees": 0.8518565125974925
     },
     {
-      "waypointRelativePos": 1.7825159914711903,
-      "rotationDegrees": -179.34947455655146
+      "waypointRelativePos": 2.002132196162046,
+      "rotationDegrees": -90.03696059164608
     }
   ],
   "constraintZones": [],
@@ -67,7 +83,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -171.1581854398083
+    "rotation": -87.7974018382342
   },
   "reversed": false,
   "folder": null,

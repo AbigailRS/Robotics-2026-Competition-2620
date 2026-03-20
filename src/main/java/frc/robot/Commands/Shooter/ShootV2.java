@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -57,6 +58,8 @@ public class ShootV2 extends Command {
   private Translation2d goalPosition;
 
   private boolean leftSpeedReached, rightSpeedReached;
+  private double timeout = -1.0;
+  private Timer timeoutTimer = new Timer();
 
   private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private static final NetworkTable table = inst.getTable("Shoot V2");
@@ -73,9 +76,24 @@ public class ShootV2 extends Command {
     addRequirements(turret, hood, flyWheel, indexer);
   }
 
+    public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain, rockDestroyerInxder indexer, double timeout)
+  {
+    turretSubsystem = turret;
+    hoodSubsystem = hood;
+    flywheelSubsystem = flyWheel;
+    this.driveTrain = driveTrain;
+    this.indexer = indexer;
+    this.timeout = timeout;
+    addRequirements(turret, hood, flyWheel, indexer);
+  }
+
   @Override
   public void initialize()
   {
+    if(timeout >= 0){
+      timeoutTimer.reset();
+      timeoutTimer.start();
+    }
 
     shooterMap.put(1.5, 45.0);
     shooterMap.put(2.0, 50.0);
@@ -187,7 +205,12 @@ public class ShootV2 extends Command {
     flywheelSubsystem.setLeftSlingVelocity(adjustedRps);
     flywheelSubsystem.setRightSlingVelocity(adjustedRps);
 
-    indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    if(flywheelSubsystem.atLeftShootVelocity() || flywheelSubsystem.atRightShootVelocity()){
+      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      indexer.setConveryVoltage(0.0);
+    }
 
     if (flywheelSubsystem.atLeftShootVelocity()) {
       leftSpeedReached = true; 
@@ -215,6 +238,11 @@ public class ShootV2 extends Command {
   @Override
   public boolean isFinished()
   {
+    if(timeout >= 0){
+      if(timeoutTimer.get() > timeout){
+        return true;
+      }
+    }
     return false;
   }
 

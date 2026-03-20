@@ -59,7 +59,7 @@ public class TargetAllianceWall extends Command {
     double latency = 0.5;
 
     if(DriverStation.getAlliance().get() == Alliance.Red){
-      angleToWallDegrees = driveTrain.getState().Pose.getRotation().getDegrees();
+      angleToWallDegrees = 0 - driveTrain.getState().Pose.getRotation().getDegrees();
     }
     else{
       angleToWallDegrees = 180 - driveTrain.getState().Pose.getRotation().getDegrees();

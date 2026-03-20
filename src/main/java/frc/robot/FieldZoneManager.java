@@ -21,7 +21,7 @@ public class FieldZoneManager {
     private static Alliance alliance;
 
     public static FieldZoneX getFieldZoneX(Translation2d translation){
-        if(translation.getX() < 3.5){
+        if(translation.getX() < 4){
             return FieldZoneX.BLUE;
         }
         else if(translation.getX() < 6.0){
@@ -30,7 +30,7 @@ public class FieldZoneManager {
         else if(translation.getX() < 10.0){
             return FieldZoneX.NEUTRAL;
         }
-        else if(translation.getX() < 12.5){
+        else if(translation.getX() < 12){
             return FieldZoneX.REDBUMP;
         }
         else{
@@ -55,10 +55,10 @@ public class FieldZoneManager {
         zoneX = getFieldZoneX(translation);
         zonePub.set(zoneX.name());
         alliance = DriverStation.getAlliance().get();
-        if(alliance == Alliance.Red && zoneX == FieldZoneX.RED){
+        if(alliance == Alliance.Red && (zoneX == FieldZoneX.RED || zoneX == FieldZoneX.REDBUMP)){
             return true;
         }
-        else if(alliance == Alliance.Blue && zoneX == FieldZoneX.BLUE){
+        else if(alliance == Alliance.Blue && (zoneX == FieldZoneX.BLUE || zoneX == FieldZoneX.BLUEBUMP)){
             return true;
         }
         return false;

@@ -65,7 +65,7 @@ public class Constants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final double LATENCY_CONSTANT = 0.2;
+    public static final double LATENCY_CONSTANT = 0.15;
     public static final double DRIVE_SHOOT_MODIFIER = 0.25;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
     public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;

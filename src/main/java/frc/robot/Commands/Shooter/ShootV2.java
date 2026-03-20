@@ -23,10 +23,14 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.FieldZoneManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hoods;
 import frc.robot.subsystems.Turret;
@@ -40,46 +44,75 @@ public class ShootV2 extends Command {
   private final Hoods hoodSubsystem;
   private final tinyPebbleShooter flywheelSubsystem;
   private final CommandSwerveDrivetrain driveTrain;
+  private final rockDestroyerInxder indexer;
 
   // Tuned Constants
   double totalExitVelocity = 55.0; // m/s
   Translation2d goalLocation;
 
-  private InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<Double, FullShooterParams>(null, null);
-  public record FullShooterParams(double rps, double hoodAngle, double tof) {}
-
+  private InterpolatingDoubleTreeMap shooterMap = new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap hoodAngleMap = new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap tofMap = new InterpolatingDoubleTreeMap();
   private InterpolatingDoubleTreeMap inverseShooterMap = new InterpolatingDoubleTreeMap();
   private Translation2d goalPosition;
 
-  public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain)
+  private boolean leftSpeedReached, rightSpeedReached;
+
+  private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  private static final NetworkTable table = inst.getTable("Shoot V2");
+  private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
+  private static final DoublePublisher hoodAnglePub = table.getDoubleTopic("Hood Angle").publish();
+
+  public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain, rockDestroyerInxder indexer)
   {
     turretSubsystem = turret;
     hoodSubsystem = hood;
     flywheelSubsystem = flyWheel;
     this.driveTrain = driveTrain;
-    addRequirements(turret, hood, flyWheel);
+    this.indexer = indexer;
+    addRequirements(turret, hood, flyWheel, indexer);
   }
 
   @Override
   public void initialize()
   {
-    SHOOTER_MAP.put(1.5, new FullShooterParams(0.45, 35.0, 0.38));
-    SHOOTER_MAP.put(2.0, new FullShooterParams(0.5, 38.0, 0.45));
-    SHOOTER_MAP.put(2.5, new FullShooterParams(0.55, 42.0, 0.52));
-    SHOOTER_MAP.put(3.0, new FullShooterParams(0.60, 46.0, 0.60));
-    SHOOTER_MAP.put(3.5, new FullShooterParams(0.65, 50.0, 0.68));
-    SHOOTER_MAP.put(4.0, new FullShooterParams(0.7, 54.0, 0.76));
-    SHOOTER_MAP.put(4.5, new FullShooterParams(0.75, 58.0, 0.85));
-    SHOOTER_MAP.put(5.0, new FullShooterParams(0.8, 62.0, 0.94));
 
-    inverseShooterMap.put(0.45, 1.5);
-    inverseShooterMap.put(0.50, 2.0);
-    inverseShooterMap.put(0.55, 2.5);
-    inverseShooterMap.put(0.60, 3.0);
-    inverseShooterMap.put(0.65, 3.5);
-    inverseShooterMap.put(0.70, 4.0);
-    inverseShooterMap.put(0.75, 4.5);
-    inverseShooterMap.put(0.80, 5.0);
+    shooterMap.put(1.5, 45.0);
+    shooterMap.put(2.0, 50.0);
+    shooterMap.put(2.5, 55.0);
+    shooterMap.put(3.0, 57.0);
+    shooterMap.put(3.5, 58.0);
+    shooterMap.put(4.0, 60.0);
+    shooterMap.put(4.5, 65.0);
+
+    hoodAngleMap.put(5.0, 0.0);
+    hoodAngleMap.put(4.5, 0.0);
+    hoodAngleMap.put(4.0, 2.0);
+    hoodAngleMap.put(3.5, 6.0);
+    hoodAngleMap.put(3.0, 10.0);
+    hoodAngleMap.put(2.5, 14.0);
+    hoodAngleMap.put(2.0, 17.0);
+    hoodAngleMap.put(1.5, 20.0);
+
+    tofMap.put(1.5, 0.85);
+    tofMap.put(2.0, 1.0);
+    tofMap.put(2.5, 1.25);
+    tofMap.put(3.0, 1.3);
+    tofMap.put(3.5, 1.1);
+    tofMap.put(4.0, 1.0);
+    tofMap.put(4.5, 1.2);
+
+    inverseShooterMap.put(45.0, 1.5);
+    inverseShooterMap.put(50.0, 2.0);
+    inverseShooterMap.put(55.0, 2.5);
+    inverseShooterMap.put(57.0, 3.0);
+    inverseShooterMap.put(58.0, 3.5);
+    inverseShooterMap.put(60.0, 4.0);
+    inverseShooterMap.put(63.0, 4.5);
+    inverseShooterMap.put(65.0, 5.0);
+
+    leftSpeedReached = false;
+    rightSpeedReached = false;
   }
 
   @Override
@@ -103,8 +136,10 @@ public class ShootV2 extends Command {
     Translation2d targetDirection = toGoal.div(distance);
 
     // 3. Look up baseline velocity from table
-    FullShooterParams baseline = SHOOTER_MAP.get(distance);
-    double baselineVelocity = distance / baseline.tof;
+    double shooterBaseline = shooterMap.get(distance);
+    double hoodBaseline = hoodAngleMap.get(distance);
+    double tofBaseline = tofMap.get(distance);
+    double baselineVelocity = distance / tofBaseline;
 
     // 4. Build target velocity vector
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
@@ -118,7 +153,7 @@ public class ShootV2 extends Command {
 
     // 7. Use table in reverse: velocity → effective distance → RPM
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
-    double requiredRpm = SHOOTER_MAP.get(effectiveDistance).rps;
+    double requiredRpm = shooterMap.get(effectiveDistance);
 
     double velocityRatio = requiredVelocity / baselineVelocity;
 
@@ -127,20 +162,53 @@ public class ShootV2 extends Command {
     double hoodFactor = Math.sqrt(velocityRatio);
 
     // Apply RPM scaling
-    double adjustedRps = baseline.rps * rpsFactor;
+    double adjustedRps = shooterBaseline * rpsFactor;
 
     // Apply hood adjustment (changes horizontal component)
-    double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.hoodAngle));
+    double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(hoodBaseline));
     double targetHorizFromHood = baselineVelocity * hoodFactor;
     double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
 
-    turretSubsystem.setTurretPosition(turretAngle.getDegrees());
+    double angleToGoalDegrees = turretAngle.getDegrees() - driveTrain.getState().Pose.getRotation().getDegrees();
+    if(angleToGoalDegrees > 180){
+      angleToGoalDegrees = angleToGoalDegrees - 360;
+    }
+    else if(angleToGoalDegrees < -180){
+      angleToGoalDegrees = angleToGoalDegrees + 360;
+    }
+    distToGoalPub.set(distance);
+    hoodAnglePub.set(adjustedHood);
+
+
+    turretSubsystem.setTurretPosition(angleToGoalDegrees);
     hoodSubsystem.setLeftServoAngle(adjustedHood);
     hoodSubsystem.setRightServoAngle(adjustedHood);
     flywheelSubsystem.setLeftSlingVelocity(adjustedRps);
     flywheelSubsystem.setRightSlingVelocity(adjustedRps);
 
+    indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+
+    if (flywheelSubsystem.atLeftShootVelocity()) {
+      leftSpeedReached = true; 
+    }
+
+    if (flywheelSubsystem.atRightShootVelocity()) {
+      rightSpeedReached = true; 
+    }
+
+    if(leftSpeedReached){
+      indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      indexer.setLeftRockSumusherVoltage(0.0);
+    }
+    if(rightSpeedReached){
+      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      indexer.setRightRockSmusherVoltage(0.0);
+    }
 
   }
 
@@ -154,24 +222,27 @@ public class ShootV2 extends Command {
   public void end(boolean interrupted)
   {
     turretSubsystem.setTurretPosition(0);
-    hoodSubsystem.setLeftServoAngle(0);
-    hoodSubsystem.setRightServoAngle(0);
+    hoodSubsystem.setLeftServoPosition(0);
+    hoodSubsystem.setLeftServoPosition(0);
     flywheelSubsystem.setLeftSlingVelocity(0);
     flywheelSubsystem.setRightSlingVelocity(0);
+    indexer.setLeftRockSumusherVoltage(0.0);
+    indexer.setRightRockSmusherVoltage(0.0);
+    indexer.setConveryVoltage(0);
   }
 
   public double getHorizontalVelocity(double distance) {
-    FullShooterParams params = SHOOTER_MAP.get(distance);
-    return distance / params.tof;
+    double params = tofMap.get(distance);
+    return distance / params;
   }
 
   public double velocityToEffectiveDistance(double velocity) {
     return inverseShooterMap.get(velocity);
   }
 
-  public double calculateAdjustedRpm(double requiredVelocity) {
-    double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
-    return SHOOTER_MAP.get(effectiveDistance).rps;
-  }
+  // public double calculateAdjustedRpm(double requiredVelocity) {
+  //   double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+  //   return SHOOTER_MAP.get(effectiveDistance).rps;
+  // }
 
 }

@@ -190,12 +190,12 @@ public class RobotContainer {
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
-        driver.rightTrigger().whileTrue(new ShootV2(turret, hoods, shooter, drivetrain));
+        driver.rightTrigger().whileTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
 
         // updateGameState.onTrue(new UpdateGameState(gameStateManager));
 
         // turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain));
-        // intake.setDefaultCommand(new IntakeRetractPos(intake));
+        intake.setDefaultCommand(new IntakeRetractPos(intake));
         // hoods.setDefaultCommand(new RetractHoods(hoods));
 
         // // OPERATOR CONTROLS
@@ -209,7 +209,7 @@ public class RobotContainer {
     //     shootTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
     //     shootTrigger.whileTrue(new SetHoodForShoot(hoods, drivetrain));
     //     shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
-    //     shootTrigger.whileTrue(new IntakeRetractShoot(intake));
+    //shootTrigger.whileTrue(new IntakeRetractShoot(intake));
     //     driver.rightTrigger().onFalse(new IntakeExtendPos(intake));
     //     passTrigger.whileTrue(new Pass(shooter, index, drivetrain));
     //     passTrigger.whileTrue(new SetHoodForPass(hoods));
@@ -219,15 +219,15 @@ public class RobotContainer {
     //     shootOnMoveTrigger.whileTrue(new SetHoodForShoot(hoods, drivetrain));
     //     shootOnMoveTrigger.whileTrue(new IntakeExtendPos(intake));
     //     //driver.leftBumper().whileTrue(new ResetTurretEncoder(turret));
-    //     driver.leftBumper().onTrue(new ZeroIntake(intake));
-    //     driver.leftBumper().onTrue(new ZeroTurret(turret));
+    driver.leftBumper().onTrue(new ZeroIntake(intake));
+    driver.leftBumper().onTrue(new ZeroTurret(turret));
 
     //     driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
     //     driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
     //     driver.povDown().whileTrue(new DisableManualRotate(turret));
-    //     //driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
-    //     //driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
-    //     driver.x().toggleOnTrue(new IntakeExtendPos(intake));
+    driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+    driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+    driver.x().toggleOnTrue(new IntakeExtendPos(intake));
     //     driver.a().whileTrue(new IntakeExtend(intake));
     //     driver.b().whileTrue(new IntakeRetract(intake));
     }

@@ -78,10 +78,10 @@ public class Hoods extends SubsystemBase {
     leftHoodieServo.set(leftServoPos);
     rightHoodieServo.set(rightServoPos);
 
-    // hoodLeftSetPositionPublisher.set(leftServoPos);
-    // hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
-    // hoodRightSetPositionPublisher.set(rightServoPos);
-    // hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
+    hoodLeftSetPositionPublisher.set(leftServoPos);
+    hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
+    hoodRightSetPositionPublisher.set(rightServoPos);
+    hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
 
   }
 }

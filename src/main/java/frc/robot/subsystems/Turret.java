@@ -167,7 +167,7 @@ public class Turret extends SubsystemBase {
       lastSightedTimer.reset();
       lastSightedTimer.stop();
     }
-    //updateLiveLogging();
+    updateLiveLogging();
     
   }
 

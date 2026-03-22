@@ -55,6 +55,11 @@ public class Constants {
     public static final double CAMERA_4_TRANSLATION_Y = -0.343;
     public static final double CAMERA_4_TRANSLATION_Z = 0.311;
 
+    public static final double TURRET_LEFT_ROBOT_OFFSET_X = -0.1;    //in meters
+    public static final double TURRET_LEFT_ROBOT_OFFSET_Y = 0.1;
+    public static final double TURRET_RIGHT_ROBOT_OFFSET_X = -0.1;
+    public static final double TURRET_RIGHT_ROBOT_OFFSET_Y = -0.1;
+
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
     public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(270.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);

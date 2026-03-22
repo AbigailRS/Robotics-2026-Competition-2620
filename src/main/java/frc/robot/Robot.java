@@ -15,6 +15,9 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -27,6 +30,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Vision;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -36,6 +40,7 @@ public class Robot extends TimedRobot {
     StructPublisher<Pose2d> combinedPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Combined Pose Log", Pose2d.struct).publish();
 
     private final RobotContainer m_robotContainer;
+    private final Vision cam1, cam2, cam3, cam4;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -47,71 +52,49 @@ public class Robot extends TimedRobot {
         updatePoseTimer.start();
         DataLogManager.start();
         DriverStation.startDataLog(DataLogManager.getLog());
-        
+        cam1 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_1_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_1_ROTATION_ROLL, Constants.CAMERA_1_ROTATION_PITCH, Constants.CAMERA_1_ROTATION_YAW)));
+        cam2 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_2_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_2_TRANSLATION_X, Constants.CAMERA_2_TRANSLATION_Y, Constants.CAMERA_2_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_2_ROTATION_ROLL, Constants.CAMERA_2_ROTATION_PITCH, Constants.CAMERA_2_ROTATION_YAW)));
+        cam3 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_3_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_3_TRANSLATION_X, Constants.CAMERA_3_TRANSLATION_Y, Constants.CAMERA_3_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_3_ROTATION_ROLL, Constants.CAMERA_3_ROTATION_PITCH, Constants.CAMERA_3_ROTATION_YAW)));
+        cam4 = new Vision(m_robotContainer.drivetrain::addVisionMeasurement, Constants.CAMERA_4_NAME, new Transform3d(
+            new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
+            new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW)));
+
     }
 
     @Override
     public void robotPeriodic() {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run(); 
-    
 
-        int numberValidCameras = 0;
-        Pose2d combinedPose = new Pose2d();
-
-        LLPosePublisher.set(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME).pose);
-        
-
-        if(updatePoseTimer.get() > 0.1 && m_robotContainer.photonCamera1.getCamOn()){
-            Pose2d pose1 = m_robotContainer.photonCamera1.getRobotPose();
-            Matrix<N3, N1> stdDevs1 = VecBuilder.fill(0.0001, 0.0001, 10000.0);
-
-            if(m_robotContainer.photonCamera1.photonCamera.isConnected() && m_robotContainer.photonCamera1.hasTarget() && m_robotContainer.photonCamera1.hasMultipleTargets()){
-                numberValidCameras++;
-                combinedPose = new Pose2d(combinedPose.getX() + pose1.getX(), combinedPose.getY() + pose1.getY(), new Rotation2d());
-            }
-            
-            Pose2d pose2 = m_robotContainer.photonCamera2.getRobotPose();
-
-            if(m_robotContainer.photonCamera2.photonCamera.isConnected() && m_robotContainer.photonCamera2.hasTarget() && m_robotContainer.photonCamera2.hasMultipleTargets()){
-                numberValidCameras++;
-                combinedPose = new Pose2d(combinedPose.getX() + pose2.getX(), combinedPose.getY() + pose2.getY(), new Rotation2d());
-            }
-
-            Pose2d pose3 = m_robotContainer.photonCamera3.getRobotPose();
-
-            if(m_robotContainer.photonCamera3.photonCamera.isConnected() && m_robotContainer.photonCamera3.hasTarget() && m_robotContainer.photonCamera3.hasMultipleTargets()){
-                numberValidCameras++;
-                combinedPose = new Pose2d(combinedPose.getX() + pose3.getX(), combinedPose.getY() + pose3.getY(), new Rotation2d());
-            }
-
-            Pose2d pose4 = m_robotContainer.photonCamera4.getRobotPose();
-
-            if(m_robotContainer.photonCamera4.photonCamera.isConnected() && m_robotContainer.photonCamera4.hasTarget() && m_robotContainer.photonCamera4.hasMultipleTargets()){
-                numberValidCameras++;
-                combinedPose = new Pose2d(combinedPose.getX() + pose4.getX(), combinedPose.getY() + pose4.getY(), new Rotation2d());
-            }
-
-
-            Pose2d pose5 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME).pose;
-
-            if(LimelightHelpers.getBotPose2d(Constants.PRIMARY_LL_NAME) != null){
-                numberValidCameras++;
-                combinedPose = new Pose2d(combinedPose.getX() + pose5.getX(), combinedPose.getY() + pose5.getY(), new Rotation2d());
-            }
-            
-
-            combinedPose = new Pose2d(combinedPose.getX() / numberValidCameras, combinedPose.getY() / numberValidCameras, new Rotation2d());
-
-            combinedPosePublisher.set(combinedPose);
-
-            if(numberValidCameras > 0){
-                cameraPosePublisher.set(combinedPose);
-                m_robotContainer.drivetrain.addVisionMeasurement(combinedPose, Utils.getSystemTimeSeconds(), stdDevs1);
-            }
-            updatePoseTimer.reset();
-            updatePoseTimer.start();
+        if(!DriverStation.isDisabled()){
+            cam1.periodic();
+            cam2.periodic();
+            cam3.periodic();
+            cam4.periodic();
         }
+
+        // First, tell Limelight your robot's current orientation
+        double robotYaw = m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees();
+        LimelightHelpers.SetRobotOrientation(Constants.PRIMARY_LL_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+        LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME);
+
+        // Add it to your pose estimator
+        if(LimelightHelpers.getTargetCount(Constants.PRIMARY_LL_NAME) > 0){
+            m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+            m_robotContainer.drivetrain.addVisionMeasurement(
+                limelightMeasurement.pose,
+                limelightMeasurement.timestampSeconds
+        );
+        }
+        
+        LLPosePublisher.set(limelightMeasurement.pose);
     }
 
     @Override
@@ -152,6 +135,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
+        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
     }
 
     @Override

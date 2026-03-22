@@ -5,21 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "CamsOff"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RetractHoods"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "RetractHoods"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -27,19 +21,26 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "ZeroTurret"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "parallel",
                       "data": {
-                        "name": "ZeroIntake"
+                        "commands": [
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ZeroTurret"
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "ZeroIntake"
+                            }
+                          }
+                        ]
                       }
                     },
                     {
@@ -55,9 +56,59 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Auto 2 Stage 2"
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 8.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShootV2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeRetractShoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RetractHoods"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ExtendIntake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto 2 Stage 2"
+                }
+              }
+            ]
           }
         },
         {
@@ -67,19 +118,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 10.0
+                  "waitTime": 5.0
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "TrackHub"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootOn"
+                  "name": "ShootV2"
                 }
               },
               {
@@ -87,20 +132,14 @@
                 "data": {
                   "name": "IntakeRetractShoot"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "HoodsForShoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CamsOn"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RetractHoods"
           }
         },
         {

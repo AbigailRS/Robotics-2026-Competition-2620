@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,6 +18,9 @@ public class Hoods extends SubsystemBase {
 
   private Servo leftHoodieServo = new Servo(Constants.LEFT_HOOD_SERVO);
   private Servo rightHoodieServo = new Servo(Constants.RIGHT_HOOD_SERVO);
+
+  private InterpolatingDoubleTreeMap leftServoAngleMap = new InterpolatingDoubleTreeMap();
+  private InterpolatingDoubleTreeMap rightServoAngleMap = new InterpolatingDoubleTreeMap();
 
 
   private double leftServoPos, rightServoPos;
@@ -30,6 +35,25 @@ public class Hoods extends SubsystemBase {
   public Hoods() {
     leftServoPos = Constants.HOOD_LEFT_LOW_POSITION;
     rightServoPos = Constants.HOOD_RIGHT_LOW_POSITION;
+
+    leftServoAngleMap.put(0.0, 0.0);
+    leftServoAngleMap.put(5.0, 0.1);
+    leftServoAngleMap.put(10.0, 0.22);
+    leftServoAngleMap.put(15.0, 0.375);
+    leftServoAngleMap.put(20.0, 0.5);
+    leftServoAngleMap.put(25.0, 0.75);
+    leftServoAngleMap.put(30.0, 0.9);
+    leftServoAngleMap.put(35.0, 1.0);
+
+    rightServoAngleMap.put(0.0, 0.0);
+    rightServoAngleMap.put(5.0, 0.1);
+    rightServoAngleMap.put(10.0, 0.22);
+    rightServoAngleMap.put(15.0, 0.375);
+    rightServoAngleMap.put(20.0, 0.5);
+    rightServoAngleMap.put(25.0, 0.75);
+    rightServoAngleMap.put(30.0, 0.9);
+    rightServoAngleMap.put(35.0, 1.0);
+
   }
 
   public void setLeftServoPosition(double position){
@@ -40,16 +64,24 @@ public class Hoods extends SubsystemBase {
     this.rightServoPos = position;
   }
 
+  public void setLeftServoAngle(double angleDegrees){
+    this.leftServoPos = leftServoAngleMap.get(angleDegrees);
+  }
+
+  public void setRightServoAngle(double angleDegrees){
+    this.rightServoPos = rightServoAngleMap.get(angleDegrees);  
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     leftHoodieServo.set(leftServoPos);
     rightHoodieServo.set(rightServoPos);
 
-    // hoodLeftSetPositionPublisher.set(leftServoPos);
-    // hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
-    // hoodRightSetPositionPublisher.set(rightServoPos);
-    // hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
+    hoodLeftSetPositionPublisher.set(leftServoPos);
+    hoodLeftPositionPublisher.set(leftHoodieServo.getPosition());
+    hoodRightSetPositionPublisher.set(rightServoPos);
+    hoodRightPositionPublisher.set(rightHoodieServo.getPosition());
 
   }
 }

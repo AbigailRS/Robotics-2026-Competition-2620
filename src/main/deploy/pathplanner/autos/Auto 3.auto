@@ -175,12 +175,6 @@
                 "data": {
                   "name": "HoodsForShoot"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CamsOn"
-                }
               }
             ]
           }

@@ -160,13 +160,13 @@ public class tinyPebbleShooter extends SubsystemBase {
   }
 
   public void updateLogging(){
-    // shooterLeftVelocitySetPointPublisher.set(leftVelocity);
-    // shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
-    // shooterRightVelocitySetPointPublisher.set(rightVelocity);
-    // shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
-    // shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
-    // shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
-    // atLeftVeloPub.set(this.atLeftShootVelocity());
-    // atRightVeloPub.set(this.atRightShootVelocity());
+    shooterLeftVelocitySetPointPublisher.set(leftVelocity);
+    shooterLeftVelocityPublisher.set(leftSlingShot.getVelocity().getValueAsDouble());
+    shooterRightVelocitySetPointPublisher.set(rightVelocity);
+    shooterRightVelocityPublisher.set(rightSlingShot.getVelocity().getValueAsDouble());
+    shooterLeftVoltagePublisher.set(leftSlingShot.getMotorVoltage().getValueAsDouble());
+    shooterRightVoltagePublisher.set(rightSlingShot.getMotorVoltage().getValueAsDouble());
+    atLeftVeloPub.set(this.atLeftShootVelocity());
+    atRightVeloPub.set(this.atRightShootVelocity());
   }
 }

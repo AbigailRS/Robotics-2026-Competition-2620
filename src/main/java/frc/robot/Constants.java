@@ -22,45 +22,50 @@ public class Constants {
 
     public static final double SLOW_SPEED_MULTIPLIER = 0.3;
 
-    public static final double CAMERA_1_TRANSLATION_X = -0.1;
-    public static final double CAMERA_1_TRANSLATION_Y = 0.3;
-    public static final double CAMERA_1_TRANSLATION_Z = -0.0;
+    public static final String CAMERA_1_NAME = "Photon Camera 1";
+    public static final String CAMERA_2_NAME = "Photon Camera 2";
+    public static final String CAMERA_3_NAME = "Photon Camera 3";
+    public static final String CAMERA_4_NAME = "Photon Camera 4";
+
+    public static final double CAMERA_1_TRANSLATION_X = -0.281;
+    public static final double CAMERA_1_TRANSLATION_Y = 0.343;
+    public static final double CAMERA_1_TRANSLATION_Z = -0.311;
 
     public static final double CAMERA_1_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(15.0);
+    public static final double CAMERA_1_ROTATION_YAW = Math.toRadians(90);
     public static final double CAMERA_1_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_2_TRANSLATION_X = -0.1;
-    public static final double CAMERA_2_TRANSLATION_Y = -0.3;
-    public static final double CAMERA_2_TRANSLATION_Z = 0.0;
+    public static final double CAMERA_2_TRANSLATION_X = -0.3429;
+    public static final double CAMERA_2_TRANSLATION_Y = 0.2794;
+    public static final double CAMERA_2_TRANSLATION_Z = 0.2921;
 
     public static final double CAMERA_2_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_2_ROTATION_YAW = Math.toRadians(-15.0);
+    public static final double CAMERA_2_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_2_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_3_TRANSLATION_X = -0.4;
-    public static final double CAMERA_3_TRANSLATION_Y = 0.344805;
-    public static final double CAMERA_3_TRANSLATION_Z = 0.0522732;
+    public static final double CAMERA_3_TRANSLATION_X = -0.3429;
+    public static final double CAMERA_3_TRANSLATION_Y = -0.2794;
+    public static final double CAMERA_3_TRANSLATION_Z = 0.2921;
 
     public static final double CAMERA_3_ROTATION_ROLL = 0.0;
     public static final double CAMERA_3_ROTATION_YAW = Math.toRadians(180.0);
     public static final double CAMERA_3_ROTATION_PITCH = Math.toRadians(0.0);
 
-    public static final double CAMERA_4_TRANSLATION_X = -0.4;
-    public static final double CAMERA_4_TRANSLATION_Y = -0.344805;
-    public static final double CAMERA_4_TRANSLATION_Z = 0.0522732;
+    public static final double CAMERA_4_TRANSLATION_X = -0.281;
+    public static final double CAMERA_4_TRANSLATION_Y = -0.343;
+    public static final double CAMERA_4_TRANSLATION_Z = 0.311;
 
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
-    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(180.0);
+    public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(270.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
 
     public static final Translation2d POSE_RED_HUB = new Translation2d(12.0, 4.0);
-    public static final Translation2d POSE_BLUE_HUB = new Translation2d(4.5, 4.0);
+    public static final Translation2d POSE_BLUE_HUB = new Translation2d(4.6, 4.0);
 
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public static final double LATENCY_CONSTANT = 0.5;
+    public static final double LATENCY_CONSTANT = 0.15;
     public static final double DRIVE_SHOOT_MODIFIER = 0.25;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
     public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;
@@ -124,7 +129,9 @@ public class Constants {
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2.0;
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
-    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.40;
+    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.25;
+
+    public static final double SHOOT_V2_CONSTANT_SPEED = 70.0;
     
     //Intake Constants
     public static final int LOWER_WHEEL_INTAKE_CANID = 30;
@@ -160,7 +167,7 @@ public class Constants {
     public static final double RIGHT_ROCK_SMUSHER_VOLTAGE = 1.5;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE = 1.5;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.60;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.7;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;
@@ -168,7 +175,7 @@ public class Constants {
 
     public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.CounterClockwise_Positive;
-    public static final InvertedValue INDEX_CONVERY_INVERT  = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue INDEX_CONVERY_INVERT  = InvertedValue.CounterClockwise_Positive;
 
     public static final double LEFT_INDEXER_STOP = 0.0;
     public static final double RIGHT_INDEXER_STOP = 0.0;
@@ -177,7 +184,7 @@ public class Constants {
 
     public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
-    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 20.0;
+    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 40.0;
     
 
     //Hoods

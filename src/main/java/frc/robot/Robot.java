@@ -80,10 +80,9 @@ public class Robot extends TimedRobot {
         }
 
         // First, tell Limelight your robot's current orientation
-        double robotYaw = m_robotContainer.drivetrain.getPigeon2().getYaw().getValueAsDouble();
+        double robotYaw = m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees();
         LimelightHelpers.SetRobotOrientation(Constants.PRIMARY_LL_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-        // Get the pose estimate
         LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME);
 
         // Add it to your pose estimator

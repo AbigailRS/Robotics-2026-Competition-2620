@@ -129,7 +129,7 @@ public class Constants {
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2.0;
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
-    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.40;
+    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.25;
 
     public static final double SHOOT_V2_CONSTANT_SPEED = 70.0;
     
@@ -167,7 +167,7 @@ public class Constants {
     public static final double RIGHT_ROCK_SMUSHER_VOLTAGE = 1.5;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE = 1.5;
     public static final double MAX_CONVEYOR_VOLTAGE = 12;
-    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.60;
+    public static final double CONVEYOR_VOLTAGE_PERCENTAGE = 0.7;
     public static final double MAX_LEFT_SMUSHER_VOLTAGE = 12;
     public static final double LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE = 0.5;
     public static final double MAX_RIGHT_SMUSHER_VOLTAGE = 12;
@@ -175,7 +175,7 @@ public class Constants {
 
     public static final InvertedValue INDEX_LEFT_INVERT = InvertedValue.CounterClockwise_Positive;
     public static final InvertedValue INDEX_RIGHT_INVERT = InvertedValue.CounterClockwise_Positive;
-    public static final InvertedValue INDEX_CONVERY_INVERT  = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue INDEX_CONVERY_INVERT  = InvertedValue.CounterClockwise_Positive;
 
     public static final double LEFT_INDEXER_STOP = 0.0;
     public static final double RIGHT_INDEXER_STOP = 0.0;
@@ -184,7 +184,7 @@ public class Constants {
 
     public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
-    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 20.0;
+    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 40.0;
     
 
     //Hoods

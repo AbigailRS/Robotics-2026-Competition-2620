@@ -61,10 +61,11 @@ public class bigRockIntake extends SubsystemBase {
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     extendConfig.withSlot1(configs);
     extendConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
-    extendConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_EXTENSION_CURRENT_LIMIT);
+    extendConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT);
     extendConfig.ClosedLoopRamps.withVoltageClosedLoopRampPeriod(Constants.INTAKE_EXTEND_RAMP_RATE);
     rockPusher.setNeutralMode(NeutralModeValue.Brake);
     intakeConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.INTAKE_ROTATE_RAMP_RATE);
+    intakeConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     rockGrabber.getConfigurator().apply(intakeConfig);
     rockPusher.getConfigurator().apply(extendConfig);
   }
@@ -113,6 +114,10 @@ public class bigRockIntake extends SubsystemBase {
     return false;
   }
 
+  public void setExtendCurrentLimiting(double limit){
+    extendConfig.CurrentLimits.withStatorCurrentLimit(limit);
+  }
+
   @Override
   public void periodic() {
     rockGrabber.setVoltage(Constants.MAX_INTAKE_VOLTAGE * intakeVoltage   /*Constants.INTAKE_VOLTAGE_PERCENTAGE*/);
@@ -123,8 +128,8 @@ public class bigRockIntake extends SubsystemBase {
     // ExtendVoltagePublisher.set(rockPusher.getSupplyVoltage().getValueAsDouble());
     // intakeExtendPostionBackwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
     // intakeExtendPostionForwardsPublisher.set(rockGrabber.getPosition().getValueAsDouble());
-    // ExtendPositionSetpointPublisher.set(extendPos);
-    // ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
+    ExtendPositionSetpointPublisher.set(extendPos);
+    ExtendPositionPublisher.set(rockPusher.getPosition().getValueAsDouble());
 
     if(posControlOn){
       rockPusher.setControl(positionVoltage.withPosition(extendPos).withEnableFOC(true));

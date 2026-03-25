@@ -55,6 +55,11 @@ public class Constants {
     public static final double CAMERA_4_TRANSLATION_Y = -0.343;
     public static final double CAMERA_4_TRANSLATION_Z = 0.311;
 
+    public static final double TURRET_LEFT_ROBOT_OFFSET_X = -0.1;    //in meters
+    public static final double TURRET_LEFT_ROBOT_OFFSET_Y = 0.1;
+    public static final double TURRET_RIGHT_ROBOT_OFFSET_X = -0.1;
+    public static final double TURRET_RIGHT_ROBOT_OFFSET_Y = -0.1;
+
     public static final double CAMERA_4_ROTATION_ROLL = 0.0;
     public static final double CAMERA_4_ROTATION_YAW = Math.toRadians(270.0);
     public static final double CAMERA_4_ROTATION_PITCH = Math.toRadians(0.0);
@@ -141,17 +146,16 @@ public class Constants {
     public static final double INTAKE_VOLTAGE_PERCENTAGE = 0.45;
     public static final double MAX_EXTEND_VOLTAGE = 12;
     public static final double EXTEND_VOLTAGE_PERCENTAGE = 0.5;
-    public static final double EXTEND_POSITION_OUT = 20.0;
-    public static final double EXTEND_POSITION_IN = 0.0;
-    public static final double EXTEND_POSITION_OSCILLATE = 40.0;
+    public static final double EXTEND_POSITION_OSCILLATE = 60.0;
 
-    public static final double INTAKE_POSITION_IN = 0.0;
-    public static final double INTAKE_POSITION_OUT = 91.0;
+    public static final double INTAKE_POSITION_IN = 30.0;
+    public static final double INTAKE_POSITION_OUT = 80.0;
 
     public static final double INTAKE_STOP = 0.0;
 
     public static final double INTAKE_IN_POSITION_ERROR = 5.0;
-    public static final double INTAKE_EXTENSION_CURRENT_LIMIT = 18.0;
+    public static final double INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT = 30.0;
+    public static final double INTAKE_ZEROING_EXTENSION_CURRENT_LIMIT = 18.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 18.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;
 
@@ -184,7 +188,7 @@ public class Constants {
 
     public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
-    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 40.0;
+    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 100.0;
     
 
     //Hoods

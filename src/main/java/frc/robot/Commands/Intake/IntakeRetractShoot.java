@@ -28,19 +28,19 @@ public class IntakeRetractShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rockIntake.setExtendPosition(Constants.EXTEND_POSITION_IN);
+    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_IN);
     timer.reset();
     timer.start();
-    extendInPos = 25;
+    extendInPos = 50;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(timer.get() > 4.0){
-      extendInPos = 0;
+      extendInPos = 25;
     }
-    rockIntake.setUpdatedPID(3.0, 0, 0);
+    rockIntake.setUpdatedPID(5.0, 0, 0);
     if((rockIntake.intakeInPosition()) && retractMode){
       rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
       retractMode = false;
@@ -50,13 +50,14 @@ public class IntakeRetractShoot extends Command {
       retractMode = true;
     }
 
-    rockIntake.setIntakeVoltage(0.0);
+    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     rockIntake.setUpdatedPID(1.0, 0, 0);
+    rockIntake.setIntakeVoltage(0.0);
   }
 
   // Returns true when the command should end.

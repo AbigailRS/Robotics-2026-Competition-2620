@@ -60,10 +60,16 @@ public class ShootV2 extends Command {
   private boolean leftSpeedReached, rightSpeedReached;
   private double timeout = -1.0;
   private Timer timeoutTimer = new Timer();
+  private Timer shootDelayTimer = new Timer();
+
+  private Transform2d leftTurretOffset, rightTurretOffset;
+  private Pose2d leftTurretPose, rightTurretPose;
 
   private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private static final NetworkTable table = inst.getTable("Shoot V2");
   private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
+  private static final DoublePublisher leftTurretDistToGoalPub = table.getDoubleTopic("Left Turret Distance to Goal").publish();
+  private static final DoublePublisher rightTurretDistToGoalPub = table.getDoubleTopic("Left Turret Distance to Goal").publish();
   private static final DoublePublisher hoodAnglePub = table.getDoubleTopic("Hood Angle").publish();
 
   public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain, rockDestroyerInxder indexer)
@@ -137,10 +143,24 @@ public class ShootV2 extends Command {
   public void execute()
   {
 
+    leftTurretOffset = new Transform2d(Constants.TURRET_LEFT_ROBOT_OFFSET_X, Constants.TURRET_LEFT_ROBOT_OFFSET_Y, new Rotation2d());
+    rightTurretOffset = new Transform2d(Constants.TURRET_RIGHT_ROBOT_OFFSET_X, Constants.TURRET_RIGHT_ROBOT_OFFSET_Y, new Rotation2d());
+
+    leftTurretPose = driveTrain.getState().Pose.plus(leftTurretOffset);
     // 1. Project future position
     Translation2d futurePos = driveTrain.getState().Pose.getTranslation().plus(
       new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(Constants.LATENCY_CONSTANT)
     );
+    Translation2d futurePosLeftTurret = leftTurretPose.getTranslation().plus(
+      new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(Constants.LATENCY_CONSTANT)
+    );
+    Translation2d futurePosRightTurret = leftTurretPose.getTranslation().plus(
+      new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond).times(Constants.LATENCY_CONSTANT)
+    );
+    
+
+    leftTurretOffset = new Transform2d(Constants.TURRET_LEFT_ROBOT_OFFSET_X, Constants.TURRET_LEFT_ROBOT_OFFSET_Y, new Rotation2d());
+    rightTurretOffset = new Transform2d(Constants.TURRET_RIGHT_ROBOT_OFFSET_X, Constants.TURRET_RIGHT_ROBOT_OFFSET_Y, new Rotation2d());
 
     // 2. Get target vector
     if(DriverStation.getAlliance().get() == Alliance.Red){
@@ -150,43 +170,81 @@ public class ShootV2 extends Command {
       goalPosition = Constants.POSE_BLUE_HUB;
     }
     Translation2d toGoal = goalPosition.minus(futurePos);
+    Translation2d leftTurretToGoal = goalPosition.minus(futurePosLeftTurret);
+    Translation2d rightTurretToGoal = goalPosition.minus(futurePosRightTurret);
     double distance = toGoal.getNorm();
+    double leftTurretDistance = leftTurretToGoal.getNorm();
+    double rightTurretDistance = rightTurretToGoal.getNorm();
     Translation2d targetDirection = toGoal.div(distance);
 
     // 3. Look up baseline velocity from table
     double shooterBaseline = shooterMap.get(distance);
+    double leftShooterBaseline = shooterMap.get(leftTurretDistance);
+    double rightShooterBaseline = shooterMap.get(rightTurretDistance);
     double hoodBaseline = hoodAngleMap.get(distance);
+    double leftHoodBaseline = hoodAngleMap.get(leftTurretDistance);
+    double rightHoodBaseline = hoodAngleMap.get(rightTurretDistance);
     double tofBaseline = tofMap.get(distance);
+    double leftTofBaseline = tofMap.get(leftTurretDistance);
+    double rightTofBaseline = tofMap.get(rightTurretDistance);
     double baselineVelocity = distance / tofBaseline;
+    double leftBaselineVelocity = leftTurretDistance / leftTofBaseline;
+    double rightBaselineVelocity = rightTurretDistance / rightTofBaseline;
 
     // 4. Build target velocity vector
     Translation2d targetVelocity = targetDirection.times(baselineVelocity);
+    Translation2d leftTargetVelocity = targetDirection.times(leftBaselineVelocity);
+    Translation2d rightTargetVelocity = targetDirection.times(rightBaselineVelocity);
 
     // 5. THE MAGIC: subtract robot velocity
     Translation2d shotVelocity = targetVelocity.minus(new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond));
+    Translation2d leftShotVelocity = leftTargetVelocity.minus(new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond));
+    Translation2d rightShotVelocity = rightTargetVelocity.minus(new Translation2d(driveTrain.getState().Speeds.vxMetersPerSecond, driveTrain.getState().Speeds.vyMetersPerSecond));
 
     // 6. Extract results
     Rotation2d turretAngle = shotVelocity.getAngle();
     double requiredVelocity = shotVelocity.getNorm();
+    double leftRequiredVelocity = leftShotVelocity.getNorm();
+    double rightRequiredVelocity = rightShotVelocity.getNorm();
 
     // 7. Use table in reverse: velocity → effective distance → RPM
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity);
+    double leftEffectiveDistance = velocityToEffectiveDistance(leftRequiredVelocity);
+    double rightEffectiveDistance = velocityToEffectiveDistance(rightRequiredVelocity);
     double requiredRpm = shooterMap.get(effectiveDistance);
+    double leftRequiredRpm = shooterMap.get(leftEffectiveDistance);
+    double rightRequiredRpm = shooterMap.get(rightEffectiveDistance);
 
     double velocityRatio = requiredVelocity / baselineVelocity;
+    double leftVelocityRatio = leftRequiredVelocity / leftBaselineVelocity;
+    double rightVelocityRatio = rightRequiredVelocity / rightBaselineVelocity;
 
     // Split the correction: sqrt gives equal "contribution" from each
     double rpsFactor = Math.sqrt(velocityRatio);
+    double leftRpsFactor = Math.sqrt(leftVelocityRatio);
+    double rightRpsFactor = Math.sqrt(rightVelocityRatio);
     double hoodFactor = Math.sqrt(velocityRatio);
+    double leftHoodFactor = Math.sqrt(leftVelocityRatio);
+    double rightHoodFactor = Math.sqrt(rightVelocityRatio);
 
     // Apply RPM scaling
     double adjustedRps = shooterBaseline * rpsFactor;
+    double leftAdjustedRps = leftShooterBaseline * leftRpsFactor;
+    double rightAdjustedRps = rightShooterBaseline * rightRpsFactor;
 
     // Apply hood adjustment (changes horizontal component)
     double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(hoodBaseline));
+    double leftTotalVelocity = leftBaselineVelocity / Math.cos(Math.toRadians(leftHoodBaseline));
+    double rightTotalVelocity = rightBaselineVelocity / Math.cos(Math.toRadians(rightHoodBaseline));
     double targetHorizFromHood = baselineVelocity * hoodFactor;
+    double leftTargetHorizFromHood = leftBaselineVelocity * leftHoodFactor;
+    double rightTargetHorizFromHood = rightBaselineVelocity * rightHoodFactor;
     double ratio = MathUtil.clamp(targetHorizFromHood / totalVelocity, 0.0, 1.0);
+    double leftRatio = MathUtil.clamp(leftTargetHorizFromHood / leftTotalVelocity, 0.0, 1.0);
+    double rightRatio = MathUtil.clamp(rightTargetHorizFromHood / rightTotalVelocity, 0.0, 1.0);
     double adjustedHood = Math.toDegrees(Math.acos(ratio));
+    double leftAdjustedHood = Math.toDegrees(Math.acos(leftRatio));
+    double rightAdjustedHood = Math.toDegrees(Math.acos(rightRatio));
 
     double angleToGoalDegrees = turretAngle.getDegrees() - driveTrain.getState().Pose.getRotation().getDegrees();
     if(angleToGoalDegrees > 180){
@@ -196,17 +254,22 @@ public class ShootV2 extends Command {
       angleToGoalDegrees = angleToGoalDegrees + 360;
     }
     distToGoalPub.set(distance);
+    leftTurretDistToGoalPub.set(leftTurretDistance);
+    rightTurretDistToGoalPub.set(rightTurretDistance);
     hoodAnglePub.set(adjustedHood);
 
 
     turretSubsystem.setTurretPosition(angleToGoalDegrees);
-    hoodSubsystem.setLeftServoAngle(adjustedHood);
-    hoodSubsystem.setRightServoAngle(adjustedHood);
-    flywheelSubsystem.setLeftSlingVelocity(adjustedRps);
-    flywheelSubsystem.setRightSlingVelocity(adjustedRps);
+    hoodSubsystem.setLeftServoAngle(leftAdjustedHood);
+    hoodSubsystem.setRightServoAngle(rightAdjustedHood);
+    flywheelSubsystem.setLeftSlingVelocity(leftAdjustedRps);
+    flywheelSubsystem.setRightSlingVelocity(rightAdjustedRps);
 
     if(flywheelSubsystem.atLeftShootVelocity() || flywheelSubsystem.atRightShootVelocity()){
-      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+      shootDelayTimer.start();
+      if(shootDelayTimer.get() > 1.0){
+        indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+      }
     }
     else{
       indexer.setConveryVoltage(0.0);
@@ -257,6 +320,7 @@ public class ShootV2 extends Command {
     indexer.setLeftRockSumusherVoltage(0.0);
     indexer.setRightRockSmusherVoltage(0.0);
     indexer.setConveryVoltage(0);
+    shootDelayTimer.reset();
   }
 
   public double getHorizontalVelocity(double distance) {

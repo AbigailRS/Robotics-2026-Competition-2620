@@ -45,7 +45,6 @@ public class ManualShoot extends Command {
 
     shooter.setLeftSlingShotVoltage(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
     shooter.setRightSlingShotVoltage(Constants.SHOOTER_MANUAL_SHOOT_PERCENTAGE);
-    indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
 
     if (shootDelayTimer.get() > 1.0) {
       indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
@@ -54,6 +53,12 @@ public class ManualShoot extends Command {
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
       indexer.setRightRockSmusherVoltage(0.0);
+    }
+    if(shootDelayTimer.get() > 2.0){
+      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      indexer.setConveryVoltage(0.0);
     }
   }
 

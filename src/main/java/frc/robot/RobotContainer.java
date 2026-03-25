@@ -33,6 +33,7 @@ import frc.robot.Commands.UpdateGameState;
 import frc.robot.Commands.climbOff;
 import frc.robot.Commands.climbOn;
 import frc.robot.Commands.Cameras.EnableCamera;
+import frc.robot.Commands.Conveyor.Eject;
 import frc.robot.Commands.Conveyor.LeftDown;
 import frc.robot.Commands.Conveyor.LeftUp;
 import frc.robot.Commands.Conveyor.RightDown;
@@ -195,6 +196,8 @@ public class RobotContainer {
         shootTrigger.whileTrue(new IntakeRetractShoot(intake));
         driver.rightBumper().toggleOnTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
         driver.rightBumper().toggleOnTrue(new IntakeExtendPos(intake));
+
+        driver.a().whileTrue(new Eject(index));
 
         updateGameState.onTrue(new UpdateGameState(gameStateManager));
 

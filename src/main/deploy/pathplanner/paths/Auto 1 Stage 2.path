@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2368616262482157,
-        "y": 7.431398002853067
+        "x": 3.198045649072753,
+        "y": 7.573723252496434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.336647646219684,
-        "y": 7.418459343794578
+        "x": 4.297831669044221,
+        "y": 7.560784593437945
       },
       "isLocked": false,
       "linkedName": "Auto 1 Stage 1-2"
     },
     {
       "anchor": {
-        "x": 6.9502567760342355,
-        "y": 7.379643366619116
+        "x": 7.0796433666191145,
+        "y": 7.4702139800285305
       },
       "prevControl": {
-        "x": 5.8892867332382295,
-        "y": 7.431398002853067
+        "x": 6.031611982881596,
+        "y": 7.4702139800285305
       },
       "nextControl": {
-        "x": 7.932427004104726,
-        "y": 7.33173262378641
+        "x": 8.062981455064195,
+        "y": 7.4702139800285305
       },
       "isLocked": false,
       "linkedName": null
@@ -98,7 +98,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

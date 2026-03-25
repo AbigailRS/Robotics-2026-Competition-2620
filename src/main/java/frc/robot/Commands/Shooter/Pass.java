@@ -52,9 +52,13 @@ public class Pass extends Command {
       indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE);
       indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE);
     }
+    else if(shootDelayTimer.get() > 2.0){
+      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
       indexer.setRightRockSmusherVoltage(0.0);
+      indexer.setConveryVoltage(0.0);
     }
 
   }

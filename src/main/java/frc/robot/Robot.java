@@ -20,14 +20,18 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Vision;
@@ -39,8 +43,13 @@ public class Robot extends TimedRobot {
     StructPublisher<Pose2d> LLPosePublisher = NetworkTableInstance.getDefault().getStructTopic("LL Pose Log", Pose2d.struct).publish();
     StructPublisher<Pose2d> combinedPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Combined Pose Log", Pose2d.struct).publish();
 
+    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    private final NetworkTable table = inst.getTable("PDH");
+    DoublePublisher[] pdhCurrentDrawArrayPub = new DoublePublisher[24];
+
     private final RobotContainer m_robotContainer;
     private final Vision cam1, cam2, cam3, cam4;
+    private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -65,6 +74,12 @@ public class Robot extends TimedRobot {
             new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
             new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW)));
 
+
+        int iterator = 0;
+        for(DoublePublisher port : pdhCurrentDrawArrayPub){
+            pdhCurrentDrawArrayPub[iterator] = table.getDoubleTopic("Current Draw Port " + iterator).publish();
+            iterator++;
+        }
     }
 
     @Override
@@ -92,6 +107,12 @@ public class Robot extends TimedRobot {
                 limelightMeasurement.pose,
                 limelightMeasurement.timestampSeconds
         );
+        }
+
+        int iterator = 0;
+        for(DoublePublisher port : pdhCurrentDrawArrayPub){
+            pdhCurrentDrawArrayPub[iterator].set(pdh.getCurrent(iterator));
+            iterator++;
         }
         
         LLPosePublisher.set(limelightMeasurement.pose);

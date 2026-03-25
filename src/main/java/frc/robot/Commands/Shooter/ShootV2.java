@@ -60,6 +60,7 @@ public class ShootV2 extends Command {
   private boolean leftSpeedReached, rightSpeedReached;
   private double timeout = -1.0;
   private Timer timeoutTimer = new Timer();
+  private Timer shootDelayTimer = new Timer();
 
   private Transform2d leftTurretOffset, rightTurretOffset;
   private Pose2d leftTurretPose, rightTurretPose;
@@ -67,6 +68,8 @@ public class ShootV2 extends Command {
   private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private static final NetworkTable table = inst.getTable("Shoot V2");
   private static final DoublePublisher distToGoalPub = table.getDoubleTopic("distance to goal").publish();
+  private static final DoublePublisher leftTurretDistToGoalPub = table.getDoubleTopic("Left Turret Distance to Goal").publish();
+  private static final DoublePublisher rightTurretDistToGoalPub = table.getDoubleTopic("Left Turret Distance to Goal").publish();
   private static final DoublePublisher hoodAnglePub = table.getDoubleTopic("Hood Angle").publish();
 
   public ShootV2(Turret turret, Hoods hood, tinyPebbleShooter flyWheel, CommandSwerveDrivetrain driveTrain, rockDestroyerInxder indexer)
@@ -251,6 +254,8 @@ public class ShootV2 extends Command {
       angleToGoalDegrees = angleToGoalDegrees + 360;
     }
     distToGoalPub.set(distance);
+    leftTurretDistToGoalPub.set(leftTurretDistance);
+    rightTurretDistToGoalPub.set(rightTurretDistance);
     hoodAnglePub.set(adjustedHood);
 
 
@@ -261,7 +266,10 @@ public class ShootV2 extends Command {
     flywheelSubsystem.setRightSlingVelocity(rightAdjustedRps);
 
     if(flywheelSubsystem.atLeftShootVelocity() || flywheelSubsystem.atRightShootVelocity()){
-      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+      shootDelayTimer.start();
+      if(shootDelayTimer.get() > 1.0){
+        indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+      }
     }
     else{
       indexer.setConveryVoltage(0.0);
@@ -312,6 +320,7 @@ public class ShootV2 extends Command {
     indexer.setLeftRockSumusherVoltage(0.0);
     indexer.setRightRockSmusherVoltage(0.0);
     indexer.setConveryVoltage(0);
+    shootDelayTimer.reset();
   }
 
   public double getHorizontalVelocity(double distance) {

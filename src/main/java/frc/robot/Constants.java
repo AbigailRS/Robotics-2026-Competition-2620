@@ -189,6 +189,12 @@ public class Constants {
     public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 100.0;
+
+    public static final double INDEXER_LEFT_VELOCITY_FEED = 45.0;
+    public static final double INDEXER_RIGHT_VELOCITY_FEED = 45.0;
+
+    public static final double INDEXER_LEFT_ALLOWABLE_ERROR = 5.0;
+    public static final double INDEXER_RIGHT_ALLOWABLE_ERROR = 5.0;
     
 
     //Hoods

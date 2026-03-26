@@ -57,7 +57,7 @@ public class ShootV2 extends Command {
   private InterpolatingDoubleTreeMap inverseShooterMap = new InterpolatingDoubleTreeMap();
   private Translation2d goalPosition;
 
-  private boolean leftSpeedReached, rightSpeedReached;
+  private boolean leftSpeedReached, rightSpeedReached, indexerSpeedReached;
   private double timeout = -1.0;
   private Timer timeoutTimer = new Timer();
   private Timer shootDelayTimer = new Timer();
@@ -137,6 +137,7 @@ public class ShootV2 extends Command {
 
     leftSpeedReached = false;
     rightSpeedReached = false;
+    indexerSpeedReached = false;
   }
 
   @Override
@@ -265,16 +266,6 @@ public class ShootV2 extends Command {
     flywheelSubsystem.setLeftSlingVelocity(leftAdjustedRps);
     flywheelSubsystem.setRightSlingVelocity(rightAdjustedRps);
 
-    if(flywheelSubsystem.atLeftShootVelocity() || flywheelSubsystem.atRightShootVelocity()){
-      shootDelayTimer.start();
-      if(shootDelayTimer.get() > 1.0){
-        indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
-      }
-    }
-    else{
-      indexer.setConveryVoltage(0.0);
-    }
-
     if (flywheelSubsystem.atLeftShootVelocity()) {
       leftSpeedReached = true; 
     }
@@ -284,16 +275,27 @@ public class ShootV2 extends Command {
     }
 
     if(leftSpeedReached){
-      indexer.setLeftRockSumusherVoltage(Constants.LEFT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
+      indexer.setLeftIndexVelocity(Constants.INDEXER_LEFT_VELOCITY_FEED);
     }
     else{
       indexer.setLeftRockSumusherVoltage(0.0);
     }
     if(rightSpeedReached){
-      indexer.setRightRockSmusherVoltage(Constants.RIGHT_ROCK_SMUSHER_VOLTAGE_PERCENTAGE);
+      indexer.setRightIndexVelocity(Constants.INDEXER_RIGHT_VELOCITY_FEED);
     }
     else{
       indexer.setRightRockSmusherVoltage(0.0);
+    }
+
+    if(flywheelSubsystem.atLeftShootVelocity() || flywheelSubsystem.atRightShootVelocity()){
+      indexerSpeedReached = true;
+    }
+
+    if(indexerSpeedReached){
+      indexer.setConveryVoltage(Constants.CONVEYOR_VOLTAGE_PERCENTAGE);
+    }
+    else{
+      indexer.setConveryVoltage(0.0);
     }
 
   }

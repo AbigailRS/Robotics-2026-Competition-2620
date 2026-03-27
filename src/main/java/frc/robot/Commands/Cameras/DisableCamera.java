@@ -7,18 +7,17 @@ package frc.robot.Commands.Cameras;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.CameraState;
 import frc.robot.CameraSystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DisableCamera extends Command {
+  CameraState cameraState;
 
-  CameraSystem cam1, cam2, cam3, cam4;
   /** Creates a new EnableCamera. */
-  public DisableCamera(CameraSystem cam1, CameraSystem cam2, CameraSystem cam3, CameraSystem cam4) {
-    this.cam1 = cam1;
-    this.cam2 = cam2;
-    this.cam3 = cam3;
-    this.cam4 = cam4;
+  public DisableCamera(CameraState cameraState) {
+    this.cameraState = cameraState;
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,12 +28,7 @@ public class DisableCamera extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    cam1.setCamOn(false);
-    cam2.setCamOn(false);
-    cam3.setCamOn(false);
-    cam4.setCamOn(false);
-
-
+    cameraState.setCameraState(false);
   }
 
   // Called once the command ends or is interrupted.

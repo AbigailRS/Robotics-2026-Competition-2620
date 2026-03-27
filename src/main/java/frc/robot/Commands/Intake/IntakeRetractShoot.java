@@ -28,35 +28,36 @@ public class IntakeRetractShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_IN);
+    rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
     timer.reset();
     timer.start();
-    extendInPos = 50;
+    rockIntake.setUpdatedPID(5.0, 0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() > 4.0){
-      extendInPos = 25;
-    }
-    rockIntake.setUpdatedPID(5.0, 0, 0);
-    if((rockIntake.intakeInPosition()) && retractMode){
-      rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
-      retractMode = false;
-    }
-    else if((rockIntake.intakeInPosition()) && !retractMode){
-      rockIntake.setExtendPosition(extendInPos);
-      retractMode = true;
-    }
 
-    rockIntake.setIntakeVoltage(Constants.INTAKE_VOLTAGE_PERCENTAGE);
+    if(timer.get() < 1.5){
+      rockIntake.setExtendPosition(Constants.INTAKE_POSITION_OUT);
+    }
+    else{
+      if((rockIntake.intakeInPosition()) && retractMode){
+        rockIntake.setExtendPosition(Constants.EXTEND_POSITION_OSCILLATE);
+        retractMode = false;
+      }
+      else if((rockIntake.intakeInPosition()) && !retractMode){
+        rockIntake.setExtendPosition(Constants.INTAKE_POSITION_IN);
+        retractMode = true;
+      }
+    }
+    rockIntake.setIntakeVoltage(0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    rockIntake.setUpdatedPID(1.0, 0, 0);
+    rockIntake.setUpdatedPID(1.5, 0, 0);
     rockIntake.setIntakeVoltage(0.0);
   }
 

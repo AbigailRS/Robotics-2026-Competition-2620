@@ -43,13 +43,8 @@ public class Robot extends TimedRobot {
     StructPublisher<Pose2d> LLPosePublisher = NetworkTableInstance.getDefault().getStructTopic("LL Pose Log", Pose2d.struct).publish();
     StructPublisher<Pose2d> combinedPosePublisher = NetworkTableInstance.getDefault().getStructTopic("Combined Pose Log", Pose2d.struct).publish();
 
-    private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    private final NetworkTable table = inst.getTable("PDH");
-    DoublePublisher[] pdhCurrentDrawArrayPub = new DoublePublisher[24];
-
     private final RobotContainer m_robotContainer;
     private final Vision cam1, cam2, cam3, cam4;
-    private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
@@ -74,12 +69,6 @@ public class Robot extends TimedRobot {
             new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
             new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW)));
 
-
-        int iterator = 0;
-        for(DoublePublisher port : pdhCurrentDrawArrayPub){
-            pdhCurrentDrawArrayPub[iterator] = table.getDoubleTopic("Current Draw Port " + iterator).publish();
-            iterator++;
-        }
     }
 
     @Override
@@ -88,34 +77,29 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run(); 
 
         if(!DriverStation.isDisabled()){
-            cam1.periodic();
-            cam2.periodic();
-            cam3.periodic();
-            cam4.periodic();
+            if(!DriverStation.isAutonomous() || m_robotContainer.cameraState.getCameraState()){
+                cam1.periodic();
+                cam2.periodic();
+                cam3.periodic();
+                cam4.periodic();
+
+                // First, tell Limelight your robot's current orientation
+                double robotYaw = m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees();
+                LimelightHelpers.SetRobotOrientation(Constants.PRIMARY_LL_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+                LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME);
+
+                // Add it to your pose estimator
+                if(LimelightHelpers.getTargetCount(Constants.PRIMARY_LL_NAME) > 0){
+                    m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+                    m_robotContainer.drivetrain.addVisionMeasurement(
+                        limelightMeasurement.pose,
+                        limelightMeasurement.timestampSeconds
+                    );
+                }
+                LLPosePublisher.set(limelightMeasurement.pose);
+            }
         }
-
-        // First, tell Limelight your robot's current orientation
-        double robotYaw = m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees();
-        LimelightHelpers.SetRobotOrientation(Constants.PRIMARY_LL_NAME, robotYaw, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-        LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(Constants.PRIMARY_LL_NAME);
-
-        // Add it to your pose estimator
-        if(LimelightHelpers.getTargetCount(Constants.PRIMARY_LL_NAME) > 0){
-            m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
-            m_robotContainer.drivetrain.addVisionMeasurement(
-                limelightMeasurement.pose,
-                limelightMeasurement.timestampSeconds
-        );
-        }
-
-        int iterator = 0;
-        for(DoublePublisher port : pdhCurrentDrawArrayPub){
-            pdhCurrentDrawArrayPub[iterator].set(pdh.getCurrent(iterator));
-            iterator++;
-        }
-        
-        LLPosePublisher.set(limelightMeasurement.pose);
     }
 
     @Override
@@ -137,6 +121,9 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
         }
+
+        LimelightHelpers.SetThrottle(Constants.PRIMARY_LL_NAME, 0);
+        LimelightHelpers.SetThrottle(Constants.SECONDARY_LL_NAME, 0);
     }
 
     @Override

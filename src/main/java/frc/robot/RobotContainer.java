@@ -32,6 +32,7 @@ import frc.robot.Commands.SpeedUpdater;
 import frc.robot.Commands.UpdateGameState;
 import frc.robot.Commands.climbOff;
 import frc.robot.Commands.climbOn;
+import frc.robot.Commands.Cameras.DisableCamera;
 import frc.robot.Commands.Cameras.EnableCamera;
 import frc.robot.Commands.Conveyor.Eject;
 import frc.robot.Commands.Conveyor.LeftDown;
@@ -66,6 +67,7 @@ import frc.robot.Commands.Turret.ResetTurretEncoder;
 import frc.robot.Commands.Turret.SearchForTarget;
 import frc.robot.Commands.Turret.SearchForTargetV2;
 import frc.robot.Commands.Turret.SearchForTargetV2_SOM;
+import frc.robot.Commands.Turret.SetTurretCenter;
 import frc.robot.Commands.Turret.TargetAllianceWall;
 import frc.robot.Commands.Turret.ZeroTurret;
 import frc.robot.enums.GameState;
@@ -103,6 +105,7 @@ public class RobotContainer {
     public final Turret turret = new Turret();
     public final Hoods hoods = new Hoods();
     public final mountainClimber climb = new mountainClimber();
+    public final CameraState cameraState = new CameraState();
 
     public final GameStateManager gameStateManager = new GameStateManager();
 
@@ -149,8 +152,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("HoodsForShoot", new SetHoodForShoot(hoods, drivetrain));
         NamedCommands.registerCommand("RetractHoods", new RetractHoods(hoods));
         NamedCommands.registerCommand("ShootV2", new ShootV2(turret, hoods, shooter, drivetrain, index));
-        // NamedCommands.registerCommand("CamsOn", new EnableCamera(photonCamera1, photonCamera2, photonCamera3, photonCamera4));
-        // NamedCommands.registerCommand("CamsOff", new EnableCamera(photonCamera1, photonCamera2, photonCamera3, photonCamera4));
+        NamedCommands.registerCommand("CamsOn", new EnableCamera(cameraState));
+        NamedCommands.registerCommand("CamsOff", new DisableCamera(cameraState));
+        NamedCommands.registerCommand("CenterTurret", new SetTurretCenter(turret));
 
         autoChooser = AutoBuilder.buildAutoChooser("");
         SmartDashboard.putData("Auto Mode", autoChooser);
@@ -164,8 +168,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY(), driver.rightTrigger().getAsBoolean()) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX(), driver.rightTrigger().getAsBoolean()) * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 5.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 5.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -194,8 +198,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
         shootTrigger.whileTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
         shootTrigger.whileTrue(new IntakeRetractShoot(intake));
-        driver.rightBumper().toggleOnTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
-        driver.rightBumper().toggleOnTrue(new IntakeExtendPos(intake));
+        // driver.rightBumper().toggleOnTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
+        // driver.rightBumper().toggleOnTrue(new IntakeExtendPos(intake));
 
         driver.a().whileTrue(new Eject(index));
 

@@ -20,13 +20,12 @@ import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Commands.Shooter.leftSlingVelocity;
 
 public class tinyPebbleShooter extends SubsystemBase {
-
-  
 
   private TalonFX leftSlingShot = new TalonFX(Constants.LEFT_SHOOT_CANID, CANBus.roboRIO());
   private TalonFX rightSlingShot = new TalonFX(Constants.RIGHT_SHOOT_CANID, CANBus.roboRIO());
@@ -47,6 +46,7 @@ public class tinyPebbleShooter extends SubsystemBase {
 
   private boolean leftShooterVeloControlMode = false, rightShooterVeloControlMode = false;
 
+  private Timer afterShotTimer = new Timer();
 
   Slot1Configs slot1Configs = new Slot1Configs();
   Slot1Configs rightSlotConfigs = new Slot1Configs();
@@ -79,20 +79,8 @@ public class tinyPebbleShooter extends SubsystemBase {
     leftSlingShotConfig.withSlot1(slot1Configs);
     rightSlingShot.getConfigurator().apply(rightSlingShotConfig);
     leftSlingShot.getConfigurator().apply(leftSlingShotConfig);
-
-    //ramprateConfig.withVoltageClosedLoopRampPeriod(50);
-    // leftSlingShot.getConfigurator().apply(ramprateConfig);
-    // rightSlingShot.getConfigurator().apply(ramprateConfig);
-
-    //   leftLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-    //   leftLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-    //   leftLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
-    //   rightLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-    //   rightLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-    //   rightLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
-    // }catch (ConfigurationFailedException e) {
-    //   System.out.println("Configuration failed! " + e);
-    // }
+    
+    afterShotTimer.start();
 
   }
 
@@ -137,6 +125,14 @@ public class tinyPebbleShooter extends SubsystemBase {
       return true;
     }
     return false;
+  }
+
+  public void afterShotTimerReset(){
+    afterShotTimer.reset();
+  }
+
+  public double getAfterShotTimer(){
+    return afterShotTimer.get();
   }
 
   @Override

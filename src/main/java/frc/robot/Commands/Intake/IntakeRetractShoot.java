@@ -57,7 +57,7 @@ public class IntakeRetractShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    rockIntake.setUpdatedPID(1.0, 0, 0);
+    rockIntake.setUpdatedPID(1.5, 0, 0);
     rockIntake.setIntakeVoltage(0.0);
   }
 

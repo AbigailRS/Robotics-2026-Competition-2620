@@ -71,7 +71,7 @@ public class Constants {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
     public static final double LATENCY_CONSTANT = 0.15;
-    public static final double DRIVE_SHOOT_MODIFIER = 0.25;
+    public static final double DRIVE_SHOOT_MODIFIER = 0.15;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
     public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;
 
@@ -154,7 +154,7 @@ public class Constants {
     public static final double INTAKE_STOP = 0.0;
 
     public static final double INTAKE_IN_POSITION_ERROR = 5.0;
-    public static final double INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT = 30.0;
+    public static final double INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT = 35.0;
     public static final double INTAKE_ZEROING_EXTENSION_CURRENT_LIMIT = 18.0;
     public static final double INTAKE_CURRENT_THRESHOLD = 18.0;
     public static final double INTAKE_EXTEND_ZERO_PERCENTAGE = 0.3;

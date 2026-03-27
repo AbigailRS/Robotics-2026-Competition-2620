@@ -39,10 +39,14 @@ public class rockDestroyerInxder extends SubsystemBase {
 
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Indexer");
-  private final DoublePublisher indexLeftTowerVoltageSetPublisher = table.getDoubleTopic("Index Left Voltage SetPoint").publish(),
-                                indexRightTowerVoltageSetPublisher = table.getDoubleTopic("Index Right Voltage SetPoint").publish(),
-                                indexLeftTowerVoltagePublisher = table.getDoubleTopic("Index Left Voltage").publish(),
-                                indexRightTowerVoltagePublisher = table.getDoubleTopic("Index Right Voltage").publish();
+  private final DoublePublisher leftIndexerSetPointVelocityPub = table.getDoubleTopic("Left Index Velocity Setpoint").publish(),
+                                leftIndexerVelocityPub = table.getDoubleTopic("Left Index Velocity").publish(),
+                                leftIndexerCurrentPub = table.getDoubleTopic("Left Index Current").publish(),
+                                rightIndexerSetPointVelocityPub = table.getDoubleTopic("Right Index Velocity Setpoint").publish(),
+                                rightIndexerVelocityPub = table.getDoubleTopic("Right Index Velocity").publish(),
+                                rightIndexerCurrentPub = table.getDoubleTopic("Right Index Current").publish(),
+                                spindexerVoltagePub = table.getDoubleTopic("Spindexer Voltage").publish(),
+                                spindexerCurrentPub = table.getDoubleTopic("Spindexer Current").publish();
 
   /** Creates a new rockDestroyerInxder. */
   public rockDestroyerInxder() {
@@ -125,10 +129,14 @@ public class rockDestroyerInxder extends SubsystemBase {
       rightRockSmusher.setControl(v_rightIndexVelVoltage.withVelocity(rightIndexVelocity).withEnableFOC(true));
     }
     
-    // indexLeftTowerVoltageSetPublisher.set(leftRockSmusherVoltage);
-    // indexLeftTowerVoltagePublisher.set(leftRockSmusher.getSupplyVoltage().getValueAsDouble());
-    // indexRightTowerVoltageSetPublisher.set(rightRockSmusherVoltage);
-    // indexRightTowerVoltagePublisher.set(rightRockSmusher.getSupplyVoltage().getValueAsDouble());
+    leftIndexerVelocityPub.set(leftRockSmusher.getVelocity().getValueAsDouble());
+    leftIndexerSetPointVelocityPub.set(leftIndexVelocity);
+    leftIndexerCurrentPub.set(leftRockSmusher.getSupplyCurrent().getValueAsDouble());
+    rightIndexerVelocityPub.set(rightRockSmusher.getVelocity().getValueAsDouble());
+    rightIndexerSetPointVelocityPub.set(rightIndexVelocity);
+    rightIndexerCurrentPub.set(rightRockSmusher.getSupplyCurrent().getValueAsDouble());
+    spindexerCurrentPub.set(converyIndex.getSupplyCurrent().getValueAsDouble());
+    spindexerVoltagePub.set(converyIndex.getMotorVoltage().getValueAsDouble());
 
     // This method will be called once per scheduler run
   }

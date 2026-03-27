@@ -323,6 +323,7 @@ public class ShootV2 extends Command {
     indexer.setRightRockSmusherVoltage(0.0);
     indexer.setConveryVoltage(0);
     shootDelayTimer.reset();
+    flywheelSubsystem.afterShotTimerReset();
   }
 
   public double getHorizontalVelocity(double distance) {

@@ -9,15 +9,27 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "Auto 2 Stage 1"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "RetractHoods"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Auto 2 Stage 1"
+                  "name": "CamsOff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ZeroTurret"
                 }
               },
               {
@@ -25,22 +37,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "parallel",
+                      "type": "named",
                       "data": {
-                        "commands": [
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "ZeroTurret"
-                            }
-                          },
-                          {
-                            "type": "named",
-                            "data": {
-                              "name": "ZeroIntake"
-                            }
-                          }
-                        ]
+                        "name": "ZeroIntake"
                       }
                     },
                     {
@@ -56,13 +55,25 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "CenterTurret"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Auto 2 Stage 2"
+          }
+        },
+        {
           "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 8.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -76,6 +87,12 @@
                 "data": {
                   "name": "IntakeRetractShoot"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CamsOn"
+                }
               }
             ]
           }
@@ -87,7 +104,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 0.5
                 }
               },
               {
@@ -100,6 +117,12 @@
                 "type": "named",
                 "data": {
                   "name": "RetractHoods"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CamsOff"
                 }
               }
             ]
@@ -118,7 +141,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Auto 2 Stage 2"
+                  "pathName": "Auto 2 Stage 3"
                 }
               }
             ]
@@ -131,7 +154,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 5.0
+                  "waitTime": 4.0
                 }
               },
               {
@@ -144,6 +167,12 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeRetractShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CamsOn"
                 }
               }
             ]

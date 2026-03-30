@@ -73,7 +73,7 @@ public class Constants {
     public static final double LATENCY_CONSTANT = 0.15;
     public static final double DRIVE_SHOOT_MODIFIER = 0.15;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
-    public static final double DRIVE_MAX_SPEED_MODIFIER = 0.8;
+    public static final double DRIVE_MAX_SPEED_MODIFIER = 0.7;
 
 
     //Turret Constants
@@ -134,7 +134,7 @@ public class Constants {
     public static final double SHOOTER_RIGHT_ALLOWABLE_ERROR = 2.0;
 
     public static final double SHOOTER_PASS_VELOCITY = 90.0;
-    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.25;
+    public static final double SHOOTER_MANUAL_SHOOT_PERCENTAGE = 0.5;
 
     public static final double SHOOT_V2_CONSTANT_SPEED = 70.0;
     
@@ -161,6 +161,8 @@ public class Constants {
 
     public static final double INTAKE_EXTEND_RAMP_RATE = 0.2;
     public static final double INTAKE_ROTATE_RAMP_RATE = 0.2;
+
+    public static final double INTAKE_CURRENT_LIMIT = 80.0;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;

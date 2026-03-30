@@ -42,7 +42,7 @@ public class bigRockIntake extends SubsystemBase {
   private final NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private final NetworkTable table = inst.getTable("Intake");
   private final DoublePublisher ExtendCurrentPublisherPub = table.getDoubleTopic("Extension Current").publish(),
-                                IntakeCurrentPublisherPub = table.getDoubleTopic("Extension Current").publish(),
+                                IntakeCurrentPublisherPub = table.getDoubleTopic("Intake Current").publish(),
                                 ExtendPositionSetpointPublisher = table.getDoubleTopic("Extend Position Setpoint").publish(),
                                 ExtendPositionPublisher = table.getDoubleTopic("Extend Position").publish();
   /** Creates a new rockDestroyerInxder. */
@@ -50,8 +50,8 @@ public class bigRockIntake extends SubsystemBase {
   /** Creates a new bigRockIntake. */
   public bigRockIntake() {
 
-    configs.kV = 0.11;
-    configs.kP = 1.2;
+    configs.kV = 0.10;
+    configs.kP = 0.9;
     configs.kI = 0;
     configs.kD = 0.0;
     extendConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
@@ -62,6 +62,8 @@ public class bigRockIntake extends SubsystemBase {
     rockPusher.setNeutralMode(NeutralModeValue.Brake);
     intakeConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.INTAKE_ROTATE_RAMP_RATE);
     intakeConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
+    intakeConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_CURRENT_LIMIT);
+    intakeConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     rockGrabber.getConfigurator().apply(intakeConfig);
     rockPusher.getConfigurator().apply(extendConfig);
   }

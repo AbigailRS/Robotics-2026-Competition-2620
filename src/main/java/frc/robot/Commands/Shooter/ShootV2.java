@@ -103,8 +103,8 @@ public class ShootV2 extends Command {
 
     shooterMap.put(1.5, 45.0);
     shooterMap.put(2.0, 50.0);
-    shooterMap.put(2.5, 55.0);
-    shooterMap.put(3.0, 57.0);
+    shooterMap.put(2.5, 55.5);
+    shooterMap.put(3.0, 57.5);
     shooterMap.put(3.5, 58.0);
     shooterMap.put(4.0, 60.0);
     shooterMap.put(4.5, 65.0);
@@ -128,8 +128,8 @@ public class ShootV2 extends Command {
 
     inverseShooterMap.put(45.0, 1.5);
     inverseShooterMap.put(50.0, 2.0);
-    inverseShooterMap.put(55.0, 2.5);
-    inverseShooterMap.put(57.0, 3.0);
+    inverseShooterMap.put(55.5, 2.5);
+    inverseShooterMap.put(57.5, 3.0);
     inverseShooterMap.put(58.0, 3.5);
     inverseShooterMap.put(60.0, 4.0);
     inverseShooterMap.put(63.0, 4.5);

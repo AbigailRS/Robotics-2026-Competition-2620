@@ -168,8 +168,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 5.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 5.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(ControllerModifier.modifyX(driver.getLeftY(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 1.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(ControllerModifier.modifyY(driver.getLeftX(), (driver.rightTrigger().getAsBoolean() || (shooter.getAfterShotTimer() < 1.0 && FieldZoneManager.inTrenchProtectionZone(drivetrain.getState().Pose.getTranslation())))) * Constants.MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-driver.getRightX() * Constants.MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );

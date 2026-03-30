@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.295877318112026,
-        "y": 7.521968616263086
+        "x": 9.059258202567758,
+        "y": 7.573723252496434
       },
       "isLocked": false,
       "linkedName": null
@@ -20,27 +20,27 @@
         "y": 4.416690442225996
       },
       "prevControl": {
-        "x": 7.932791013034392,
-        "y": 4.10979279563125
+        "x": 7.7385804802077365,
+        "y": 4.068136827689102
       },
       "nextControl": {
-        "x": 7.532496433664136,
-        "y": 4.843666191161093
+        "x": 7.804208273894435,
+        "y": 4.921298145506419
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.673052781735421,
+        "x": 5.319985734664764,
         "y": 7.586661911554922
       },
       "prevControl": {
-        "x": 6.783184143290403,
+        "x": 7.430117096219746,
         "y": 7.5280471515117275
       },
       "nextControl": {
-        "x": 3.27567760341873,
+        "x": 3.922610556348073,
         "y": 7.625477888730385
       },
       "isLocked": false,
@@ -60,7 +60,12 @@
       "linkedName": "Auto 1 Stage 1-2"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.488272921108706,
+      "rotationDegrees": -90.03107037067879
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -74,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -91.73570458892827
+    "rotation": -53.67317404787975
   },
   "reversed": false,
   "folder": null,

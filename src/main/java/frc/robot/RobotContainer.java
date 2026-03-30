@@ -95,7 +95,6 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(Constants.MaxSpeed);
 
     private final CommandXboxController driver = new CommandXboxController(0);
-    private final CommandXboxController operator = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -109,18 +108,6 @@ public class RobotContainer {
 
     public final GameStateManager gameStateManager = new GameStateManager();
 
-    // public final CameraSystem photonCamera1 = new CameraSystem("Photon Camera 1", new Translation3d(Constants.CAMERA_1_TRANSLATION_X, Constants.CAMERA_1_TRANSLATION_Y, Constants.CAMERA_1_TRANSLATION_Z), 
-    //                                                                                             new Rotation3d(Constants.CAMERA_1_ROTATION_ROLL, Constants.CAMERA_1_ROTATION_PITCH, Constants.CAMERA_1_ROTATION_YAW));
-
-    // public final CameraSystem photonCamera2 = new CameraSystem("Photon Camera 2", new Translation3d(Constants.CAMERA_2_TRANSLATION_X, Constants.CAMERA_2_TRANSLATION_Y, Constants.CAMERA_2_TRANSLATION_Z), 
-    //                                                                                             new Rotation3d(Constants.CAMERA_2_ROTATION_ROLL, Constants.CAMERA_2_ROTATION_PITCH, Constants.CAMERA_2_ROTATION_YAW));
-    
-    // public final CameraSystem photonCamera3 = new CameraSystem("Photon Camera 3", new Translation3d(Constants.CAMERA_3_TRANSLATION_X, Constants.CAMERA_3_TRANSLATION_Y, Constants.CAMERA_3_TRANSLATION_Z), 
-    //                                                                                             new Rotation3d(Constants.CAMERA_3_ROTATION_ROLL, Constants.CAMERA_3_ROTATION_PITCH, Constants.CAMERA_3_ROTATION_YAW));
-    
-    // public final CameraSystem photonCamera4 = new CameraSystem("Photon Camera 4", new Translation3d(Constants.CAMERA_4_TRANSLATION_X, Constants.CAMERA_4_TRANSLATION_Y, Constants.CAMERA_4_TRANSLATION_Z), 
-    //                                                                                             new Rotation3d(Constants.CAMERA_4_ROTATION_ROLL, Constants.CAMERA_4_ROTATION_PITCH, Constants.CAMERA_4_ROTATION_YAW));
-    
     private final SendableChooser<Command> autoChooser;
 
     private final Trigger updateGameState = new Trigger(() -> DriverStation.getMatchTime() % 1 == 0);
@@ -181,53 +168,26 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // driver.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-driver.getLeftY(), -driver.getLeftX()))
-        // ));  
-        
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        // driver.back().and(driver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // driver.back().and(driver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // driver.start().and(driver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // driver.start().and(driver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
         // Reset the field-centric heading on left bumper press.
         driver.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
-        shootTrigger.whileTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
-        shootTrigger.whileTrue(new IntakeRetractShoot(intake));
-        // driver.rightBumper().toggleOnTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
-        // driver.rightBumper().toggleOnTrue(new IntakeExtendPos(intake));
+        //shootTrigger.whileTrue(new ShootV2(turret, hoods, shooter, drivetrain, index));
 
         driver.a().whileTrue(new Eject(index));
 
-        updateGameState.onTrue(new UpdateGameState(gameStateManager));
-
         turret.setDefaultCommand(new SearchForTargetV2_SOM(turret, drivetrain));
         intake.setDefaultCommand(new IntakeRetractPos(intake));
-        hoods.setDefaultCommand(new RetractHoods(hoods));
+        //hoods.setDefaultCommand(new RetractHoods(hoods));
 
-        outOfZoneTrigger.whileTrue(new TargetAllianceWall(turret, drivetrain));
-
-        //shootTrigger.whileTrue(drivetrain.applyRequest(() -> brake));
-        driver.rightTrigger().onFalse(new IntakeExtendPos(intake));
-        passTrigger.whileTrue(new Pass(shooter, index, drivetrain));
-        passTrigger.whileTrue(new SetHoodForPass(hoods));
         manualTrigger.whileTrue(new ManualShoot(shooter, index));
-
-    //     shootOnMoveTrigger.whileTrue(new Shoot(shooter, index, drivetrain));
-    //     shootOnMoveTrigger.whileTrue(new SetHoodForShoot(hoods, drivetrain));
-    //     shootOnMoveTrigger.whileTrue(new IntakeExtendPos(intake));
         driver.leftBumper().onTrue(new ZeroIntake(intake));
         driver.leftBumper().onTrue(new ZeroTurret(turret));
 
         driver.povLeft().whileTrue(new ManualRotate(turret, 12.0));
         driver.povRight().whileTrue(new ManualRotate(turret, -12.0));
-        driver.povDown().whileTrue(new DisableManualRotate(turret));
-    // driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
-    // driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
+        //driver.povDown().whileTrue(new DisableManualRotate(turret));
+        driver.povDown().whileTrue(new TESTSetHoodsLow(hoods));
+        driver.povUp().whileTrue(new TESTSetHoodsHigh(hoods));
         driver.x().toggleOnTrue(new IntakeExtendPos(intake));
     }
 

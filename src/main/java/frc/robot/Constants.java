@@ -73,7 +73,7 @@ public class Constants {
     public static final double LATENCY_CONSTANT = 0.15;
     public static final double DRIVE_SHOOT_MODIFIER = 0.15;
     public static final double DRIVE_TURN_MODIFIER = 0.65;
-    public static final double DRIVE_MAX_SPEED_MODIFIER = 0.7;
+    public static final double DRIVE_MAX_SPEED_MODIFIER = 0.25;
 
 
     //Turret Constants

@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /** Add your docs here. */
 public class ControllerModifier {
-    private static SlewRateLimiter xRateLimiter = new SlewRateLimiter(2.0);
-    private static SlewRateLimiter yRateLimiter = new SlewRateLimiter(2.0);
+    private static SlewRateLimiter xRateLimiter = new SlewRateLimiter(5.0);
+    private static SlewRateLimiter yRateLimiter = new SlewRateLimiter(5.0);
 
     public static double modifyX(double input, boolean shooting){
         if(shooting){

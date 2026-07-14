@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.414279600570612,
-        "y": 0.48333808844507875
+        "x": 3.54922891566265,
+        "y": 3.9912891566265065
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.92987161198288,
-        "y": 0.22456490727532136
+        "x": 2.4127469879518073,
+        "y": 4.155204819277109
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.778330955777461,
-        "y": 3.510984308131241
+        "x": 2.3690361445783132,
+        "y": 4.865506024096386
       },
       "prevControl": {
-        "x": 7.713637660485022,
-        "y": 1.4019828815977187
+        "x": 2.3441200679092704,
+        "y": 4.460619778224441
+      },
+      "nextControl": {
+        "x": 2.4127469879518073,
+        "y": 5.575807228915662
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.54922891566265,
+        "y": 5.63044578313253
+      },
+      "prevControl": {
+        "x": 3.0356265060240952,
+        "y": 5.843536144578313
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Auto 2 Stage 1-2"
+      "linkedName": "8-1"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +49,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.13194855025445
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }

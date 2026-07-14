@@ -58,12 +58,16 @@ public class bigRockIntake extends SubsystemBase {
     extendConfig.withSlot1(configs);
     extendConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
     extendConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT);
+    extendConfig.CurrentLimits.withSupplyCurrentLimitEnable(true);
+    extendConfig.CurrentLimits.withSupplyCurrentLimit(Constants.INTAKE_DEFAULT_EXTENSION_CURRENT_LIMIT);
     extendConfig.ClosedLoopRamps.withVoltageClosedLoopRampPeriod(Constants.INTAKE_EXTEND_RAMP_RATE);
     rockPusher.setNeutralMode(NeutralModeValue.Brake);
     intakeConfig.OpenLoopRamps.withVoltageOpenLoopRampPeriod(Constants.INTAKE_ROTATE_RAMP_RATE);
     intakeConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive);
     intakeConfig.CurrentLimits.withStatorCurrentLimit(Constants.INTAKE_CURRENT_LIMIT);
     intakeConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
+    intakeConfig.CurrentLimits.withSupplyCurrentLimitEnable(true);
+    intakeConfig.CurrentLimits.withSupplyCurrentLimit(Constants.INTAKE_CURRENT_LIMIT);
     rockGrabber.getConfigurator().apply(intakeConfig);
     rockPusher.getConfigurator().apply(extendConfig);
   }

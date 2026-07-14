@@ -92,8 +92,8 @@ public class Constants {
     public static final double TURRET_STALL_CURRENT = 15.0;
 
     public static final int TURRET_CANCODER_ID = 35;
-    public static final double TURRET_LEFT_LIMIT = -100.0;
-    public static final double TURRET_RIGHT_LIMIT = 100.0; 
+    public static final double TURRET_LEFT_LIMIT = -20.0;
+    public static final double TURRET_RIGHT_LIMIT = 20.0; 
     public static final double TURRET_CANCODER_OFFSET = 0.0;
     public static final double TURRET_MOTOR_TO_TURRET_RATIO = 35.15;
     public static final double TURRET_LEFT_ENDSTOP_OFFSET = 17.25;
@@ -162,7 +162,7 @@ public class Constants {
     public static final double INTAKE_EXTEND_RAMP_RATE = 0.2;
     public static final double INTAKE_ROTATE_RAMP_RATE = 0.2;
 
-    public static final double INTAKE_CURRENT_LIMIT = 80.0;
+    public static final double INTAKE_CURRENT_LIMIT = 20.0;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;
@@ -190,7 +190,7 @@ public class Constants {
 
     public static final double INDEXER_LEFT_CURRENT_LIMIT = 20.0;
     public static final double INDEXER_RIGHT_CURRENT_LIMIT = 20.0;
-    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 100.0;
+    public static final double INDEXER_CONVEYOR_CURRENT_LIMIT = 20.0;
 
     public static final double INDEXER_LEFT_VELOCITY_FEED = 45.0;
     public static final double INDEXER_RIGHT_VELOCITY_FEED = 45.0;

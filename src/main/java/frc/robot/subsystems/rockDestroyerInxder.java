@@ -54,12 +54,12 @@ public class rockDestroyerInxder extends SubsystemBase {
     rightIndexerConfig.MotorOutput.withInverted(Constants.INDEX_RIGHT_INVERT);
     converyIndexConfig.MotorOutput.withInverted(Constants.INDEX_CONVERY_INVERT);
 
-    leftIndexerConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
-    leftIndexerConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_LEFT_CURRENT_LIMIT);
-    rightIndexerConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
-    rightIndexerConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_RIGHT_CURRENT_LIMIT);
-    converyIndexConfig.CurrentLimits.withStatorCurrentLimitEnable(true);
-    converyIndexConfig.CurrentLimits.withStatorCurrentLimit(Constants.INDEXER_CONVEYOR_CURRENT_LIMIT);
+    leftIndexerConfig.CurrentLimits.withSupplyCurrentLimitEnable(true);
+    leftIndexerConfig.CurrentLimits.withSupplyCurrentLimit(Constants.INDEXER_LEFT_CURRENT_LIMIT);
+    rightIndexerConfig.CurrentLimits.withSupplyCurrentLimitEnable(true);
+    rightIndexerConfig.CurrentLimits.withSupplyCurrentLimit(Constants.INDEXER_RIGHT_CURRENT_LIMIT);
+    converyIndexConfig.CurrentLimits.withSupplyCurrentLimitEnable(true);
+    converyIndexConfig.CurrentLimits.withSupplyCurrentLimit(Constants.INDEXER_CONVEYOR_CURRENT_LIMIT);
 
     leftIndexerConfig.Slot0.kV = 0.1;
     leftIndexerConfig.Slot0.kP = 0.375;

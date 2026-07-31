@@ -162,7 +162,7 @@ public class Constants {
     public static final double INTAKE_EXTEND_RAMP_RATE = 0.2;
     public static final double INTAKE_ROTATE_RAMP_RATE = 0.2;
 
-    public static final double INTAKE_CURRENT_LIMIT = 40.0;
+    public static final double INTAKE_CURRENT_LIMIT = 50.0;
 
     //Indexer
     public static final int CONVEYOR_CANID = 50;
